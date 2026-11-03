@@ -1,3 +1,15 @@
+---
+license: other
+library_name: pytorch
+pretty_name: AAKG-M
+tags:
+  - protein-fitness
+  - proteingym
+  - structure-aware
+  - kernel-methods
+  - model-gating
+---
+
 # AAKG-M: Assay-Adaptive Kernel Gate
 
 **Fixed-configuration empirical result, not a fully nested official benchmark.**
@@ -136,6 +148,16 @@ python aakg_m.py \
 `--seed 1` reproduces the seed-1 score `0.688046`; the headline `0.688024` is
 the mean over the three seeds above.
 
+## Checkpoints
+
+`checkpoints/gate_fold{0..4}.pt` are the five seed-1 fold gates.  They are the
+models that produced `results/per_unit.csv`; see
+[`checkpoints/README.md`](checkpoints/README.md) for the format, checksums and
+loading snippet.
+
+These checkpoints contain **only the gate**.  D / Kermut / AMK experts and the
+OOF tables are not included.
+
 ## Files
 
 ```text
@@ -143,6 +165,7 @@ aakg_m.py                 gate training + official aggregation
 meta_stack.py             OOF loading, features, context, metrics
 AAKG_M_REPORT.md          full method report, ablations, limitations
 aakg_m_217.png            summary figure
+checkpoints/              five seed-1 gate checkpoints + format notes
 results/result.json       seed-1 metrics and category/scheme breakdown
 results/per_unit.csv      per assay × scheme × category scores
 results/assay_weights.csv mean gate weights per assay
@@ -158,8 +181,8 @@ requirements.txt
 3. **Small effect.**  +0.0048 over Blend; Contiguous is a tie.
 4. **Architecture selected on the same 217 assays.**  The headline number is
    selection-optimistic relative to a fully nested protocol.
-5. **No trained weights included.**  The gate has 1,347 parameters and is
-   retrained by `aakg_m.py`.
+5. **Only gate checkpoints are included.**  D / Kermut / AMK expert weights and
+   the OOF tables are not redistributed.
 6. **No fresh cohort.**  External validation is still missing.
 
 ## License

@@ -76,6 +76,7 @@ def main():
     parser.add_argument("--seed", type=int, default=20261029)
     parser.add_argument("--out", default=str(OUT))
     parser.add_argument("--log-every", type=int, default=10)
+    parser.add_argument("--save-models", action="store_true", help="save one gate checkpoint per fold")
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="auto")
     args = parser.parse_args()
     torch.manual_seed(args.seed)
@@ -114,6 +115,8 @@ def main():
     w_row = (1.0 / n_by_assay).astype(np.float64)
     w_row /= w_row.mean()
 
+    outdir = Path(args.out)
+    outdir.mkdir(parents=True, exist_ok=True)
     pred = np.full(len(meta), np.nan, dtype=np.float32)
     gate_w = np.full((len(meta), 3), np.nan, dtype=np.float32)
     history = []
@@ -152,6 +155,20 @@ def main():
                 history.append(rec)
                 print(json.dumps({"stage": "EPOCH", **rec}), flush=True)
         model.eval()
+        if args.save_models:
+            ckpt = {
+                "state_dict": {k: v.detach().cpu() for k, v in model.state_dict().items()},
+                "config": {"model": args.model, "hidden": args.hidden,
+                           "dropout": args.dropout, "ctx": args.ctx,
+                           "ctx_dim": int(C.shape[1])},
+                "ctx_cols": ctx_cols,
+                "base_cols": base_cols,
+                "ctx_mean": torch.from_numpy(mu.astype(np.float32)),
+                "ctx_std": torch.from_numpy(sd.astype(np.float32)),
+                "fold": int(f),
+                "seed": int(args.seed),
+            }
+            torch.save(ckpt, outdir / f"gate_fold{f}.pt")
         with torch.no_grad():
             outs, ws = [], []
             for i in range(0, len(te), args.batch):
@@ -175,8 +192,6 @@ def main():
             "units": int(len(per)),
         },
     }
-    outdir = Path(args.out)
-    outdir.mkdir(parents=True, exist_ok=True)
     meta["w_D"], meta["w_K"], meta["w_A"] = gate_w[:, 0], gate_w[:, 1], gate_w[:, 2]
     meta.groupby("assay")[["w_D", "w_K", "w_A"]].mean().to_csv(outdir / "assay_weights.csv")
     per.to_csv(outdir / "per_unit.csv", index=False)
