@@ -1,0 +1,108 @@
+{
+  "config": {
+    "folds": 5,
+    "epochs": 100,
+    "batch": 32768,
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "model": "mlp",
+    "hidden": 64,
+    "dropout": 0.1,
+    "ctx": "ext",
+    "sched": "cosine",
+    "seed": 1,
+    "out": "analysis/h200_aakg_sweep/mlp64_ext_seed1",
+    "log_every": 10,
+    "device": "cuda"
+  },
+  "official": {
+    "AMK": 0.6620329334032096,
+    "D": 0.6562149145289415,
+    "Kermut": 0.6625398270838919,
+    "Kseq": 0.6391178768927145,
+    "Blend": 0.6831933208340856,
+    "Meta": 0.6880455246450226
+  },
+  "categories": {
+    "AMK": {
+      "Activity": 0.612575,
+      "Binding": 0.587699,
+      "Expression": 0.677421,
+      "OrganismalFitness": 0.609922,
+      "Stability": 0.822547
+    },
+    "D": {
+      "Activity": 0.60619,
+      "Binding": 0.582831,
+      "Expression": 0.669869,
+      "OrganismalFitness": 0.6067,
+      "Stability": 0.815484
+    },
+    "Kermut": {
+      "Activity": 0.609985,
+      "Binding": 0.619132,
+      "Expression": 0.670407,
+      "OrganismalFitness": 0.596511,
+      "Stability": 0.816664
+    },
+    "Kseq": {
+      "Activity": 0.58805,
+      "Binding": 0.577307,
+      "Expression": 0.640407,
+      "OrganismalFitness": 0.593936,
+      "Stability": 0.795889
+    },
+    "Blend": {
+      "Activity": 0.629431,
+      "Binding": 0.63397,
+      "Expression": 0.688696,
+      "OrganismalFitness": 0.624374,
+      "Stability": 0.839495
+    },
+    "Meta": {
+      "Activity": 0.634182,
+      "Binding": 0.643931,
+      "Expression": 0.691722,
+      "OrganismalFitness": 0.62708,
+      "Stability": 0.843313
+    }
+  },
+  "schemes": {
+    "AMK": {
+      "fold_contiguous_5": 0.61295,
+      "fold_modulo_5": 0.654194,
+      "fold_random_5": 0.771011
+    },
+    "D": {
+      "fold_contiguous_5": 0.61726,
+      "fold_modulo_5": 0.653024,
+      "fold_random_5": 0.751446
+    },
+    "Kermut": {
+      "fold_contiguous_5": 0.612666,
+      "fold_modulo_5": 0.64833,
+      "fold_random_5": 0.759878
+    },
+    "Kseq": {
+      "fold_contiguous_5": 0.57843,
+      "fold_modulo_5": 0.626041,
+      "fold_random_5": 0.766685
+    },
+    "Blend": {
+      "fold_contiguous_5": 0.646175,
+      "fold_modulo_5": 0.675315,
+      "fold_random_5": 0.768655
+    },
+    "Meta": {
+      "fold_contiguous_5": 0.646526,
+      "fold_modulo_5": 0.677976,
+      "fold_random_5": 0.777375
+    }
+  },
+  "wins": {
+    "Meta>AMK": 571,
+    "Meta>Kermut": 595,
+    "Meta>Blend": 476,
+    "units": 651
+  }
+}
