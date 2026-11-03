@@ -25,10 +25,20 @@ KSEQ = DATA / "kseq_oof_predictions.csv"
 DEV_UNITS = DATA / "dev20_units"
 AMK197_UNITS = DATA / "amk197_units"
 CONTRACT = DATA / "contract.json"
+BUNDLE = DATA / "oof_bundle.csv.gz"
 OUT = ROOT / "results" / "run"
 
 
 def load_oof():
+    if BUNDLE.exists():
+        meta = pd.read_csv(BUNDLE)
+        required = {"assay", "scheme", "variant_id", "fold", "category",
+                    "target", "D", "Kermut", "Kseq", "AMK"}
+        missing = required.difference(meta.columns)
+        if missing:
+            raise ValueError(f"OOF bundle missing columns: {sorted(missing)}")
+        return meta.dropna(subset=["target", "D", "Kermut", "Kseq", "AMK"]).reset_index(drop=True)
+
     full = pd.read_csv(
         FULL,
         usecols=["assay", "scheme", "variant", "fold", "target_common_std",

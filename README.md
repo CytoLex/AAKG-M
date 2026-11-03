@@ -109,12 +109,17 @@ Expected layout:
 
 ```text
 data/
+  oof_bundle.csv.gz          # optional single-file bundle (see HF private dataset)
   oof_predictions.csv
   kseq_oof_predictions.csv
   contract.json
   dev20_units/<assay>/<scheme>/oof.csv
   amk197_units/<assay>/<scheme>/oof.csv
 ```
+
+If `data/oof_bundle.csv.gz` is present, `meta_stack.load_oof()` uses it and
+ignores the four separate OOF sources.  The bundle is not in this model repo;
+it is in the private dataset [`cytolex/AAKG-M-oof`](https://huggingface.co/datasets/cytolex/AAKG-M-oof).
 
 `oof_predictions.csv` columns:
 
