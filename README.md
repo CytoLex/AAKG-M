@@ -1,5 +1,9 @@
 # AAKG-M: from a gate that does not help to an expert that does
 
+> **Headline: 0.6985** — four fixed weights plus a constructed encoder expert, **+0.0109** over a
+> tuned constant and **+0.0106** over the published gate (0.6879). The gate itself is a
+> **statistical tie with a tuned constant**, and that falsification is what motivated the expert.
+
 **Two results, in order.**
 
 1. **The learned gate is not worth its parameters.** Under the protocol this repository was built for,
