@@ -359,6 +359,12 @@ requirements.txt
    so the nested estimate is bit-identical to the fixed one (gap 0.000). Rank is flat (4 vs 8 differ
    by 0.0002), and width and epochs were never tuned. What is *not* nested is the broader design
    space — which mechanisms we chose to try was decided on this panel, and no protocol can nest that.
+   **That selection risk is bounded, though.** Twenty-two mechanisms were tried here, so a two-sided
+   Bonferroni correction needs z = 3.05; the observed paired effect is **z = 5.16**, giving a
+   corrected 95% CI of **[+0.00223, +0.00866]**, still entirely above zero. The claim would survive
+   even if 10⁵ configurations had been tried. (Bonferroni assumes independence and the attempts here
+   are correlated, which makes the correction conservative in our favour.) This bounds the risk; it
+   does not replace replication on an external panel.
 5. **Only gate checkpoints are included.**  D / Kermut / AMK expert weights and
    the OOF tables are not redistributed.
 6. **No fresh cohort.**  External validation is still missing.
