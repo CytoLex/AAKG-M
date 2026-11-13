@@ -1,0 +1,36 @@
+{
+  "protocol": "aakg_m_save.py, unmodified, on the released oof_bundle; mlp/hidden64/dropout0.1/lr1e-3/cosine/100 epochs/batch 32768/5-fold assay-held-out; official metric",
+  "seed_scores": {
+    "20261029": 0.6879937279568653,
+    "1": 0.6880455246450226,
+    "2": 0.6880340128278204,
+    "3": 0.6879810068303522,
+    "4": 0.6872205825337248,
+    "5": 0.688128174429316,
+    "6": 0.6877464503777739,
+    "7": 0.6876042533251612,
+    "8": 0.687907874563734
+  },
+  "reported_seeds": [
+    "20261029",
+    "1",
+    "2"
+  ],
+  "reported_mean": 0.6880244218099026,
+  "reported_sd": 2.7197701089194336e-05,
+  "all_seeds_mean": 0.6878512897210857,
+  "all_seeds_sd": 0.0002867723247489796,
+  "all_seeds_min": 0.6872205825337248,
+  "all_seeds_max": 0.688128174429316,
+  "n_seeds": 9,
+  "note": "The originally reported sd (+-0.000027) is the spread of three seeds that happen to lie within 5e-5 of each other. Across nine seeds the spread is 10.5x larger. Quote 0.687851 +- 0.000287, and state the baseline next to any gain.",
+  "provenance": {
+    "platform": "Inspire (\u542f\u667a) \u5206\u5e03\u5f0f\u8bad\u7ec3\u7a7a\u95f4, 1xH100, image ngc-pytorch:25.02-cuda12.8.0-py3",
+    "jobs": [
+      "aakg-orig-seeds-1104-r1 (seeds 1-3)",
+      "aakg-orig-seeds4to8-1104-r1 (seeds 4-8)",
+      "aakg-headroom-1104-r1 (seed 20261029)"
+    ],
+    "date": "2026-11-04"
+  }
+}

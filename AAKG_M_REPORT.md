@@ -220,6 +220,52 @@ AAKG does not rescue AMK as a standalone method.  It uses AMK as one expert and
 lets the gate decide how much to trust it.  This framing is honest and still
 gives AMK a role.
 
+## Update (2026-11): what happened after the gate
+
+The gate result above stands: against any tuned constant it is a statistical tie. The follow-up
+work asked where the gain actually lives, and found it in the expert pool rather than the weighting.
+
+**The oracle bound.** Within the original three-expert (and four-expert) pool, a per-assay oracle —
+allowed to pick the best weights separately for every assay — reaches **0.693544**. That is *below*
+the fixed-weight fusion below. Whatever a better gate could do, it cannot reach the number we
+already have by improving an expert instead.
+
+**The replacement.** Four experts, four fixed weights selected per fold on the training assays:
+
+```text
+0.00 · D + 0.40 · Kermut + 0.40 · AMK + 0.20 · X
+```
+
+`X` is a distilled ESM-650 encoder expert (multi-representation features, teacher = 0.4·Kermut +
+0.5·AMK, α = 0.9), with a **category-specific rank-8 linear residual** on its output and its
+predictions **averaged over eight training seeds**.
+
+| configuration | 217-assay official |
+|---|---:|
+| tuned three-expert constant | 0.687637 |
+| published gate (result 1) | 0.687851 |
+| four experts, previous site expert | 0.690808 |
+| ＋ distilled multi-representation encoder | 0.694837 |
+| ＋ category-specific low-rank residual | 0.696250 ± 0.000434 |
+| **＋ 8-seed expert averaging** | **0.698495** |
+
++0.0109 over the constant, +0.0106 over the gate, +0.0077 over the previous four-expert fusion
+(two-level CI [+0.00442, +0.01087]).
+
+**What the follow-up rules out.** Nine directions were tested and rejected, and the two most
+informative are worth recording here:
+
+- **Co-distillation from the fusion itself** raises the expert's own score by **+0.0136** (8/8 seeds)
+  but leaves the fusion **−0.0002** unchanged: teaching an expert to imitate the pool removes the
+  residual decorrelation that gave it value.
+- **A residual ("boosting") expert** trained on the fusion's own error gets **exactly zero weight**
+  in the simplex — there is nothing left in the residual that these features can explain.
+
+**Caveats carried over.** The encoder expert covers 182 of 217 assays (the rest fall back to the
+older site expert, contributing structural zeros); the 0.6985 configuration has no seed-level
+spread because the expert is an average; fusion weights are nested per fold while the experts are
+cached OOF, exactly as in result 1.
+
 ## Limitations
 
 - **No fresh external cohort.** The 217 assays are used for development; the

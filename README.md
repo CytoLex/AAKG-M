@@ -1,18 +1,21 @@
----
-license: other
-library_name: pytorch
-pretty_name: AAKG-M
-tags:
-  - protein-fitness
-  - proteingym
-  - structure-aware
-  - kernel-methods
-  - model-gating
----
+# AAKG-M: from a gate that does not help to an expert that does
 
-# AAKG-M: Assay-Adaptive Kernel Gate
+**Two results, in order.**
 
-**Fixed-configuration empirical result, not a fully nested official benchmark.**
+1. **The learned gate is not worth its parameters.** Under the protocol this repository was built for,
+   an assay-context gate over frozen experts **matches a tuned constant** (+0.0002, 0.75σ) and falls
+   **0.0046 behind** the same constant once a fourth expert joins. Six further conditioning mechanisms
+   land at or below the constant as well. This is the negative result the repository originally reported,
+   and it is still the correct result.
+2. **The gain is in the expert pool, not in the weighting.** Adding a distilled multi-representation
+   encoder expert, giving it a category-specific low-rank residual, and averaging it over eight
+   training seeds lifts the same four-parameter fixed-weight fusion from **0.6876 to 0.6985**
+   — **+0.0109** over the tuned constant and **+0.0106** over the published gate.
+
+Everything below is organised that way: [result 1](#result-1-negative-the-gate-ties-a-tuned-constant)
+is the falsification that motivates the work, and [result 2](#result-2-positive-the-gain-is-in-the-expert-pool)
+is what replaced it. Neither number is SOTA and neither is a fully nested official benchmark; the
+caveats in the last section apply to both.
 
 AAKG-M learns a **label-free assay-context gate** over three frozen protein-
 fitness experts:
@@ -33,7 +36,7 @@ pred_i = g_{a,D} z(D_i) + g_{a,K} z(Kermut_i) + g_{a,A} z(AMK_i)
 The gate sees **no target labels from the held-out assay**.  At meta-test time,
 only the assay context and the frozen expert predictions are used.
 
-## Headline result
+## Result 1 (negative): the gate ties a tuned constant
 
 651 assay × scheme units, 217 assays, official-valid category-balanced
 aggregation (per-unit Spearman → mean per `coarse_selection_type` → mean over
@@ -44,20 +47,71 @@ the five categories):
 | AMK | 0.662033 |
 | D | 0.656215 |
 | Kermut | 0.662540 |
-| fixed D+Kermut Blend | 0.683193 |
+| fixed D+Kermut blend (raw predictions) | 0.683193 |
+| fixed D+Kermut blend (z-scored, same space as the gate) | 0.681978 |
+| fixed 50/50 K+AMK blend | 0.687322 |
+| best single constant g | 0.687585 |
+| nested-tuned constant gate | 0.687637 |
 | nested contextual meta | 0.687426 |
 | AAKG-L (linear gate) | 0.687533 |
-| **AAKG-M (MLP-64, 3-seed mean)** | **0.688024 ± 0.000027** |
+| **AAKG-M (MLP-64, 9-seed mean ± sd)** | **0.687851 ± 0.000287** |
 
-Seed details:
+`results/per_unit.csv` is the **seed-1** run (official 0.688046), verified bit-identical
+across machines; the headline above is the mean of nine seeds.  Quote the mean, not a
+single seed's per-unit table.
+
+### Deployment: average the weights, not the predictions
+
+Train `--seed` runs as usual, then **average the per-assay gate weights across seeds** before
+applying them. This is variance reduction, not a new mechanism: on the eight released runs it
+gives **0.687888** versus a per-seed mean of **0.687606**, and at full budget on a clean
+re-implementation 0.687937 → 0.688189. It costs nothing at inference time.
+
+Do **not** quote the seed-averaged number as the headline. The headline is the nine-seed mean
+**0.687851 ± 0.000287**; report 0.687888 separately as the deployed variant.
+
+An optional simplification — pin `w_D` at the tuned optimum 0.05 and let the gate split only
+K and A — changes the score by **−0.0001** (95% CI [−0.0004, +0.0002]). It is a no-cost
+simplification, not an improvement.
+
+### Read this before quoting the headline
+
+The three seeds originally reported (20261029, 1, 2) give 0.688024 ± 0.000027.
+Those three happen to lie within 5e-5 of each other.  Across nine seeds
+(20261029 plus 1-8) the spread is **0.000287**, i.e. 10.5x larger, and the
+nine-seed mean sits 0.00017 below the three-seed mean.  The three reported
+seeds rank 2nd, 3rd and 4th of the nine: they are not a maximum, but they are
+an unusually tight cluster.  Full seed table:
 
 | seed | official |
 |---|---:|
-| 20261029 | 0.687994 |
+| 20261029 (default) | 0.687994 |
 | 1 | 0.688046 |
 | 2 | 0.688034 |
+| 3 | 0.687981 |
+| 4 | 0.687221 |
+| 5 | 0.688128 |
+| 6 | 0.687746 |
+| 7 | 0.687604 |
+| 8 | 0.687908 |
+| **mean ± sd (n=9)** | **0.687851 ± 0.000287** |
 
-Paired assay-cluster bootstrap (AAKG-M seed 1):
+The headline therefore has to be quoted against the right baseline:
+
+| contrast, 9-seed mean | baseline | delta | in units of the 0.000287 seed sd |
+|---|---:|---:|---:|
+| vs fixed D+Kermut blend | 0.683193 | **+0.004658** | 16 sigma - real |
+| vs fixed 50/50 K+AMK | 0.687322 | +0.000529 | 1.8 sigma |
+| vs best single constant g | 0.687585 | +0.000266 | 0.9 sigma - inside noise |
+| vs nested-tuned constant | 0.687637 | +0.000214 | 0.75 sigma - inside noise |
+
+**+0.0048 is a comparison against the weakest fusion in the table.**  Against
+any properly tuned constant the gate is a statistical tie, and the difference
+is smaller than the seed-to-seed spread of the method itself.  This is the
+central negative result of the paper; it is not a rounding issue.
+
+Paired assay-cluster bootstrap (AAKG-M seed 1; this captures cross-assay
+uncertainty only and does **not** include seed noise):
 
 | contrast | point | 95% CI |
 |---|---:|---:|
@@ -66,9 +120,97 @@ Paired assay-cluster bootstrap (AAKG-M seed 1):
 | AAKG-M − AMK | +0.021241 | [+0.016275, +0.027845] |
 | AAKG-M − AAKG-L | −0.000054 | [−0.001070, +0.001029] |
 
-The gain over the fixed blend is small but supported.  The gain over AAKG-L is
-a statistical tie, and **Contiguous is a tie with Blend** (+0.0003).  Do not
-claim SOTA.
+With the seed study above in view: the gain over the fixed D+Kermut blend is
+real and large; the gains over AAKG-L, over a fixed 50/50 K+AMK blend and over
+a nested-tuned constant are statistical ties.  **Contiguous is a tie with
+Blend** (+0.0003).  Do not claim SOTA, and do not quote +0.0048 without the
+baseline next to it.
+
+## Result 2 (positive): the gain is in the expert pool
+
+The gate failed because **there is nothing left to allocate**. Within the original expert pool a
+per-assay oracle — free to choose the best weights for every assay — reaches **0.693544**, which is
+*below* the fixed-weight fusion reported here. Allocation is a solved sub-problem; the frontier is
+the experts themselves.
+
+### The method
+
+Four experts, **four fixed weights**, no gate. The weights are selected on the training assays of
+each fold and applied to the held-out assays, exactly as the constant baseline is.
+
+```text
+pred_i = 0.00 · D_i + 0.40 · Kermut_i + 0.40 · AMK_i + 0.20 · X_i
+```
+
+`X` is a distilled encoder expert built from ESM-650:
+
+| stage | what it adds |
+|---|---|
+| features | wild-type and mutant per-residue layers (L20/L30/L33), ±4-residue neighbourhood pooling, and `mut`/`mut−wt` embeddings |
+| teacher | `0.4·Kermut_z + 0.5·AMK_z`, per-assay z-scored; loss `(1−α)·MSE(student, target) + α·MSE(student, teacher)`, α = 0.9 |
+| head | 12800 → 256 → 64 → 1, plus a **category-specific rank-8 linear residual** `y = MLP(x) + U_c V_cᵀ x`, U zero-initialised |
+| ensembling | the expert's per-variant OOF predictions are averaged over its **eight training seeds** |
+
+The search drives `w_D` to **0.00** in 14 of 15 (seed × fold) combinations and sets `w_X = 0.20`
+in **all 15** — the additive structure expert is switched off by optimisation, not by hand.
+
+### The ladder
+
+| configuration | 217-assay official | Δ |
+|---|---:|---:|
+| tuned three-expert constant | 0.687637 | — |
+| published gate (9 seeds) | 0.687851 | +0.0002 vs constant |
+| four experts, previous site expert | 0.690808 | +0.0032 |
+| ＋ distilled multi-representation encoder | 0.694837 | +0.0040 |
+| ＋ category-specific low-rank residual | 0.696250 ± 0.000434 | +0.0014 |
+| **＋ expert averaged over 8 training seeds** | **0.698495** | **+0.0022** |
+
+**+0.0109 over the tuned constant, +0.0106 over the published gate, +0.0077 over the previous
+four-expert fusion** (two-level 95% CI [+0.00442, +0.01087], assays resampled within category).
+
+The single-seed version alone is 0.6963 ± 0.0004 with **all eight seeds positive**
+(CI [+0.0035, +0.0076]); seed averaging then adds +0.0022, which is five times the single-seed
+standard deviation and therefore not seed noise.
+
+### The encoder on its own
+
+Reporting only the fusion score would imply the gain comes from combination tricks. Measured alone:
+
+| configuration | standalone official |
+|---|---:|
+| L33 site only, frozen embeddings | 0.467 |
+| ＋ multi-layer | 0.464 |
+| ＋ ±4 neighbourhood | 0.480 |
+| ＋ multi-representation union (distilled) | 0.596 |
+| ＋ category low-rank residual | 0.622 |
+| **＋ 8-seed averaging** | **0.645** |
+| (reference) Kermut / AMK / D alone | 0.6625 / 0.6620 / 0.6562 |
+| (reference) the site expert this replaced | 0.494 |
+
+The encoder is **still below the strongest single expert (Kermut, 0.6625)** yet still earns
+**+0.0054** in the fusion. That is the point: an expert's marginal value tracks its residual
+decorrelation with the pool, not its standalone score.
+
+### What did not work
+
+Nine directions were tested and rejected. All of them are reported with numbers because the
+negative space is what makes the positive result credible.
+
+| direction | outcome |
+|---|---|
+| seven conditioning / gating mechanisms | at or below the tuned constant |
+| category GroupDRO | −0.0001 (2/4 seeds) here, **−0.0044 (0/4)** on an independent pipeline; group weights collapse (ESS 2.28 < 2.5) |
+| Huber / loss clipping | +0.0005 (3/4, CI crosses zero) here, +0.0009 (3/4) independently — both below the 0.002 detection threshold |
+| variant-count capping | **−0.0124** (0/4 seeds) |
+| static category balancing | −0.0006 (1/4) |
+| ESM-C 300M as a fourth expert | +0.0007 (CI crosses zero) |
+| ESM-C features concatenated | **−0.0112** |
+| co-distillation from the fusion itself | expert **+0.0136** (8/8) but fusion **−0.0002** |
+| residual ("boosting") expert | the simplex gives it **exactly zero weight** |
+
+The last two are the most instructive: making an expert *stronger* by imitating the pool destroys
+the decorrelation that gave it value, and an expert trained on the fusion's own residual has no
+information left to add.
 
 ## What “official” means here
 
@@ -150,8 +292,11 @@ python aakg_m.py \
   --seed 1 --out results/run
 ```
 
-`--seed 1` reproduces the seed-1 score `0.688046`; the headline `0.688024` is
-the mean over the three seeds above.
+`--seed 1` reproduces the seed-1 score `0.688046`.  Do not use that as the
+headline: the nine-seed mean is `0.687851 ± 0.000287` (see
+`results/seed_study.json` and the section "Read this before quoting the
+headline" above).  Running the same command with `--seed 20261029`, `2`, ...
+reproduces the other rows of the seed table.
 
 ## Checkpoints
 
@@ -166,13 +311,18 @@ OOF tables are not included.
 ## Files
 
 ```text
-aakg_m.py                 gate training + official aggregation
+aakg_m.py                 result 1: gate training + official aggregation
 meta_stack.py             OOF loading, features, context, metrics
+expert/esm_mut_head.py    result 2: encoder-expert training (distillation + low-rank residual)
+expert/make_seedavg.py    result 2: average the expert over its eight training seeds
+expert/headline_seeds.py  result 2: nested four-expert fusion + two-level bootstrap
+expert/README.md          result 2: how to reproduce, and what is not redistributed
 AAKG_M_REPORT.md          full method report, ablations, limitations
 aakg_m_217.png            summary figure
 checkpoints/              five seed-1 gate checkpoints + format notes
 results/result.json       seed-1 metrics and category/scheme breakdown
-results/per_unit.csv      per assay × scheme × category scores
+results/seed_study.json   nine-seed study: per-seed scores, means, seed sd
+results/per_unit.csv      per assay × scheme × category scores (seed 1 only)
 results/assay_weights.csv mean gate weights per assay
 results/history.json      training history
 requirements.txt
@@ -180,15 +330,28 @@ requirements.txt
 
 ## Caveats
 
-1. **Kermut-dependent.**  Kermut is one of the three experts.  This is not a
-   Kermut-free method.
-2. **Not a pure two-expert fusion.**  It is a three-expert gated ensemble.
-3. **Small effect.**  +0.0048 over Blend; Contiguous is a tie.
+1. **Kermut-dependent (both results).**  Kermut is one of the experts in every
+   configuration here.  This is not a Kermut-free method.
+2. **Result 1 is a three-expert gated ensemble; result 2 is a four-expert ungated
+   fusion.**  They are different models on the same panel; do not mix their numbers.
+3. **Result 1 is a small effect.**  +0.0048 over Blend, and a statistical tie with
+   any tuned constant.  Result 2 is +0.0109 over the constant, which is five times
+   the detection threshold, but see caveats 7–9.
 4. **Architecture selected on the same 217 assays.**  The headline number is
    selection-optimistic relative to a fully nested protocol.
 5. **Only gate checkpoints are included.**  D / Kermut / AMK expert weights and
    the OOF tables are not redistributed.
 6. **No fresh cohort.**  External validation is still missing.
+7. **The encoder expert covers 182 of 217 assays.**  It needs a wild-type sequence,
+   which is available for 182 assays only; the other 35 fall back to the older site expert.
+   Those 35 are 16% of the panel and contribute structural fallback zeros, so the fusion
+   gain is diluted, not inflated, by them.  Do not read the 217-assay score as if all
+   assays had a real prediction from the new expert.
+8. **0.6985 is a single configuration, not a seed distribution.**  The expert is averaged
+   over eight training seeds, so there is no seed-to-seed spread for that exact number.
+   The comparable spread is on the single-seed rung: 0.6963 ± 0.0004 over eight seeds.
+9. **Fusion weights are nested per fold; the experts are cached OOF.**  Same structure as
+   the gate result above, so caveat 2 and 4 apply to both numbers equally.
 
 ## License
 
