@@ -231,9 +231,12 @@ if the caveats are disclosed.
 
 It is **not** a fully nested official benchmark number, because:
 
-1. **Architecture selection was not nested.**  The MLP-64 configuration was
-   chosen after observing the 217-assay results.  The 5-fold estimate is nested
-   over assay holdout, not over architecture/hyperparameter search.
+1. **Architecture selection was not fully nested.**  The MLP-64 configuration was
+   chosen after observing the 217-assay results, and the 5-fold estimate is nested
+   over assay holdout rather than over architecture search.  For result 2 the one
+   hyperparameter that matters (α) *was* re-selected inside each fold and picked the
+   same value every time — see caveat 4 — but the broader design space was still
+   explored on this panel.
 2. **Base expert predictions are cached OOF.**  D, Kermut and AMK are frozen
    out-of-fold predictions; they are not retrained inside every meta-fold.
 3. **No fresh external cohort.**  All 217 assays were used during development.
@@ -350,8 +353,12 @@ requirements.txt
 3. **Result 1 is a small effect.**  +0.0048 over Blend, and a statistical tie with
    any tuned constant.  Result 2 is +0.0109 over the constant, which is five times
    the detection threshold, but see caveats 7–9.
-4. **Architecture selected on the same 217 assays.**  The headline number is
-   selection-optimistic relative to a fully nested protocol.
+4. **Hyperparameters: partially nested.**  The knob that materially moves the score is the
+   distillation weight α (standalone: 0.607 at α=0.6, 0.617 at 0.75, **0.621 at 0.9**, 0.619 at 1.0).
+   Re-selecting α inside every fold, using the training assays only, picks **0.9 in all five folds**,
+   so the nested estimate is bit-identical to the fixed one (gap 0.000). Rank is flat (4 vs 8 differ
+   by 0.0002), and width and epochs were never tuned. What is *not* nested is the broader design
+   space — which mechanisms we chose to try was decided on this panel, and no protocol can nest that.
 5. **Only gate checkpoints are included.**  D / Kermut / AMK expert weights and
    the OOF tables are not redistributed.
 6. **No fresh cohort.**  External validation is still missing.
