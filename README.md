@@ -1,8 +1,11 @@
 # AAKG-M: from a gate that does not help to an expert that does
 
-> **Headline: 0.6985** — four fixed weights plus a constructed encoder expert, **+0.0109** over a
-> tuned constant and **+0.0106** over the published gate (0.6879). The gate itself is a
-> **statistical tie with a tuned constant**, and that falsification is what motivated the expert.
+> **Headline: 0.6963 ± 0.0004** (single model, eight seeds) → **0.6985** once the expert is averaged
+> over those seeds. The claim is the single-model rung (**+0.0054** over the previous four-expert
+> fusion, 95% CI [+0.0035, +0.0076]; **+0.0084** over the published gate) because only that rung
+> admits a seed-level interval and an equal-compute comparison; 0.6985 adds the ensemble advantage
+> and is reported as the deployed number. The gate itself is a **statistical tie with a tuned
+> constant**, and that falsification is what motivated the expert.
 
 **Two results, in order.**
 
@@ -12,9 +15,10 @@
    land at or below the constant as well. This is the negative result the repository originally reported,
    and it is still the correct result.
 2. **The gain is in the expert pool, not in the weighting.** Adding a distilled multi-representation
-   encoder expert, giving it a category-specific low-rank residual, and averaging it over eight
-   training seeds lifts the same four-parameter fixed-weight fusion from **0.6876 to 0.6985**
-   — **+0.0109** over the tuned constant and **+0.0106** over the published gate.
+   encoder expert with a category-specific low-rank residual lifts the same four-parameter
+   fixed-weight fusion from **0.6876 to 0.6963 ± 0.0004** over eight seeds (**+0.0054** over the
+   previous four-expert fusion, **+0.0084** over the gate, positive in all eight); averaging that
+   expert over the seeds brings it to **0.6985**.
 
 Everything below is organised that way: [result 1](#result-1-negative-the-gate-ties-a-tuned-constant)
 is the falsification that motivates the work, and [result 2](#result-2-positive-the-gain-is-in-the-expert-pool)
@@ -169,12 +173,15 @@ in **all 15** — the additive structure expert is switched off by optimisation,
 | ＋ category-specific low-rank residual | 0.696250 ± 0.000434 | +0.0014 |
 | **＋ expert averaged over 8 training seeds** | **0.698495** | **+0.0022** |
 
-**+0.0109 over the tuned constant, +0.0106 over the published gate, +0.0077 over the previous
-four-expert fusion** (two-level 95% CI [+0.00442, +0.01087], assays resampled within category).
+**Claim (single model, 0.6963):** +0.0054 over the previous four-expert fusion
+(95% CI [+0.0035, +0.0076], all eight seeds positive) and +0.0084 over the published gate.
+**Deployed (seed-averaged, 0.6985):** +0.0077 and +0.0106 respectively, two-level CI
+[+0.00442, +0.01087] over the previous fusion.
 
-The single-seed version alone is 0.6963 ± 0.0004 with **all eight seeds positive**
-(CI [+0.0035, +0.0076]); seed averaging then adds +0.0022, which is five times the single-seed
-standard deviation and therefore not seed noise.
+We keep the claim on the single-model rung because it is equal-compute against baselines that are
+themselves single models, and because it is the only rung with a seed-level interval. Seed averaging
+then adds +0.0022 — five times the single-seed standard deviation, so not seed noise — and is
+reported as a deployment step, exactly as the gate repository reports its weight-averaged variant.
 
 ### The encoder on its own
 
