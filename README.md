@@ -328,6 +328,8 @@ expert/esm_mut_head.py    result 2: encoder-expert training (distillation + low-
 expert/make_seedavg.py    result 2: average the expert over its eight training seeds
 expert/headline_seeds.py  result 2: nested four-expert fusion + two-level bootstrap
 expert/README.md          result 2: how to reproduce, and what is not redistributed
+paper/                    paper drafts (Chinese prose + English camera-ready blocks)
+paper/README.md           paper: the two-tier headline convention and what §8.x refers to
 AAKG_M_REPORT.md          full method report, ablations, limitations
 aakg_m_217.png            summary figure
 checkpoints/              five seed-1 gate checkpoints + format notes
