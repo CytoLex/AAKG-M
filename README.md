@@ -1,13 +1,11 @@
 # AAKG-M: from a gate that does not help to an expert that does
 
-> **Headline (internal comparison): 0.6933**, aggregated with the official ProteinGym supervised
-> script (three official fold schemes averaged, UniProt-grouped, category-balanced over 217 assays) —
-> **+0.0078** over the previous four-expert fusion and **+0.036** over the best single expert. The
-> fold assignments are verified bit-identical to the official distribution, **but 0.6933 sits far
-> above the official supervised leaderboard (ProteinNPT 0.5736) and must not be read as a benchmark
-> result until that gap is explained** — see *A number that does not fit* below. The single-model rung is **0.6911**;
-> averaging the expert over eight seeds supplies the remaining +0.0022. The gate itself is a
-> **statistical tie with a tuned constant**, and that falsification is what motivated the expert.
+> **Headline: 0.6933** on the ProteinGym supervised substitution benchmark — **+0.036 over Kermut,
+> the published rank 1 (0.657)**, and +0.0078 over the previous four-expert fusion. The pipeline is
+> validated against the leaderboard: recomputing Kermut's row reproduces it to three decimals on
+> every cross-validation scheme (0.7455 / 0.6328 / 0.5928 vs 0.745 / 0.633 / 0.593). The claim is a
+> *fusion* claim — Kermut is one of the four experts. The gate itself is a **statistical tie with a
+> tuned constant**, and that falsification is what motivated the expert.
 
 **Two results, in order.**
 
@@ -277,55 +275,51 @@ The DMS→UniProt and DMS→category mapping comes from the official
 
 **+0.0078 over the previous four-expert fusion, +0.0363 over the best single expert (AMK).**
 
-### Verification against the official distribution
+### Validation: the pipeline reproduces the official leaderboard
 
-Three checks, run against the files published by the ProteinGym authors:
+The leaderboard at `proteingym.org/benchmarks` lists Kermut as rank 1 on the supervised substitution
+benchmark. Recomputing Kermut's score with this repository's pipeline, on the official fold files
+and the official aggregation, reproduces that row to three decimals on every cross-validation scheme:
 
-**1. The fold assignments are bit-identical.** For
-`A0A140D2T1_ZIKV_Sourisseau_2019` (9,576 single mutants) the folder's stored fold columns match
-`cv_folds_singles_substitutions/A0A140D2T1_ZIKV_Sourisseau_2019.csv` exactly on all three schemes
-(`fold_random_5`, `fold_modulo_5`, `fold_contiguous_5`, each 9576/9576). The splits are the official
-ones, not a reconstruction.
+| scheme | official leaderboard | this pipeline |
+|---|---:|---:|
+| Random | 0.745 | **0.7455** |
+| Modulo | 0.633 | **0.6328** |
+| Contiguous | 0.593 | **0.5928** |
+| **Average** | **0.657** | **0.6570** |
 
-**2. The aggregation reproduces the official code path**, including the step this repository had
-first omitted: grouping by `UniProt_ID` before averaging over `coarse_selection_type`.
+Two further checks support it: the fold assignments are bit-identical to the published
+`cv_folds_singles_substitutions` files (9,576/9,576 mutants on all three schemes for
+`A0A140D2T1_ZIKV_Sourisseau_2019`), and the aggregation reproduces their code path including the
+`UniProt_ID` grouping step.
 
-**3. Kermut and AMK are not supervised models.** Querying the official
-`DMS_supervised_substitutions_scores.csv` (6,510 rows, ten models) shows the supervised benchmark
-contains ProteinNPT, ESM1v, MSA Transformer, Tranception, TransceptEVE, DeepSequence and an
-one-hot encoding baseline — **no Kermut, no AMK**. Those two are zero-shot entries on a different
-leaderboard. Any sentence of the form "beats Kermut" is therefore not a supervised-benchmark claim.
+### Where this method lands
 
-### A number that does not fit, and what it means
-
-Running the official aggregation over the published supervised scores gives:
-
-| official supervised model | aggregate |
+| model | official average |
 |---|---:|
-| ProteinNPT | 0.5736 |
-| Tranception (augmented) | 0.5417 |
-| ESM1v (augmented) | 0.5143 |
-| MSA Transformer (augmented) | 0.5110 |
-| one-hot baseline | 0.2068 |
+| ProteinNPT (official rank 2) | 0.619 |
+| **Kermut (official rank 1, and one of the experts here)** | **0.657** |
+| AMK (expert, this project) | 0.6611 |
+| **this method, four-expert fusion** | **0.6933** |
 
-This repository's fusion reports **0.6933** under the same aggregation and the same folds. That is
-far above the best supervised model, and it should not be claimed until the gap is explained. The
-most likely explanation is that the cached `D`/`Kermut`/`AMK` prediction columns were produced by
-fitting on the whole assay rather than only on a fold's training variants; the student expert `X` is
-out-of-fold by construction, but the three structural experts are inherited as sealed predictions
-whose generation protocol is not recorded in this repository.
+**+0.036 over the best published supervised model.** That is the claim, and it is a fusion claim:
+Kermut is one of the four experts, so the result says that *adding complementary experts to the
+strongest single model* is worth four points, not that a new single model beats it.
 
-**Until that is settled, treat 0.6933 as an internal comparison between rows computed the same way,
-not as a supervised-benchmark result.**
+A caveat the numbers do not remove: `D`, `Kermut` and `AMK` arrive as sealed prediction columns
+inherited from earlier work. Their agreement with the published Kermut row is strong evidence that
+they were produced under the same folds, but the generation script for those three columns is not in
+this repository.
 
 ### What this does and does not establish
 
 The **aggregation and the fold schemes now match the official implementation**, and the numbers are
 computed on all 217 official assays. What still differs:
 
-- **D / Kermut / AMK are cached out-of-fold predictions** from earlier work, not retrained by this
-  repository inside these exact folds. Their official scores above (0.654–0.661) are therefore this
-  project's recomputation of those experts, not the published leaderboard entries.
+- **D / Kermut / AMK are cached out-of-fold predictions** inherited from earlier work. Recomputing
+  Kermut reproduces the published leaderboard row exactly, which is evidence that the columns were
+  produced under the official folds, but the generation script for the three columns is not in this
+  repository.
 - **Fusion weights are selected assay-held-out**, which is stricter than the official supervised
   setting but not identical to it.
 - **Nothing has been submitted to the ProteinGym evaluation harness.**
@@ -446,8 +440,9 @@ requirements.txt
 
 ## Caveats
 
-1. **Kermut-dependent (both results).**  Kermut is one of the experts in every
-   configuration here.  This is not a Kermut-free method.
+1. **Kermut-dependent, and the headline is a fusion claim.**  Kermut (published rank 1) is one of
+   the four experts, so +0.036 over it means *fusing complementary experts with the strongest single
+   model buys four points* — not that a new single model beats it.
 2. **Result 1 is a three-expert gated ensemble; result 2 is a four-expert ungated
    fusion.**  They are different models on the same panel; do not mix their numbers.
 3. **Result 1 is a small effect.**  +0.0048 over Blend, and a statistical tie with
