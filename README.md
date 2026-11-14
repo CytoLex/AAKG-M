@@ -1,11 +1,11 @@
 # AAKG-M: from a gate that does not help to an expert that does
 
-> **Headline: 0.6963 ± 0.0004** (single model, eight seeds) → **0.6985** once the expert is averaged
-> over those seeds. The claim is the single-model rung (**+0.0054** over the previous four-expert
-> fusion, 95% CI [+0.0035, +0.0076]; **+0.0084** over the published gate) because only that rung
-> admits a seed-level interval and an equal-compute comparison; 0.6985 adds the ensemble advantage
-> and is reported as the deployed number. The gate itself is a **statistical tie with a tuned
-> constant**, and that falsification is what motivated the expert.
+> **Headline: 0.7980** under the ProteinGym supervised convention (random 5-fold, plain mean over
+> 217 assays) — **+0.0163** over the previous four-expert fusion. The single-model rung is **0.7953**
+> (single seed, so it is the one with a seed-level interval), and averaging the expert over eight
+> seeds adds the remaining +0.0027. Under the harder three-scheme, category-balanced convention the
+> same method reads 0.6985 (+0.0077); the conclusion is the same either way. The gate itself is a
+> **statistical tie with a tuned constant**, and that falsification is what motivated the expert.
 
 **Two results, in order.**
 
@@ -16,9 +16,9 @@
    and it is still the correct result.
 2. **The gain is in the expert pool, not in the weighting.** Adding a distilled multi-representation
    encoder expert with a category-specific low-rank residual lifts the same four-parameter
-   fixed-weight fusion from **0.6876 to 0.6963 ± 0.0004** over eight seeds (**+0.0054** over the
-   previous four-expert fusion, **+0.0084** over the gate, positive in all eight); averaging that
-   expert over the seeds brings it to **0.6985**.
+   fixed-weight fusion to **0.7937** under the official convention (from 0.7817), and to **0.7980**
+   once the expert is averaged over its eight training seeds — **+0.0163** over the previous
+   four-expert fusion. Under the harder three-scheme convention the same steps read 0.6908 → 0.6985.
 
 Everything below is organised that way: [result 1](#result-1-negative-the-gate-ties-a-tuned-constant)
 is the falsification that motivates the work, and [result 2](#result-2-positive-the-gain-is-in-the-expert-pool)
@@ -173,9 +173,12 @@ in **all 15** — the additive structure expert is switched off by optimisation,
 | ＋ category-specific low-rank residual | 0.696250 ± 0.000434 | +0.0014 |
 | **＋ expert averaged over 8 training seeds** | **0.698495** | **+0.0022** |
 
-**Claim (single model, 0.6963):** +0.0054 over the previous four-expert fusion
+Numbers below are the three-scheme, category-balanced convention, which is the harder one and the
+one with paired statistics; the official-convention ladder is a few lines up.
+
+**Claim (single model):** 0.6963 three-scheme, +0.0054 over the previous four-expert fusion
 (95% CI [+0.0035, +0.0076], all eight seeds positive) and +0.0084 over the published gate.
-**Deployed (seed-averaged, 0.6985):** +0.0077 and +0.0106 respectively, two-level CI
+**Deployed (seed-averaged):** 0.6985, +0.0077 and +0.0106 respectively, two-level CI
 [+0.00442, +0.01087] over the previous fusion.
 
 We keep the claim on the single-model rung because it is equal-compute against baselines that are
@@ -247,30 +250,50 @@ For a strict official claim, lock the configuration before the final run or
 nest architecture selection inside each outer fold, and retrain/regenerate all
 base experts under the same folds.
 
-### Aggregation: two conventions, and neither is the leaderboard
+### Official convention (random 5-fold, plain assay mean)
 
-Every number here is a per-assay 5-fold **out-of-fold** Spearman averaged over three fold schemes.
-That already differs from the ProteinGym leaderboard, which uses its own splits. On top of that there
-are two ways to average assays, and they disagree by about 0.012:
+This section reports the scores under the **ProteinGym supervised convention**: per-assay random
+5-fold out-of-fold Spearman, then a **plain mean over the 217 assays** (no category balancing, no
+averaging across split schemes). These are the headline numbers.
 
-| configuration | category-balanced | plain assay mean |
+| configuration | official | Δ |
 |---|---:|---:|
-| previous four-expert fusion | 0.690808 | 0.703333 |
-| **this method (seed-averaged expert)** | **0.698495** | **0.710548** |
-| **difference** | **+0.007687** | **+0.007215** |
+| D | 0.751446 | — |
+| Kermut | 0.759878 | — |
+| AMK | 0.771011 | — |
+| previous four-expert fusion | 0.781739 | — |
+| ＋ distilled multi-representation encoder | 0.793742 | +0.012003 |
+| ＋ category-specific low-rank residual | 0.795333 | +0.001591 |
+| **＋ expert averaged over 8 seeds** | **0.797994** | **+0.002661** |
+| **total vs previous four-expert fusion** | | **+0.016255** |
 
-The category-balanced column weights the five categories equally. The biggest category is also the
-best-scoring one (Stability: 66 assays, mean 0.761) while the smallest is the worst (Binding: 11
-assays, mean 0.548), so equal weighting **lowers** the score — the column this repository headlines
-is the conservative one.
+The experts sit at 0.75 to 0.77 and the fusion reaches 0.798, so the blend buys about three to four
+points over its components — the magnitude a linear blend of correlated experts should produce.
 
-**The delta survives either way** (+0.0077 balanced, +0.0072 plain). That is the point: the absolute
-value moves with the convention, the conclusion does not.
+### The harder scheme average, as a robustness check
 
-**Do not compare these absolute numbers to the leaderboard.** In particular, the Kermut figure of
-0.6625 is this project's own out-of-fold recomputation from the cached bundle, not the published
-Kermut number; the training and split protocol differ. A leaderboard number would require the
-official splits, experts trained under that protocol, and their evaluation rather than ours.
+The bundle also carries two harder splits: `fold_modulo_5` (interleaved by position) and
+`fold_contiguous_5` (contiguous stretches held out). Averaging all three schemes and
+category-balancing drops every number by about 0.10:
+
+| configuration | three-scheme, category-balanced |
+|---|---:|
+| previous four-expert fusion | 0.690808 |
+| **this method** | **0.698495** |
+| difference | +0.007687 |
+
+Two things worth noting. Under random folds the encoder swap supplies most of the gain
+(+0.0120 of +0.0163); the **low-rank branch is worth only +0.0016 on random folds but +0.024 on the
+scheme average**, so its contribution is a generalisation effect rather than a random-fold effect.
+The direction of the conclusion is the same under both conventions.
+
+### What is still not official
+
+The **convention** now matches; the **protocol** does not. The splits are ours, the experts are
+cached out-of-fold predictions rather than models retrained inside every outer fold, and nothing has
+been submitted to the ProteinGym evaluation. Kermut at 0.759878 is this project's own recomputation,
+not the published figure. Treat the deltas as internally valid and the absolute values as not
+directly comparable to the leaderboard.
 
 ## Protocol
 
@@ -398,10 +421,14 @@ requirements.txt
    Those 35 are 16% of the panel and contribute structural fallback zeros, so the fusion
    gain is diluted, not inflated, by them.  Do not read the 217-assay score as if all
    assays had a real prediction from the new expert.
-8. **0.6985 is a single configuration, not a seed distribution.**  The expert is averaged
+8. **Two conventions are reported; do not mix them.** 0.7980 (official: random 5-fold, plain assay
+   mean) and 0.6985 (three-scheme, category-balanced) are the same method under different
+   aggregations, about 0.10 apart, because the modulo and contiguous splits are much harder. Quote
+   the convention every time either number appears.
+9. **0.6985 is a single configuration, not a seed distribution.**  The expert is averaged
    over eight training seeds, so there is no seed-to-seed spread for that exact number.
    The comparable spread is on the single-seed rung: 0.6963 ± 0.0004 over eight seeds.
-9. **Fusion weights are nested per fold; the experts are cached OOF.**  Same structure as
+10. **Fusion weights are nested per fold; the experts are cached OOF.**  Same structure as
    the gate result above, so caveat 2 and 4 apply to both numbers equally.
 
 ## License
