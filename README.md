@@ -169,10 +169,10 @@ the fusion scores 0.6911, so most of the gain is the expert, not the ensembling.
 The **aggregation and the fold schemes now match the official implementation**, and the numbers are
 computed on all 217 official assays. What still differs:
 
-- **D / Kermut / AMK are cached out-of-fold predictions** inherited from earlier work. Recomputing
-  Kermut reproduces the published leaderboard row exactly, which is evidence that the columns were
-  produced under the official folds, but the generation script for the three columns is not in this
-  repository.
+- **D / Kermut / AMK are cached out-of-fold predictions** inherited from earlier work. The loading
+  code that joins them on `(assay, scheme, variant_id, fold)` is in `meta_stack.py`, and recomputing
+  Kermut from its column reproduces the published leaderboard row exactly — see `data/README.md`.
+  The upstream kernel fitting code is not redistributed here.
 - **Fusion weights are selected assay-held-out**, which is stricter than the official supervised
   setting but not identical to it.
 - **Nothing has been submitted to the ProteinGym evaluation harness.**
@@ -410,6 +410,7 @@ expert/headline_seeds.py  nested four-expert fusion + two-level bootstrap
 expert/README.md          how to reproduce, and what is not redistributed
 paper/                    paper drafts (Chinese prose + English camera-ready blocks)
 paper/README.md           the headline convention and what §8.x refers to
+data/README.md            expert provenance: what each column is, and why it is out-of-fold
 AAKG_M_REPORT.md          full method report, ablations, limitations
 aakg_m_217.png            summary figure
 checkpoints/              five seed-1 gate checkpoints + format notes
@@ -451,8 +452,11 @@ requirements.txt
 8. **0.6933 is a single configuration, not a seed distribution.**  The expert is averaged
    over eight training seeds, so there is no seed-to-seed spread for that exact number. The
    comparable spread is on the single-seed rung under the looser protocol: 0.6963 ± 0.0004.
-9. **Fusion weights are nested per fold; the experts are cached OOF.**  Same structure as
-   the gate result above, so caveat 2 and 4 apply to both numbers equally.
+9. **Fusion weights are nested per fold; the experts are cached OOF.**  The expert tables are
+   joined on `(assay, scheme, variant_id, fold)` with one-to-one validation in `meta_stack.py`, and
+   recomputing Kermut from its column reproduces the published row exactly — see `data/README.md`
+   for the full provenance chain. What is *not* redistributed is the upstream kernel fitting code and
+   the multi-gigabyte prediction tables; both are available on request.
 
 ## License
 
