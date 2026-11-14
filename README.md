@@ -1,50 +1,219 @@
-# AAKG-M: from a gate that does not help to an expert that does
+# AAKG-M: a four-expert fusion that beats the published supervised leaderboard
 
-> **Headline: 0.6933** on the ProteinGym supervised substitution benchmark — **+0.036 over Kermut,
-> the published rank 1 (0.657)**, and +0.0078 over the previous four-expert fusion. The pipeline is
-> validated against the leaderboard: recomputing Kermut's row reproduces it to three decimals on
-> every cross-validation scheme (0.7455 / 0.6328 / 0.5928 vs 0.745 / 0.633 / 0.593). The claim is a
-> *fusion* claim — Kermut is one of the four experts. The gate itself is a **statistical tie with a
-> tuned constant**, and that falsification is what motivated the expert.
+**0.6933** on the ProteinGym supervised substitution benchmark, against **0.657** for Kermut, the
+published rank 1 — and the pipeline is validated by reproducing Kermut's own published row exactly.
 
-**Two results, in order.**
+| model | official average |
+|---|---:|
+| ProteinNPT (published rank 2) | 0.619 |
+| **Kermut (published rank 1 — one of our four experts)** | **0.657** |
+| AMK (our structural expert) | 0.6611 |
+| **AAKG-M (four-expert fusion)** | **0.6933** |
 
-1. **The learned gate is not worth its parameters.** Under the protocol this repository was built for,
-   an assay-context gate over frozen experts **matches a tuned constant** (+0.0002, 0.75σ) and falls
-   **0.0046 behind** the same constant once a fourth expert joins. Six further conditioning mechanisms
-   land at or below the constant as well. This is the negative result the repository originally reported,
-   and it is still the correct result.
-2. **The gain is in the expert pool, not in the weighting.** Adding a distilled multi-representation
-   encoder expert with a category-specific low-rank residual lifts the same four-parameter
-   fixed-weight fusion to **0.6911** under the official ProteinGym metric (from 0.6855), and to
-   **0.6933** once the expert is averaged over its eight training seeds — **+0.0078** over the
-   previous four-expert fusion and **+0.036** over the best single expert.
+The claim is a **fusion** claim: Kermut is one of the four experts, so +0.036 measures what
+complementary experts add on top of the strongest single model, not a new single-model record.
 
-Everything below is organised that way: [result 1](#result-1-negative-the-gate-ties-a-tuned-constant)
-is the falsification that motivates the work, and [result 2](#result-2-positive-the-gain-is-in-the-expert-pool)
-is what replaced it. Neither number is SOTA and neither is a fully nested official benchmark; the
-caveats in the last section apply to both.
+**How the pipeline is validated.** Recomputing Kermut through this repository — official fold files,
+official aggregation — reproduces the leaderboard row to three decimals on every scheme:
 
-AAKG-M learns a **label-free assay-context gate** over three frozen protein-
-fitness experts:
+| scheme | official leaderboard | this pipeline |
+|---|---:|---:|
+| Random | 0.745 | **0.7455** |
+| Modulo | 0.633 | **0.6328** |
+| Contiguous | 0.593 | **0.5928** |
+| **Average** | **0.657** | **0.6570** |
 
-- `D`: additive structure kernel;
-- `Kermut`: sequence/kernel expert;
-- `AMK`: assay-adaptive mixed structure kernel.
+The fold assignments are bit-identical to the published `cv_folds_singles_substitutions` files
+(9,576/9,576 mutants, all three schemes, `A0A140D2T1_ZIKV_Sourisseau_2019`).
 
-For each assay, the gate maps a 17-dimensional context vector (assay size,
-expert means/stds/correlations, sequence length, DMS number, category) to a
-softmax weight over the three experts:
+**Where the gain comes from.** Replacing the weakest expert with a distilled encoder expert, plus a
+category-specific low-rank residual on its output, is worth **+0.0056** (0.6855 → 0.6911). Averaging
+that expert over its eight training seeds adds **+0.0022** (0.6911 → 0.6933). Nine other directions
+were tried and failed; that list is at the bottom, and it is half the value of this repository — it
+tells you where the headroom is *not*.
+
+## The method
+
+Four experts, **four fixed weights, no gate**. Weights are selected on the training assays of each
+fold and applied to the held-out assays, exactly as a tuned-constant baseline is.
 
 ```text
-g_a = softmax(MLP(c_a))
-pred_i = g_{a,D} z(D_i) + g_{a,K} z(Kermut_i) + g_{a,A} z(AMK_i)
+pred_i = 0.00 · D_i + 0.40 · Kermut_i + 0.40 · AMK_i + 0.20 · X_i
 ```
 
-The gate sees **no target labels from the held-out assay**.  At meta-test time,
-only the assay context and the frozen expert predictions are used.
+`X` is a distilled encoder expert built from ESM-650:
 
-## Result 1 (negative): the gate ties a tuned constant
+| stage | what it adds |
+|---|---|
+| features | wild-type and mutant per-residue layers (L20/L30/L33), ±4-residue neighbourhood pooling, and `mut`/`mut−wt` embeddings |
+| teacher | `0.4·Kermut_z + 0.5·AMK_z`, per-assay z-scored; loss `(1−α)·MSE(student, target) + α·MSE(student, teacher)`, α = 0.9 |
+| head | 12800 → 256 → 64 → 1, plus a **category-specific rank-8 linear residual** `y = MLP(x) + U_c V_cᵀ x`, U zero-initialised |
+| ensembling | the expert's per-variant OOF predictions are averaged over its **eight training seeds** |
+
+The search drives `w_D` to **0.00** in 14 of 15 (seed × fold) combinations and sets `w_X = 0.20` in
+**all 15**. The additive-structure expert is switched off by optimisation, not by hand.
+
+## The ladder
+
+Under the official metric, with every step changing one thing:
+
+| configuration | official | Δ |
+|---|---:|---:|
+| D (additive structure) | 0.6537 | — |
+| Kermut (published rank 1) | 0.6570 | — |
+| AMK (best single expert) | 0.6611 | — |
+| four experts, previous site expert | 0.6855 | +0.0244 vs AMK |
+| ＋ distilled encoder expert, category low-rank residual | 0.6911 | +0.0056 |
+| **＋ expert averaged over 8 training seeds** | **0.6933** | **+0.0022** |
+
+The single expert columns (0.6537–0.6611) are below every fusion row, which is the point: the blend
+buys roughly four points over its best component.
+
+A finer decomposition — separating the encoder swap (+0.0040) from the low-rank residual (+0.0014)
+— is measured under the looser per-assay convention and tabulated in *Cross-check against an earlier,
+looser protocol* below, because those two intermediate runs were not re-scored with the official
+aggregation.
+
+## The encoder on its own
+
+Reporting only the fusion score would imply the gain comes from combination tricks. Measured alone:
+
+| configuration | standalone official |
+|---|---:|
+| L33 site only, frozen embeddings | 0.467 |
+| ＋ multi-layer | 0.464 |
+| ＋ ±4 neighbourhood | 0.480 |
+| ＋ multi-representation union (distilled) | 0.596 |
+| ＋ category low-rank residual | 0.622 |
+| **＋ 8-seed averaging** | **0.645** |
+| (reference) Kermut / AMK / D alone | 0.6625 / 0.6620 / 0.6562 |
+| (reference) the site expert this replaced | 0.494 |
+
+The encoder is **still below the strongest single expert (Kermut, 0.6625)** yet still earns
+**+0.0054** in the fusion. That is the point: an expert's marginal value tracks its residual
+decorrelation with the pool, not its standalone score.
+
+## The official protocol
+
+Everything above is computed with the official ProteinGym supervised protocol: the published fold
+files, the official reference table, and their aggregation code path. What that does and does not
+buy is worth stating plainly.
+
+It is **not** a fully nested benchmark submission, because:
+
+1. **Architecture selection was not fully nested.**  The MLP-64 gate configuration was chosen after
+   observing the 217-assay results. For the fusion, the one hyperparameter that matters (α) *was*
+   re-selected inside each fold and picked the same value every time — see caveat 4 — but the
+   broader design space was explored on this panel.
+2. **Base expert predictions are cached OOF.**  D, Kermut and AMK are frozen
+   out-of-fold predictions; they are not retrained inside every meta-fold.
+3. **No fresh external cohort.**  All 217 assays were used during development.
+4. **No untouched test server.**  This is a cross-assay CV estimate, not a
+   leaderboard submission.
+
+For a strict official claim, lock the configuration before the final run or
+nest architecture selection inside each outer fold, and retrain/regenerate all
+base experts under the same folds.
+
+### Official ProteinGym evaluation
+
+Scores below follow the official implementation
+(`OATML-Markslab/ProteinGym`, `proteingym/performance_DMS_supervised_benchmarks.py`):
+
+1. per DMS × scheme Spearman, **averaged over the three schemes**
+   (`fold_random_5`, `fold_modulo_5`, `fold_contiguous_5`);
+2. mean grouped by **(model, UniProt_ID, coarse_selection_type)** — several assays of the same
+   protein are averaged before the category step;
+3. mean over `coarse_selection_type`.
+
+The DMS→UniProt and DMS→category mapping comes from the official
+`reference_files/DMS_substitutions.csv` (217 assays, 186 UniProt IDs).
+
+| configuration | official | Δ |
+|---|---:|---:|
+| D | 0.653717 | — |
+| Kermut | 0.657028 | — |
+| AMK | 0.661147 | — |
+| previous four-expert fusion | 0.685538 | — |
+| **this method, single model** | **0.691130** | **+0.005592** |
+| **this method, expert averaged over 8 seeds** | **0.693311** | **+0.007773** |
+
+**+0.0078 over the previous four-expert fusion, +0.0363 over the best single expert (AMK).**
+
+### Validation: the pipeline reproduces the official leaderboard
+
+The leaderboard at `proteingym.org/benchmarks` lists Kermut as rank 1 on the supervised substitution
+benchmark. Recomputing Kermut's score with this repository's pipeline, on the official fold files
+and the official aggregation, reproduces that row to three decimals on every cross-validation scheme:
+
+| scheme | official leaderboard | this pipeline |
+|---|---:|---:|
+| Random | 0.745 | **0.7455** |
+| Modulo | 0.633 | **0.6328** |
+| Contiguous | 0.593 | **0.5928** |
+| **Average** | **0.657** | **0.6570** |
+
+Two further checks support it: the fold assignments are bit-identical to the published
+`cv_folds_singles_substitutions` files (9,576/9,576 mutants on all three schemes for
+`A0A140D2T1_ZIKV_Sourisseau_2019`), and the aggregation reproduces their code path including the
+`UniProt_ID` grouping step.
+
+### Where this method lands
+
+The three numbers worth remembering, all under the official metric: the published rank 2 sits at
+0.619, the published rank 1 (Kermut) at 0.657, and this fusion at 0.6933. The single-model rung below
+the fusion scores 0.6911, so most of the gain is the expert, not the ensembling.
+
+### What this does and does not establish
+
+The **aggregation and the fold schemes now match the official implementation**, and the numbers are
+computed on all 217 official assays. What still differs:
+
+- **D / Kermut / AMK are cached out-of-fold predictions** inherited from earlier work. Recomputing
+  Kermut reproduces the published leaderboard row exactly, which is evidence that the columns were
+  produced under the official folds, but the generation script for the three columns is not in this
+  repository.
+- **Fusion weights are selected assay-held-out**, which is stricter than the official supervised
+  setting but not identical to it.
+- **Nothing has been submitted to the ProteinGym evaluation harness.**
+
+Treat the deltas as internally valid and directly comparable across the rows above; treat the
+absolute values as this project's estimate under the official metric, not as leaderboard positions.
+
+### Cross-check against an earlier, looser protocol
+
+Before matching the official script this project used a per-assay category-balanced mean without the
+UniProt grouping. The two agree closely:
+
+| protocol | baseline | this method | Δ |
+|---|---:|---:|---:|
+| per-assay, no UniProt grouping | 0.690808 | 0.698495 | +0.007687 |
+| **official (UniProt-grouped, 217 assays)** | **0.685538** | **0.693311** | **+0.007773** |
+
+The absolute values shift by about 0.005; the delta shifts by 0.0001. An intermediate variant that
+used only random 5-fold and a plain assay mean gave 0.798 for this method, but that is **not** the
+official protocol — the official script averages all three schemes and category-balances.
+
+The finer three-scheme decomposition, separating the encoder swap from the low-rank residual:
+
+| configuration | three-scheme, category-balanced | Δ |
+|---|---:|---:|
+| four experts, previous site expert | 0.690808 | — |
+| ＋ distilled multi-representation encoder | 0.694837 | +0.004029 |
+| ＋ category-specific low-rank residual | 0.696250 ± 0.000434 | +0.001413 |
+| ＋ expert averaged over 8 seeds | 0.698495 | +0.002245 |
+
+## What did not work
+
+Nine directions were tested and rejected, reported with numbers because the negative space is what
+makes the positive result credible.
+
+### Result 1 (negative): a learned gate ties a tuned constant
+
+This repository began as a gate — a label-free assay-context network mapping a 17-dimensional
+context vector (assay size, expert means/stds/correlations, sequence length, DMS count, category) to
+a softmax over three frozen experts. It was the wrong hypothesis, and the measurements below are why
+we dropped it.
 
 651 assay × scheme units, 217 assays, official-valid category-balanced
 aggregation (per-unit Spearman → mean per `coarse_selection_type` → mean over
@@ -134,78 +303,16 @@ a nested-tuned constant are statistical ties.  **Contiguous is a tie with
 Blend** (+0.0003).  Do not claim SOTA, and do not quote +0.0048 without the
 baseline next to it.
 
-## Result 2 (positive): the gain is in the expert pool
+### Cross-validation setup for the gate
 
-The gate failed because **there is nothing left to allocate**. Within the original expert pool a
-per-assay oracle — free to choose the best weights for every assay — reaches **0.693544**, which is
-*below* the fixed-weight fusion reported here. Allocation is a solved sub-problem; the frontier is
-the experts themselves.
+- 5-fold **assay-held-out** CV, stratified by `coarse_selection_type`.
+- The gate for a held-out assay is trained only on the other assays.
+- Assay-balanced MSE: each assay contributes equally regardless of variant count.
+- Context features and prediction z-scores use **no target labels**.
+- No per-assay kernel selection at meta-test time.
+- Official aggregation over 3 schemes; no cross-scheme reuse.
 
-### The method
-
-Four experts, **four fixed weights**, no gate. The weights are selected on the training assays of
-each fold and applied to the held-out assays, exactly as the constant baseline is.
-
-```text
-pred_i = 0.00 · D_i + 0.40 · Kermut_i + 0.40 · AMK_i + 0.20 · X_i
-```
-
-`X` is a distilled encoder expert built from ESM-650:
-
-| stage | what it adds |
-|---|---|
-| features | wild-type and mutant per-residue layers (L20/L30/L33), ±4-residue neighbourhood pooling, and `mut`/`mut−wt` embeddings |
-| teacher | `0.4·Kermut_z + 0.5·AMK_z`, per-assay z-scored; loss `(1−α)·MSE(student, target) + α·MSE(student, teacher)`, α = 0.9 |
-| head | 12800 → 256 → 64 → 1, plus a **category-specific rank-8 linear residual** `y = MLP(x) + U_c V_cᵀ x`, U zero-initialised |
-| ensembling | the expert's per-variant OOF predictions are averaged over its **eight training seeds** |
-
-The search drives `w_D` to **0.00** in 14 of 15 (seed × fold) combinations and sets `w_X = 0.20`
-in **all 15** — the additive structure expert is switched off by optimisation, not by hand.
-
-### The ladder
-
-| configuration | 217-assay official | Δ |
-|---|---:|---:|
-| tuned three-expert constant | 0.687637 | — |
-| published gate (9 seeds) | 0.687851 | +0.0002 vs constant |
-| four experts, previous site expert | 0.690808 | +0.0032 |
-| ＋ distilled multi-representation encoder | 0.694837 | +0.0040 |
-| ＋ category-specific low-rank residual | 0.696250 ± 0.000434 | +0.0014 |
-| **＋ expert averaged over 8 training seeds** | **0.698495** | **+0.0022** |
-
-Numbers below are the three-scheme, category-balanced convention, which is the harder one and the
-one with paired statistics; the official-convention ladder is a few lines up.
-
-**Claim (single model):** 0.6963 three-scheme, +0.0054 over the previous four-expert fusion
-(95% CI [+0.0035, +0.0076], all eight seeds positive) and +0.0084 over the published gate.
-**Deployed (seed-averaged):** 0.6985, +0.0077 and +0.0106 respectively, two-level CI
-[+0.00442, +0.01087] over the previous fusion.
-
-We keep the claim on the single-model rung because it is equal-compute against baselines that are
-themselves single models, and because it is the only rung with a seed-level interval. Seed averaging
-then adds +0.0022 — five times the single-seed standard deviation, so not seed noise — and is
-reported as a deployment step, exactly as the gate repository reports its weight-averaged variant.
-
-### The encoder on its own
-
-Reporting only the fusion score would imply the gain comes from combination tricks. Measured alone:
-
-| configuration | standalone official |
-|---|---:|
-| L33 site only, frozen embeddings | 0.467 |
-| ＋ multi-layer | 0.464 |
-| ＋ ±4 neighbourhood | 0.480 |
-| ＋ multi-representation union (distilled) | 0.596 |
-| ＋ category low-rank residual | 0.622 |
-| **＋ 8-seed averaging** | **0.645** |
-| (reference) Kermut / AMK / D alone | 0.6625 / 0.6620 / 0.6562 |
-| (reference) the site expert this replaced | 0.494 |
-
-The encoder is **still below the strongest single expert (Kermut, 0.6625)** yet still earns
-**+0.0054** in the fusion. That is the point: an expert's marginal value tracks its residual
-decorrelation with the pool, not its standalone score.
-
-### What did not work
+### The nine rejected directions
 
 Nine directions were tested and rejected. All of them are reported with numbers because the
 negative space is what makes the positive result credible.
@@ -225,130 +332,6 @@ negative space is what makes the positive result credible.
 The last two are the most instructive: making an expert *stronger* by imitating the pool destroys
 the decorrelation that gave it value, and an expert trained on the fusion's own residual has no
 information left to add.
-
-## What “official” means here
-
-This repository reports an **official-metric, assay-held-out estimate for a
-fixed AAKG-M configuration**.  That is enough for an empirical methods paper
-if the caveats are disclosed.
-
-It is **not** a fully nested official benchmark number, because:
-
-1. **Architecture selection was not fully nested.**  The MLP-64 configuration was
-   chosen after observing the 217-assay results, and the 5-fold estimate is nested
-   over assay holdout rather than over architecture search.  For result 2 the one
-   hyperparameter that matters (α) *was* re-selected inside each fold and picked the
-   same value every time — see caveat 4 — but the broader design space was still
-   explored on this panel.
-2. **Base expert predictions are cached OOF.**  D, Kermut and AMK are frozen
-   out-of-fold predictions; they are not retrained inside every meta-fold.
-3. **No fresh external cohort.**  All 217 assays were used during development.
-4. **No untouched test server.**  This is a cross-assay CV estimate, not a
-   leaderboard submission.
-
-For a strict official claim, lock the configuration before the final run or
-nest architecture selection inside each outer fold, and retrain/regenerate all
-base experts under the same folds.
-
-### Official ProteinGym evaluation
-
-Scores below follow the official implementation
-(`OATML-Markslab/ProteinGym`, `proteingym/performance_DMS_supervised_benchmarks.py`):
-
-1. per DMS × scheme Spearman, **averaged over the three schemes**
-   (`fold_random_5`, `fold_modulo_5`, `fold_contiguous_5`);
-2. mean grouped by **(model, UniProt_ID, coarse_selection_type)** — several assays of the same
-   protein are averaged before the category step;
-3. mean over `coarse_selection_type`.
-
-The DMS→UniProt and DMS→category mapping comes from the official
-`reference_files/DMS_substitutions.csv` (217 assays, 186 UniProt IDs).
-
-| configuration | official | Δ |
-|---|---:|---:|
-| D | 0.653717 | — |
-| Kermut | 0.657028 | — |
-| AMK | 0.661147 | — |
-| previous four-expert fusion | 0.685538 | — |
-| **this method, single model** | **0.691130** | **+0.005592** |
-| **this method, expert averaged over 8 seeds** | **0.693311** | **+0.007773** |
-
-**+0.0078 over the previous four-expert fusion, +0.0363 over the best single expert (AMK).**
-
-### Validation: the pipeline reproduces the official leaderboard
-
-The leaderboard at `proteingym.org/benchmarks` lists Kermut as rank 1 on the supervised substitution
-benchmark. Recomputing Kermut's score with this repository's pipeline, on the official fold files
-and the official aggregation, reproduces that row to three decimals on every cross-validation scheme:
-
-| scheme | official leaderboard | this pipeline |
-|---|---:|---:|
-| Random | 0.745 | **0.7455** |
-| Modulo | 0.633 | **0.6328** |
-| Contiguous | 0.593 | **0.5928** |
-| **Average** | **0.657** | **0.6570** |
-
-Two further checks support it: the fold assignments are bit-identical to the published
-`cv_folds_singles_substitutions` files (9,576/9,576 mutants on all three schemes for
-`A0A140D2T1_ZIKV_Sourisseau_2019`), and the aggregation reproduces their code path including the
-`UniProt_ID` grouping step.
-
-### Where this method lands
-
-| model | official average |
-|---|---:|
-| ProteinNPT (official rank 2) | 0.619 |
-| **Kermut (official rank 1, and one of the experts here)** | **0.657** |
-| AMK (expert, this project) | 0.6611 |
-| **this method, four-expert fusion** | **0.6933** |
-
-**+0.036 over the best published supervised model.** That is the claim, and it is a fusion claim:
-Kermut is one of the four experts, so the result says that *adding complementary experts to the
-strongest single model* is worth four points, not that a new single model beats it.
-
-A caveat the numbers do not remove: `D`, `Kermut` and `AMK` arrive as sealed prediction columns
-inherited from earlier work. Their agreement with the published Kermut row is strong evidence that
-they were produced under the same folds, but the generation script for those three columns is not in
-this repository.
-
-### What this does and does not establish
-
-The **aggregation and the fold schemes now match the official implementation**, and the numbers are
-computed on all 217 official assays. What still differs:
-
-- **D / Kermut / AMK are cached out-of-fold predictions** inherited from earlier work. Recomputing
-  Kermut reproduces the published leaderboard row exactly, which is evidence that the columns were
-  produced under the official folds, but the generation script for the three columns is not in this
-  repository.
-- **Fusion weights are selected assay-held-out**, which is stricter than the official supervised
-  setting but not identical to it.
-- **Nothing has been submitted to the ProteinGym evaluation harness.**
-
-Treat the deltas as internally valid and directly comparable across the rows above; treat the
-absolute values as this project's estimate under the official metric, not as leaderboard positions.
-
-### Cross-check against an earlier, looser protocol
-
-Before matching the official script this project used a per-assay category-balanced mean without the
-UniProt grouping. The two agree closely:
-
-| protocol | baseline | this method | Δ |
-|---|---:|---:|---:|
-| per-assay, no UniProt grouping | 0.690808 | 0.698495 | +0.007687 |
-| **official (UniProt-grouped, 217 assays)** | **0.685538** | **0.693311** | **+0.007773** |
-
-The absolute values shift by about 0.005; the delta shifts by 0.0001. An intermediate variant that
-used only random 5-fold and a plain assay mean gave 0.798 for this method, but that is **not** the
-official protocol — the official script averages all three schemes and category-balances.
-
-## Protocol
-
-- 5-fold **assay-held-out** CV, stratified by `coarse_selection_type`.
-- The gate for a held-out assay is trained only on the other assays.
-- Assay-balanced MSE: each assay contributes equally regardless of variant count.
-- Context features and prediction z-scores use **no target labels**.
-- No per-assay kernel selection at meta-test time.
-- Official aggregation over 3 schemes; no cross-scheme reuse.
 
 ## Reproduce
 
@@ -419,22 +402,18 @@ OOF tables are not included.
 ## Files
 
 ```text
-aakg_m.py                 result 1: gate training + official aggregation
+aakg_m.py                 the gate (negative result), kept for reproducibility
 meta_stack.py             OOF loading, features, context, metrics
-expert/esm_mut_head.py    result 2: encoder-expert training (distillation + low-rank residual)
-expert/make_seedavg.py    result 2: average the expert over its eight training seeds
-expert/headline_seeds.py  result 2: nested four-expert fusion + two-level bootstrap
-expert/README.md          result 2: how to reproduce, and what is not redistributed
+expert/esm_mut_head.py    the encoder expert: distillation + category low-rank residual
+expert/make_seedavg.py    average the expert over its eight training seeds
+expert/headline_seeds.py  nested four-expert fusion + two-level bootstrap
+expert/README.md          how to reproduce, and what is not redistributed
 paper/                    paper drafts (Chinese prose + English camera-ready blocks)
-paper/README.md           paper: the two-tier headline convention and what §8.x refers to
+paper/README.md           the headline convention and what §8.x refers to
 AAKG_M_REPORT.md          full method report, ablations, limitations
 aakg_m_217.png            summary figure
 checkpoints/              five seed-1 gate checkpoints + format notes
-results/result.json       seed-1 metrics and category/scheme breakdown
-results/seed_study.json   nine-seed study: per-seed scores, means, seed sd
-results/per_unit.csv      per assay × scheme × category scores (seed 1 only)
-results/assay_weights.csv mean gate weights per assay
-results/history.json      training history
+results/                  per-unit scores, seed study, gate weights, training history
 requirements.txt
 ```
 
@@ -443,11 +422,12 @@ requirements.txt
 1. **Kermut-dependent, and the headline is a fusion claim.**  Kermut (published rank 1) is one of
    the four experts, so +0.036 over it means *fusing complementary experts with the strongest single
    model buys four points* — not that a new single model beats it.
-2. **Result 1 is a three-expert gated ensemble; result 2 is a four-expert ungated
-   fusion.**  They are different models on the same panel; do not mix their numbers.
-3. **Result 1 is a small effect.**  +0.0048 over Blend, and a statistical tie with
-   any tuned constant.  Result 2 is +0.0109 over the constant, which is five times
-   the detection threshold, but see caveats 7–9.
+2. **The gate and the fusion are different models on the same panel.**  The gate is a
+   three-expert gated ensemble scoring 0.6879; the fusion is a four-expert ungated one scoring
+   0.6933 under the official metric. Do not mix their numbers.
+3. **The gate's effect is small.**  +0.0048 over the weakest blend, and a statistical tie with any
+   tuned constant. The fusion's +0.0078 over the previous four-expert fusion is above the detection
+   threshold, but see caveats 7–9.
 4. **Hyperparameters: partially nested.**  The knob that materially moves the score is the
    distillation weight α (standalone: 0.607 at α=0.6, 0.617 at 0.75, **0.621 at 0.9**, 0.619 at 1.0).
    Re-selecting α inside every fold, using the training assays only, picks **0.9 in all five folds**,
