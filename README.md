@@ -1,5 +1,9 @@
 # AAKG-M: a four-expert fusion that beats the published supervised leaderboard
 
+> **Public for inspection only. Commercial use is prohibited without prior written authorization from CytoLex. Other use also requires authorization.** See [LICENSE](LICENSE).
+>
+> **公开仅供查看。未经 CytoLex 事先书面授权，禁止商业使用；其他用途亦需授权。** 详见[版权与使用限制](LICENSE)。
+
 **0.6933** on the ProteinGym supervised substitution benchmark, against **0.657** for Kermut, the
 published rank 1 — and the pipeline is validated by reproducing Kermut's own published row exactly.
 
@@ -460,5 +464,13 @@ requirements.txt
 
 ## License
 
-No license is granted for this private research release.  Contact the CytoLex
-organization before reuse or redistribution.
+Copyright (c) 2026 CytoLex. All rights reserved.
+
+This repository is public for inspection only. Commercial use and other use of
+the covered materials require separate prior written authorization from CytoLex.
+The limited inspection permission, third-party terms, and rights under GitHub's
+applicable Terms of Service or applicable law are described in [LICENSE](LICENSE).
+No open-source license or automatic research-use license is granted.
+
+本仓库公开仅供查看。商业或非商业的其他用途均须事先获得 CytoLex 的单独书面授权；
+查看权限、第三方材料和适用条款的具体范围见[版权与使用限制](LICENSE)。
