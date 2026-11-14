@@ -247,6 +247,31 @@ For a strict official claim, lock the configuration before the final run or
 nest architecture selection inside each outer fold, and retrain/regenerate all
 base experts under the same folds.
 
+### Aggregation: two conventions, and neither is the leaderboard
+
+Every number here is a per-assay 5-fold **out-of-fold** Spearman averaged over three fold schemes.
+That already differs from the ProteinGym leaderboard, which uses its own splits. On top of that there
+are two ways to average assays, and they disagree by about 0.012:
+
+| configuration | category-balanced | plain assay mean |
+|---|---:|---:|
+| previous four-expert fusion | 0.690808 | 0.703333 |
+| **this method (seed-averaged expert)** | **0.698495** | **0.710548** |
+| **difference** | **+0.007687** | **+0.007215** |
+
+The category-balanced column weights the five categories equally. The biggest category is also the
+best-scoring one (Stability: 66 assays, mean 0.761) while the smallest is the worst (Binding: 11
+assays, mean 0.548), so equal weighting **lowers** the score — the column this repository headlines
+is the conservative one.
+
+**The delta survives either way** (+0.0077 balanced, +0.0072 plain). That is the point: the absolute
+value moves with the convention, the conclusion does not.
+
+**Do not compare these absolute numbers to the leaderboard.** In particular, the Kermut figure of
+0.6625 is this project's own out-of-fold recomputation from the cached bundle, not the published
+Kermut number; the training and split protocol differ. A leaderboard number would require the
+official splits, experts trained under that protocol, and their evaluation rather than ours.
+
 ## Protocol
 
 - 5-fold **assay-held-out** CV, stratified by `coarse_selection_type`.
