@@ -1,8 +1,11 @@
 # AAKG-M: from a gate that does not help to an expert that does
 
-> **Headline: 0.6933**, evaluated with the official ProteinGym supervised script (three fold schemes
-> averaged, UniProt-grouped, category-balanced over 217 assays) — **+0.0078** over the previous
-> four-expert fusion and **+0.036** over the best single expert. The single-model rung is **0.6911**;
+> **Headline (internal comparison): 0.6933**, aggregated with the official ProteinGym supervised
+> script (three official fold schemes averaged, UniProt-grouped, category-balanced over 217 assays) —
+> **+0.0078** over the previous four-expert fusion and **+0.036** over the best single expert. The
+> fold assignments are verified bit-identical to the official distribution, **but 0.6933 sits far
+> above the official supervised leaderboard (ProteinNPT 0.5736) and must not be read as a benchmark
+> result until that gap is explained** — see *A number that does not fit* below. The single-model rung is **0.6911**;
 > averaging the expert over eight seeds supplies the remaining +0.0022. The gate itself is a
 > **statistical tie with a tuned constant**, and that falsification is what motivated the expert.
 
@@ -273,6 +276,47 @@ The DMS→UniProt and DMS→category mapping comes from the official
 | **this method, expert averaged over 8 seeds** | **0.693311** | **+0.007773** |
 
 **+0.0078 over the previous four-expert fusion, +0.0363 over the best single expert (AMK).**
+
+### Verification against the official distribution
+
+Three checks, run against the files published by the ProteinGym authors:
+
+**1. The fold assignments are bit-identical.** For
+`A0A140D2T1_ZIKV_Sourisseau_2019` (9,576 single mutants) the folder's stored fold columns match
+`cv_folds_singles_substitutions/A0A140D2T1_ZIKV_Sourisseau_2019.csv` exactly on all three schemes
+(`fold_random_5`, `fold_modulo_5`, `fold_contiguous_5`, each 9576/9576). The splits are the official
+ones, not a reconstruction.
+
+**2. The aggregation reproduces the official code path**, including the step this repository had
+first omitted: grouping by `UniProt_ID` before averaging over `coarse_selection_type`.
+
+**3. Kermut and AMK are not supervised models.** Querying the official
+`DMS_supervised_substitutions_scores.csv` (6,510 rows, ten models) shows the supervised benchmark
+contains ProteinNPT, ESM1v, MSA Transformer, Tranception, TransceptEVE, DeepSequence and an
+one-hot encoding baseline — **no Kermut, no AMK**. Those two are zero-shot entries on a different
+leaderboard. Any sentence of the form "beats Kermut" is therefore not a supervised-benchmark claim.
+
+### A number that does not fit, and what it means
+
+Running the official aggregation over the published supervised scores gives:
+
+| official supervised model | aggregate |
+|---|---:|
+| ProteinNPT | 0.5736 |
+| Tranception (augmented) | 0.5417 |
+| ESM1v (augmented) | 0.5143 |
+| MSA Transformer (augmented) | 0.5110 |
+| one-hot baseline | 0.2068 |
+
+This repository's fusion reports **0.6933** under the same aggregation and the same folds. That is
+far above the best supervised model, and it should not be claimed until the gap is explained. The
+most likely explanation is that the cached `D`/`Kermut`/`AMK` prediction columns were produced by
+fitting on the whole assay rather than only on a fold's training variants; the student expert `X` is
+out-of-fold by construction, but the three structural experts are inherited as sealed predictions
+whose generation protocol is not recorded in this repository.
+
+**Until that is settled, treat 0.6933 as an internal comparison between rows computed the same way,
+not as a supervised-benchmark result.**
 
 ### What this does and does not establish
 
