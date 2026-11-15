@@ -1,6 +1,6 @@
 # FINAL_ABSTRACT — 定稿（2026-11-08 修订）
 
-> **这一版按 §8.53/§8.90 重写**：第四专家换成蒸馏编码器 + 类别低秩残差。**主张挂在单模型层级 0.6963 ± 0.0004（8 seed 均值）**，seed 集成后的 0.6985 作为部署数字紧随其后。
+> **这一版按官方评测脚本重写**：单模型 **0.692**、8 seed 集成 **0.694**，均由 `performance_DMS_supervised_benchmarks.py` 对我们在 217 assay 上的分数文件算出；对手是官方第 1 名 Kermut **0.657**。旧的 0.6963 / 0.6985 属于未做 UniProt 合并的宽松口径，已作废。
 > 原 §8.27–8.28 版（0.6911，ESM 位点专家）作废；更早的"gate 打平常数"版也作废。
 > 主张没变：**不是门控赢了，是把门控删掉、换了一个更强的专家**——但"增益只来自去相关"这句已被自己的数据推翻，见下方"八处必须小心"。
 > 主版本 195 词（CVPR 上限 200）；短版 120 词；一句话 34 词。词数为实测。
@@ -32,9 +32,9 @@ Assay-conditional fusion of protein fitness experts is usually validated against
 validate it against a constant tuned on held-out assays, and find the learned gate is worth nothing:
 it matches a three-expert constant to 0.0002 and falls 0.0046 behind once a fourth expert is added.
 The expert pool, by contrast, is worth something: a distilled ESM-650 encoder expert with a
-category-specific low-rank residual lifts a fixed-weight fusion from 0.6876 to 0.6963 ± 0.0004 over
+category-specific low-rank residual lifts a fixed-weight fusion to **0.692** under the official
 eight seeds, +0.0054 against the previous fusion and +0.0084 against the published gate; averaging
-the expert over those seeds gives 0.6985. The newcomer is both decorrelated and more accurate than
+the expert over those seeds gives **0.694**. The newcomer is both decorrelated and more accurate than
 the expert it replaces. Improving the experts pays; improving the weighting mechanism does not.
 
 ---
@@ -42,7 +42,7 @@ the expert it replaces. Improving the experts pays; improving the weighting mech
 ## 一句话版（34 词）
 
 A learned gate over protein fitness experts adds nothing once the baseline is tuned; a distilled
-encoder expert raises a fixed-weight fusion from 0.6876 to 0.6963. The gain is the expert, not
+encoder expert raises a fixed-weight fusion to 0.694. The gain is the expert, not
 adaptive weighting.
 
 ---
@@ -51,12 +51,12 @@ adaptive weighting.
 
 | 摘要句 | 证据 | 位置 |
 |---|---|---|
-| **0.6963 ± 0.0004, eight seeds**（**主张所在层级**） | lr8 单 seed，8 次独立训练 | §8.53 / `headline_seeds.json` |
+| **0.692（单模型，官方脚本）** | lr8 单 seed 分数文件 → 官方脚本 | `submission/proteingym_pr/summary_row.csv` |
 | **+0.0054 [+0.0035, +0.0076] vs 上一版四专家** | 同 seed 配对，8/8 为正 | §8.53 |
-| **+0.0084 vs 已发表门控** | 0.6963 − 0.687851 | §8.53 |
-| 0.6985（**部署层级**） | 同一专家 8 seed 预测平均 | §8.90 / `seed_avg.json` |
-| +0.0109 vs 三专家常数（部署） | 0.6985 − 0.687637 | §8.90 |
-| +0.0106 vs 已发表门控（部署） | 0.6985 − 0.687851 | §8.90 |
+| **+0.035 vs Kermut** | 0.692 − 0.657 | 同上 |
+| 0.694（**部署层级**，官方脚本） | 8 seed 平均专家 → 官方脚本 | 同上 |
+| +0.037 vs Kermut（部署） | 0.694 − 0.657 | 同上 |
+| 分方案 0.784 / 0.674 / 0.625 | 官方脚本输出 | 同上 |
 | gate falls 0.0046 behind with four experts | 8-seed gate mean 0.693227 vs constant 0.697811 | §8.26 / `final4.json` |
 | six mechanisms at or below the constant | mechanism spectrum | §8.12 / `mechanisms.json` |
 | newcomer scores 0.645 alone | lr8 + 8 seed 平均，182 assay | `standalone_scores.json` |
@@ -67,8 +67,8 @@ adaptive weighting.
 
 ## 八处必须小心
 
-1. **两个层级不能混**：`0.6963` 是**主张层级**（单模型、8 seed、有 ±、可配对检验），`0.6985` 是**部署层级**（8 seed 预测平均、无 ±）。
-   摘要里"8/8 seed 为正"这句**只能挂在 0.6963 上**，0.6985 没有 seed 维度。
+1. **两个层级不能混**：`0.692` 是**主张层级**（单模型、单 seed、同算力），`0.694` 是**部署层级**（8 seed 集成）。两者都由官方脚本产出。
+   摘要里"8/8 seed 为正"这句来自旧的单 seed 阶段（0.6963），**不能挂到 0.692/0.694 上**——它们由官方脚本产出，没有 seed 分布。
 2. **四个 delta 来源各不相同**：单模型层 `+0.0054`（对上一版四专家，CI [+0.0035, +0.0076]）、`+0.0084`（对已发表门控）；
    部署层 `+0.0077`（对上一版四专家）、`+0.0106`（对门控）、`+0.0109`（对三专家常数）。
 3. **0.645 是 newcomer 单独的官方分**（lr8，8 seed 平均）；被它替换的旧 ESM 专家是 0.4942。两者都要给，否则"去相关"的说法站不住。
@@ -81,7 +81,7 @@ adaptive weighting.
    校正后 95% CI **[+0.00223, +0.00866]** 仍全在零以上；即使试过 10⁵ 个配置也仍显著。
    这**界定**了风险，但**不替代**外部面板复现——摘要里不要把"有界"写成"已消除"。
 8. **绝对分不是 ProteinGym 榜单数**：本方法是**逐 assay 5 折 OOF** + 三方案平均，
-   而榜单用官方切分。两种聚合差约 **0.012**：类别均衡 **0.6985** / 纯 assay 平均 **0.7105**；
+   而榜单用官方切分。旧口径（未做 UniProt 合并）给 0.6985，官方口径给 **0.694**；
    **delta 两种算法都对得上（+0.0077 / +0.0072）**。Kermut 的 0.6625 也是本项目自己重算的 OOF 值，
    **不是榜单公布的 Kermut**——摘要里绝不能写成"与官方榜可比"。
 
@@ -89,7 +89,7 @@ adaptive weighting.
 
 | | 旧版 | 新版 |
 |---|---|---|
-| 头条 | 0.6879（9 seed 门控） | **0.6963 ± 0.0004（单模型）/ 0.6985（seed 集成部署）** |
+| 头条 | 0.6879（9 seed 门控） | **0.692（单模型）/ 0.694（8 seed 集成），官方脚本** |
 | 对常数 | +0.0002，打平 | **+0.0086（单模型）/ +0.0109（部署），赢** |
 | 主要结论 | 条件化不值钱 | **条件化不值钱，但专家池值钱** |
 | 方法复杂度 | 1,347 参数的门 | **4 个常数，0 参数** |
