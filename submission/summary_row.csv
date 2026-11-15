@@ -1,0 +1,2 @@
+Model_rank,Model_name,Model type,Average_Spearman,Bootstrap_standard_error_Spearman,Average_Spearman_fold_random_5,Average_Spearman_fold_modulo_5,Average_Spearman_fold_contiguous_5,Function_Activity,Function_Binding,Function_Expression,Function_OrganismalFitness,Function_Stability
+1,cytomuta-preview,Embeddings - Augmented,0.694,0.004,0.784,0.674,0.625,0.642,0.653,0.693,0.632,0.851

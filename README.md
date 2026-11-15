@@ -426,6 +426,7 @@ expert/README.md          how to reproduce, and what is not redistributed
 paper/                    paper drafts (Chinese prose + English camera-ready blocks)
 paper/README.md           the headline convention and what §8.x refers to
 data/README.md            expert provenance: what each column is, and why it is out-of-fold
+submission/               ProteinGym submission package: scoring script, score row, PR/issue drafts
 AAKG_M_REPORT.md          full method report, ablations, limitations
 aakg_m_217.png            summary figure
 checkpoints/              five seed-1 gate checkpoints + format notes
