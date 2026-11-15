@@ -22,6 +22,7 @@ Conditions:
 | requirement | status | note |
 |---|---|---|
 | official aggregation replicated | **done** | Kermut reproduced per assay, r = 0.999998 over 217/217 |
+| one-command reproduction from public repos | **done** | `submission/reproduce_official.sh`; verified from fresh clones of both repositories |
 | official folds used | **done** | bit-identical to `cv_folds_singles_substitutions` |
 | scoring script | **drafted** | `proteingym/baselines/cytomuta/compute_fitness.py`; needs the expert tables and the trained student per assay |
 | example bash script | **drafted** | `scripts/scoring_DMS_supervised/cytomuta_substitutions.sh` |
