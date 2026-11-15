@@ -4,15 +4,17 @@
 >
 > **公开仅供查看。未经 CytoLex 事先书面授权，禁止商业使用；其他用途亦需授权。** 详见[版权与使用限制](LICENSE)。
 
-**0.6933** on the ProteinGym supervised substitution benchmark, against **0.657** for Kermut, the
-published rank 1 — and the pipeline is validated by reproducing Kermut's own published row exactly.
+**0.694** on the ProteinGym supervised substitution benchmark, produced by running the official
+`performance_DMS_supervised_benchmarks.py` on our score file — against **0.657** for Kermut, the
+published rank 1. The same script, applied to our Kermut column, reproduces the published Kermut row
+on all nine numbers (average, three schemes, five function categories).
 
 | model | official average |
 |---|---:|
 | ProteinNPT (published rank 2) | 0.619 |
 | **Kermut (published rank 1 — one of our four experts)** | **0.657** |
 | AMK (our structural expert) | 0.6611 |
-| **AAKG-M (four-expert fusion)** | **0.6933** |
+| **AAKG-M (four-expert fusion)** | **0.694** |
 
 The claim is a **fusion** claim: Kermut is one of the four experts, so +0.036 measures what
 complementary experts add on top of the strongest single model, not a new single-model record.
@@ -26,6 +28,11 @@ official aggregation — reproduces the leaderboard row to three decimals on eve
 | Modulo | 0.633 | **0.6328** |
 | Contiguous | 0.593 | **0.5928** |
 | **Average** | **0.657** | **0.6570** |
+
+The official script's Kermut row: average 0.657, per scheme 0.745 / 0.633 / 0.593, per function
+0.605 / 0.611 / 0.670 / 0.582 / 0.817 — identical to the published leaderboard entry. Our own
+reimplementation of the aggregation gives 0.6933 for the fusion rather than 0.694; the 0.001 gap is
+the order of the scheme averaging, and the script output above is the authoritative one.
 
 The fold assignments are bit-identical to the published `cv_folds_singles_substitutions` files
 (9,576/9,576 mutants, all three schemes, `A0A140D2T1_ZIKV_Sourisseau_2019`). The agreement holds at
@@ -71,7 +78,7 @@ Under the official metric, with every step changing one thing:
 | AMK (best single expert) | 0.6611 | — |
 | four experts, previous site expert | 0.6855 | +0.0244 vs AMK |
 | ＋ distilled encoder expert, category low-rank residual | 0.6911 | +0.0056 |
-| **＋ expert averaged over 8 training seeds** | **0.6933** | **+0.0022** |
+| **＋ expert averaged over 8 training seeds** | **0.6933** (script: 0.694) | **+0.0022** |
 
 The single expert columns (0.6537–0.6611) are below every fusion row, which is the point: the blend
 buys roughly four points over its best component.
@@ -168,8 +175,9 @@ Two further checks support it: the fold assignments are bit-identical to the pub
 ### Where this method lands
 
 The three numbers worth remembering, all under the official metric: the published rank 2 sits at
-0.619, the published rank 1 (Kermut) at 0.657, and this fusion at 0.6933. The single-model rung below
-the fusion scores 0.6911, so most of the gain is the expert, not the ensembling.
+0.619, the published rank 1 (Kermut) at 0.657, and this fusion at 0.694 by the official script
+(0.6933 by our reimplementation). The single-model rung scores 0.6911, so most of the gain is the
+expert, not the ensembling.
 
 ### What this does and does not establish
 
