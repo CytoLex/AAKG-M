@@ -459,7 +459,10 @@ requirements.txt
 5. **Only gate checkpoints are included.**  D / Kermut / AMK expert weights and
    the OOF tables are not redistributed.
 6. **No fresh cohort.**  External validation is still missing.
-7. **The encoder expert covers 182 of 217 assays.**  It needs a wild-type sequence,
+7. **The encoder expert covers 182 of 217 assays, but every mutant is still scored.**  The official
+   mutant counts match on **217/217 assays** (696,311 mutants) because the older site expert covers
+   the remaining 35. The coverage limitation affects *which expert* scores those assays, not whether
+   they are scored.  It needs a wild-type sequence,
    which is available for 182 assays only; the other 35 fall back to the older site expert.
    Those 35 are 16% of the panel and contribute structural fallback zeros, so the fusion
    gain is diluted, not inflated, by them.  Do not read the 217-assay score as if all
