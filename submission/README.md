@@ -14,6 +14,7 @@ plus an honest statement of what is still missing.
 | `SUBMISSION_READINESS.md` | item-by-item status against the official requirements |
 | `raw_score_file.csv` | 1,302 rows: per-assay, per-scheme Spearman for cytomuta-preview **and** Kermut, the exact input to the official script |
 | `reproduce_official.sh` | clones ProteinGym and re-runs their script on that file — no GPU, no cluster, no proprietary tables |
+| `official_outputs/` | what the script writes: the DMS-level tables (overall and per scheme) and the summary row, i.e. the exact files a merged PR would carry |
 
 ## The numbers, as their own script reports them
 
@@ -50,6 +51,21 @@ Model_rank,Model_name,Model type,Average_Spearman,...,random,modulo,contiguous
 The Kermut row reproduces the published leaderboard entry, including its model type string, which
 only appears when the official `constants.json` is used rather than a stub. That is the check that
 makes the reproduction meaningful: if our aggregation were wrong, the control row would move.
+
+## The output files a merged PR would carry
+
+`official_outputs/` holds the script's own outputs, unedited:
+
+| file | content |
+|---|---|
+| `DMS_substitutions_Spearman_DMS_level.csv` | 217 rows: per-assay score for cytomuta-preview and Kermut |
+| `..._fold_random_5.csv`, `..._fold_modulo_5.csv`, `..._fold_contiguous_5.csv` | the same split by scheme |
+| `Summary_performance_DMS_substitutions_Spearman.csv` | the one-row summary that would be appended to the leaderboard table |
+
+Cross-check: our generated Kermut column is **identical to the published
+`benchmarks/DMS_supervised/substitutions/Spearman/DMS_substitutions_Spearman_DMS_level.csv` on 217 of
+217 assays** (mean absolute difference 0.0, three-decimal table). Running the pipeline end to end
+therefore reproduces the published per-assay values, not just the aggregate.
 
 ## Status in one line
 
