@@ -12,6 +12,8 @@ plus an honest statement of what is still missing.
 | `PR_DESCRIPTION.md` | ready-to-paste pull-request text |
 | `ISSUE_TEXT.md` | ready-to-paste "new model" issue text |
 | `SUBMISSION_READINESS.md` | item-by-item status against the official requirements |
+| `raw_score_file.csv` | 1,302 rows: per-assay, per-scheme Spearman for cytomuta-preview **and** Kermut, the exact input to the official script |
+| `reproduce_official.sh` | clones ProteinGym and re-runs their script on that file — no GPU, no cluster, no proprietary tables |
 
 ## The numbers, as their own script reports them
 
@@ -26,6 +28,17 @@ file of 2 models × 3 schemes × 217 assays:
 
 The control row reproduces the published Kermut entry on all nine numbers (average, three schemes,
 five function categories), which is the strongest available check short of submitting.
+
+## Reproducing the number from scratch
+
+```bash
+cd submission && ./reproduce_official.sh
+```
+
+The script clones the official repository, runs `performance_DMS_supervised_benchmarks.py` unmodified
+on `raw_score_file.csv`, and prints the summary. Because Kermut's column is in the same file, the run
+also shows the control row matching the published leaderboard — if our aggregation were wrong, that
+row would move.
 
 ## Status in one line
 
