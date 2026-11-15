@@ -8,21 +8,21 @@
 
 ---
 
-## 主版本（195 词，投稿用）
+## 主版本（186 词，投稿用）
 
 Protein fitness models fuse sequence and structure experts, validated almost always against another
 fixed blend. We ask what a tuned baseline leaves, against a constant tuned on held-out assays.
 First, the learned part does not help. A label-free gate over frozen experts matches that constant
 to 0.0002 and falls 0.0046 behind once a fourth expert enters; six further mechanisms also fail.
 Second, the expert pool does help. Adding a distilled ESM-650 expert with a category-specific
-low-rank residual raises a fixed-weight fusion from 0.6876 to **0.6963 ± 0.0004** over eight seeds:
-**+0.0054** against the previous four-expert fusion (95% CI [+0.0035, +0.0076]) and **+0.0084**
-against the published gate, positive in all eight. Averaging that expert over the same eight seeds
-lifts it to **0.6985**. The original experts correlate 0.78 to 0.96; the newcomer is the only one
-from a different representation — but it is also more accurate than the one it replaces (0.645
-versus 0.494), so decorrelation alone does not explain it. The gain is aggregate, not universal (97
-assays improve, 85 decline, 35 unchanged). The gate's failure is diagnosable: per-assay headroom is
-real, 49% surviving a variant-level split, but no label-free descriptor predicts it ($R^2 \le 0$).
+low-rank residual raises a fixed-weight fusion to **0.692** on the ProteinGym supervised benchmark,
+evaluated with the official performance script; averaging that expert over eight training seeds
+lifts it to **0.694**, against **0.657** for the published leader Kermut. The original experts
+correlate 0.78 to 0.96; the newcomer is the only one from a different representation — but it is
+also more accurate than the one it replaces (0.645 versus 0.494), so decorrelation alone does not
+explain it. The gain is aggregate, not universal (97 assays improve, 85 decline, 35 unchanged). The
+gate's failure is diagnosable: per-assay headroom is real, 49% surviving a variant-level split, but
+no label-free descriptor predicts it ($R^2 \le 0$).
 
 ---
 

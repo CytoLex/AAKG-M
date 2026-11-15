@@ -12,17 +12,23 @@ the end of each section file; the English blocks are what would be submitted.
 | `DRAFT_SKELETON.md` | full-paper skeleton: section order, figure assignments, forbidden phrasings |
 | `PROPOSAL_METHOD.md` | the same method written up as a thesis-proposal chapter (technical route + plan) |
 
-## The two-tier headline, in one place
+## The headline, in one place
 
-Every file uses the same convention, and it must not drift:
+Both rungs are computed by running the official `performance_DMS_supervised_benchmarks.py` on our
+score file, so they are on the same scale as the leaderboard:
 
 | tier | number | delta | why it is written this way |
 |---|---:|---|---|
-| **claim** | **0.6963 ± 0.0004** | +0.0054 over the previous four-expert fusion (95% CI [+0.0035, +0.0076]); +0.0084 over the published gate | single model, eight seeds: the only tier with a seed-level interval and an equal-compute comparison |
-| **deployed** | **0.6985** | +0.0077 and +0.0106 respectively | adds seed averaging (eight models); reported as a deployment step, like the gate repository's weight-averaged variant |
+| **claim** | **0.692** | **+0.035 over Kermut (0.657)** | single model, one seed: the equal-compute comparison |
+| **deployed** | **0.694** | **+0.037 over Kermut** | expert averaged over eight training seeds |
 
-The sentence "positive in all eight seeds" belongs to the **claim** tier only. The deployed tier has
-no seed dimension.
+Kermut is one of the four experts, so both deltas measure what complementary experts add on top of
+the published leader, not a new single-model record. Per-scheme values: 0.782 / 0.671 / 0.624
+(single) and 0.784 / 0.674 / 0.625 (seed-averaged).
+
+An earlier set of drafts quoted 0.6963 / 0.6985 from a per-assay category-balanced protocol without
+the UniProt grouping. Those are superseded; where they survive below they are labelled as the looser
+protocol.
 
 ## What `§8.x` means
 
