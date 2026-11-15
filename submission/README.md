@@ -14,6 +14,7 @@ plus an honest statement of what is still missing.
 | `SUBMISSION_READINESS.md` | item-by-item status against the official requirements |
 | `raw_score_file.csv` | 1,302 rows: per-assay, per-scheme Spearman for cytomuta-preview **and** Kermut, the exact input to the official script |
 | `reproduce_official.sh` | clones ProteinGym and re-runs their script on that file — no GPU, no cluster, no proprietary tables |
+| `test_scoring.py` | smoke test: checks the scoring script really computes `0.4·K_z + 0.4·A_z + 0.2·X_z` |
 | `official_outputs/` | what the script writes: the DMS-level tables (overall and per scheme) and the summary row, i.e. the exact files a merged PR would carry |
 
 ## The numbers, as their own script reports them
@@ -33,7 +34,8 @@ five function categories), which is the strongest available check short of submi
 ## Reproducing the number from scratch
 
 ```bash
-cd submission && ./reproduce_official.sh
+cd submission && python test_scoring.py      # the fusion arithmetic
+cd submission && ./reproduce_official.sh     # the headline number
 ```
 
 The script clones the official repository, runs `performance_DMS_supervised_benchmarks.py` unmodified
