@@ -28,7 +28,10 @@ official aggregation — reproduces the leaderboard row to three decimals on eve
 | **Average** | **0.657** | **0.6570** |
 
 The fold assignments are bit-identical to the published `cv_folds_singles_substitutions` files
-(9,576/9,576 mutants, all three schemes, `A0A140D2T1_ZIKV_Sourisseau_2019`).
+(9,576/9,576 mutants, all three schemes, `A0A140D2T1_ZIKV_Sourisseau_2019`). The agreement holds at
+the per-assay level too: recomputing Kermut reproduces `DMS_substitutions_Spearman_DMS_level.csv`
+on **217 of 217 assays** with Pearson r = 0.999998, mean absolute difference 0.00026 and max 0.0005,
+the residual being the three-decimal rounding in the published table.
 
 **Where the gain comes from.** Replacing the weakest expert with a distilled encoder expert, plus a
 category-specific low-rank residual on its output, is worth **+0.0056** (0.6855 → 0.6911). Averaging
