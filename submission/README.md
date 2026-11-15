@@ -37,8 +37,19 @@ cd submission && ./reproduce_official.sh
 
 The script clones the official repository, runs `performance_DMS_supervised_benchmarks.py` unmodified
 on `raw_score_file.csv`, and prints the summary. Because Kermut's column is in the same file, the run
-also shows the control row matching the published leaderboard — if our aggregation were wrong, that
-row would move.
+also exercises the control row.
+
+**Verified end to end** from a fresh clone of this repository plus a fresh clone of ProteinGym:
+
+```text
+Model_rank,Model_name,Model type,Average_Spearman,...,random,modulo,contiguous
+1,cytomuta-preview,,0.694,...,0.784,0.674,0.625
+2,Kermut,Structure & sequence embedding,0.657,...,0.745,0.633,0.593
+```
+
+The Kermut row reproduces the published leaderboard entry, including its model type string, which
+only appears when the official `constants.json` is used rather than a stub. That is the check that
+makes the reproduction meaningful: if our aggregation were wrong, the control row would move.
 
 ## Status in one line
 
