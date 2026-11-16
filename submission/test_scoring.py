@@ -47,7 +47,20 @@ def main():
     got = pd.read_csv(f"{tmp}/out.csv")["predictions_fitness"].to_numpy()
     want = 0.4 * z(K) + 0.4 * z(A) + 0.2 * z(X)
     assert np.allclose(got, want, atol=1e-9), f"{got} != {want}"
-    print(f"ok: {np.round(got, 6).tolist()} == 0.4K + 0.4A + 0.2X on z-scores")
+    print(f"ok fusion:        {np.round(got, 6).tolist()} == 0.4K + 0.4A + 0.2X on z-scores")
+
+    # passthrough mode: the script must also work from already-fused predictions, which is the
+    # path the maintainers can run without the research-use expert tables
+    pd.DataFrame({"mutated_sequence": seqs,
+                  "predictions_fitness": want}).to_csv(f"{tmp}/fused.csv", index=False)
+    r2 = subprocess.run([sys.executable, str(SCRIPT),
+                         "--dms_file", f"{tmp}/dms.csv",
+                         "--fused_preds", f"{tmp}/fused.csv",
+                         "--out", f"{tmp}/out2.csv"], capture_output=True, text=True)
+    assert r2.returncode == 0, r2.stderr[-800:]
+    got2 = pd.read_csv(f"{tmp}/out2.csv")["predictions_fitness"].to_numpy()
+    assert np.allclose(got2, want, atol=1e-9), f"{got2} != {want}"
+    print("ok passthrough:   same values from --fused_preds, no expert tables needed")
 
 
 if __name__ == "__main__":
