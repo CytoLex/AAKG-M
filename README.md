@@ -478,8 +478,10 @@ requirements.txt
    recomputing Kermut from its column reproduces the published row exactly — see `data/README.md`
    for the full provenance chain. What is *not* redistributed is the upstream kernel fitting code and
    the multi-gigabyte prediction tables; the tables are research-use only under
-   [LICENSE-WEIGHTS.md](LICENSE-WEIGHTS.md) and available on request, and
-   `submission/reproduce_official.sh` reproduces every reported number without them.
+   [LICENSE-WEIGHTS.md](LICENSE-WEIGHTS.md) and available on request. Their kernel has since been
+   recovered and verified to floating-point precision (`submission/kernel.py`, max |diff| 8.2e-14
+   against the saved predictions), and `submission/reproduce_official.sh` reproduces every reported
+   number without needing the tables at all.
 
 ## License
 

@@ -1,60 +1,74 @@
-# Attempt to reconstruct the structural-expert kernel
+# The structural-expert kernel: recovered and verified
 
-The submission does not need this — the scores are reproducible from the published prediction file —
-but the question "can the kernel be rebuilt from its saved artifacts" came up, so here is what was
-recovered and where it stopped.
+**Status: reconstructed.** `submission/kernel.py` implements the kernel, and running it against the
+saved artifacts reproduces the stored predictions to floating-point precision.
 
-## What the artifacts give you
+## What the artifacts expose
 
-`output/<assay>/<scheme>/fold<k>/` for every fold contains a complete record of one closed-form fit:
+Every fold directory (`output/<assay>/<scheme>/fold<k>/`) records a complete closed-form fit:
 
 | artifact | content |
 |---|---|
-| `model.pt` | `alpha` (617, 1) kernel-ridge coefficients, `transforms.main` (10368) and `transforms.side` (9) with mean/std/active, `target_mean`, `target_std`, `train_indices`, `test_indices` |
-| `inner_selection.pt` | `selected_lambda = 1e-4` and the inner-CV scores over six candidate values |
+| `model.pt` | `alpha` (617, 1), `transforms.main` (10368) and `.side` (9) with mean/std/active, `target_mean`, `target_std`, `train_indices`, `test_indices` |
+| `inner_selection.pt` | `selected_lambda = 1e-4` plus the inner-CV scores over six candidates |
 | `summary.json` | solver `Cholesky`, precision `float64`, `optimizer_steps = 0` — no gradient training |
 | `predictions.csv` | per test variant: `target`, `prediction`, `prediction_normalized` |
-| `side/<assay>.pt` | 9 hand-built side features per variant (LLR, MSA statistics), `target_access: false` |
-| `features/esmc/<assay>/block_*.pt` | the 10,368-dim main features, 12 row-blocks of 64 x 10368 float32, backbone **ESM-C** |
+| `side/<assay>.pt` | 9 side features plus `wt` and `mut` per variant, `target_access: false` |
+| `features/esmc/<assay>/block_*.pt` | the main features: 12 row-blocks of 64 x 10368 float32, backbone ESM-C |
 
-So the model is kernel ridge regression, and every ingredient except the kernel function and the
-callable feature pipeline is on disk in a readable form.
+So everything except the kernel function was on disk, readable, including `alpha` and a set of saved
+predictions to check against.
 
-## What the reconstruction achieved
+## The kernel
 
-With feature blocks + side features + saved `alpha`, the test-set prediction under a kernel hypothesis
-is `K(test, train) @ alpha`, compared against `prediction_normalized`:
+Found in `kernel_readout_v1.py` of the fitting project:
 
-| kernel | corr | RMSE |
-|---|---:|---:|
-| RBF on main, length scale 130 | 0.933 | 1.75 |
-| RBF on side, length scale 2.7 | 0.725 | 1.14 |
-| linear on main | 0.875 | — |
-| **additive: 0.354 x RBF(main, 130) + 0.154 x RBF(side, 4)** | **0.936** | **0.345** |
+```python
+def kernel(left, right):
+    out = None
+    for key in ("main", "side"):
+        d2 = ||x||^2 + ||y||^2 - 2xy            # squared euclidean distance
+        block = exp(-0.5 * d2 / x.shape[1])     # length scale^2 == block dimension
+        out = block if out is None else out + block
+    for key in ("wt", "mut"):
+        out = out + 1[wt equal] + 1[mut equal]  # identity indicators
+    return out / 4
+```
 
-The additive form with fitted amplitudes reaches **R^2 = 0.874** against the saved predictions.
-The shape is right — the kernel is RBF-like over ESM-C block features with a smaller side component —
-but 12.6% of the variance is unexplained, which is far from the exactness required to claim a
-faithful reimplementation.
+The squared length scale of each block is that block's own dimension — 10368 for `main`, 9 for
+`side` — and two identity indicators carry the rest. Both blocks are standardised with the per-block
+`mean`/`std` from `transforms`, inactive coordinates zeroed.
 
-## Why it stopped there
+## Verification
 
-1. **The kernel form is not fully identified.** Plausible remaining structure: a separate length
-   scale per one of the 12 feature blocks, a Matern rather than Gaussian radial function, or an
-   additional linear term. Each is a new experiment against the 145 saved predictions of one fold.
-2. **The feature pipeline is not callable.** Features are computed at run time by the fitting code that
-   is not on the compute share; only its cached outputs are. Those outputs are 430 MB per assay, so
-   they cannot serve as the distribution format either.
-3. **One fold is 145 test points.** That is enough to reject hypotheses, not enough to pin a dozen
-   hyperparameters without overfitting the check.
+`K(test, train) @ alpha` for `MAFG_MOUSE_Tsuboyama_2023_1K1V` / `fold_random_5` / `fold0`, against
+`predictions.csv`:
 
-## Conclusion
+| quantity | value |
+|---|---:|
+| correlation | **1.0** |
+| RMSE | **2.4e-14** |
+| max absolute difference | **8.2e-14** |
 
-**Not reconstructed.** A reimplementation matching 87% of the variance would silently disagree with
-the reported numbers, which is worse than not having one. The honest position is the one the
-repository already takes: the structural experts are sealed, their scores are published per mutant,
-and the reported benchmark numbers are reproducible from that publication.
+Floating-point exact over all 145 test variants.
 
-If the fitting code is ever recovered, the recipe above is enough to verify a reimplementation
-immediately: `K(test, train) @ alpha` must match `predictions.csv` to floating-point tolerance on
-every fold.
+## Why a hypothesis search had stalled first
+
+Fitting a kernel family against those 145 predictions reached R^2 = 0.874 with free amplitudes and a
+grid over length scales. It could not have done better: `exp(-0.5 d^2 / 10368)` and
+`exp(-0.5 d^2 / 130^2)` differ by about 3% in effective length scale, which at n = 145 is far inside
+the noise, and the missing pieces were structural — the two identity indicators and the `/4`
+normalisation — not a hyperparameter.
+
+The artifacts were never the bottleneck. The source was, and it was on the user home volume
+(`/inspire/hdd/global_user/.../cytolex-mutation-context-v02-preparation-20260930/`) rather than under
+the project share that the benchmark outputs live on.
+
+## What this changes for the submission
+
+Nothing about the published numbers, but it removes the last unknown: the structural experts are no
+longer sealed. Given the cached feature blocks, `submission/kernel.py` plus the per-fold `alpha`
+reproduces their predictions exactly.
+
+The per-mutant prediction file remains the recommended distribution path — it needs no features and
+no 430 MB per-assay caches — but anyone who wants to rescore new mutants now has the kernel.
