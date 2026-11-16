@@ -34,12 +34,11 @@ and reproducible; it is not a matter of tuning.
 
 The same protocol then says what does work. The experts correlate 0.78 to 0.96 with each other: the
 pool is diverse in name only. Adding one expert from a different representation raises a
-fixed-weight fusion from **0.6876 to 0.6963 ± 0.0004** over eight seeds: **+0.0054** against the
-previous four-expert fusion (95% CI [+0.0035, +0.0076]) and **+0.0084** against the published gate,
-positive in all eight. Averaging that expert over the same eight seeds lifts the fusion to
-**0.6985** (+0.0109 against the tuned constant); we report that as the deployed number and keep
-0.6963 as the claim, because only the single-model rung admits a seed-level confidence interval and
-an equal-compute comparison. The newcomer is a distilled ESM-650 encoder that reads both wild-type
+fixed-weight fusion to **0.692** on the ProteinGym supervised benchmark, and averaging that expert
+over eight training seeds lifts it to **0.694**, against **0.657** for Kermut, the published rank 1.
+Both rungs are produced by running the official `performance_DMS_supervised_benchmarks.py` unmodified
+on our score file, so they are on the leaderboard's scale; we report the single-model rung as the
+equal-compute claim and the seed-averaged one as the deployed number. The newcomer is a distilled ESM-650 encoder that reads both wild-type
 and mutant per-residue context, with neighbourhood pooling, a category-specific low-rank residual
 (the control arm shows the gain needs category specialisation, not parameters), and seed averaging;
 on its own it scores **0.645**, against **0.494** for the site-embedding expert it displaces. We therefore no longer attribute the gain to decorrelation alone:
@@ -63,8 +62,8 @@ adds nothing over a tuned constant, across seven mechanisms, four granularities 
 magnitude of training data — and that the comparison which reveals this, a constant tuned on held-out
 assays, is missing from the standard evaluation of this literature. **Second**, a positive method
 result that follows from taking the negative one seriously: a distilled encoder expert raises the
-fusion to 0.6963 ± 0.0004 on a four-parameter weighting, by +0.0054 over the previous expert and
-+0.0084 over the published gate; seed averaging then brings it to 0.6985. **Third**, a diagnostic that separates "there is no headroom" from "there is headroom we
+fusion to 0.692 on a four-parameter weighting, +0.035 over the published leader and +0.037 once the
+expert is averaged over its eight training seeds. **Third**, a diagnostic that separates "there is no headroom" from "there is headroom we
 cannot reach", with the measurements — oracle capture, variant-level split, weight-level nulls,
 context-to-weight regression, and a label-budget curve — that make the distinction checkable. We
 release the frozen out-of-fold bundle and code under which every number reproduces bit-for-bit.
@@ -83,7 +82,7 @@ than either, and can be bought without any learned machinery at all.
 | 1 | 融合对着固定混合验证 | §5.1 / `reconciled.json` |
 | 2 | 公平基线 = label-free 且 per-assay | nested 常数构造 §5.2 |
 | 3 | 门控输：+0.0002；四专家下 −0.0046；六机制 ≤ 常数 | §8.26 / `final4.json`、`mechanisms.json` |
-| 4 | 专家池赢：单模型 +0.0054（对上一版融合，CI 不含 0），部署 0.6985，构造专家单独 0.645 | §8.53 / §8.90 |
+| 4 | 专家池赢：单模型 **0.692**、集成 **0.694**（官方脚本），对 Kermut +0.035/+0.037；覆盖 696,311 个突变 | 官方脚本 / `submission/` |
 | 5 | 为什么：headroom 真但不可测；R²≤0；k≈215 | §5.4、§8.15、§8.17、§8.21 |
 | 6 | 三条贡献 | — |
 | 7 | hedge | — |
@@ -91,8 +90,8 @@ than either, and can be bought without any learned machinery at all.
 ## 三个不能写错的点
 
 1. **"0.6978 vs 0.6932"** 是四专家面板上的比较（§8.26），**不是**已发布口径的 0.6876。段里必须紧跟一句说明面板差异，否则读者会以为是同一组数。
-2. **两个层级不能混**：`0.6963` 是主张层级（单模型、8 seed、有 ±），`0.6985` 是部署层级（seed 集成、无 ±）。
-   "8/8 seed 为正"只能挂在 0.6963 上。两者都不是门控，任何"我们的门更好"的暗示都会被 §8.26 打脸。
+2. **两个层级不能混**：`0.692` 是主张层级（单模型、同算力），`0.694` 是部署层级（8 seed 集成）。
+   两者都由官方脚本产出，都**没有**可配对的 seed 区间——"8/8 seed 为正"属于更早的宽松口径实验，不能挂到这两个数上。
 3. **四个 delta 来源不同**：单模型层 `+0.0054`（对上一版四专家）、`+0.0084`（对门控）；
    部署层 `+0.0077`、`+0.0106`、`+0.0109`（对三专家常数）。不能混用。
 4. **不要写"增益来自去相关而非准确率"**：新专家单独 0.645，被它替换的旧专家 0.494，两者同时变好，这个因果已被自己的数据推翻。

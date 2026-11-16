@@ -37,6 +37,25 @@ with this repository. It records, for every number quoted here, the script that 
 seed range, and the paired statistics. Everything it supports is reproducible from `expert/` plus
 the numbers in the main README; the log is available from the authors on request.
 
+## Submission status (2026-11-17)
+
+The method is formally submitted to ProteinGym:
+
+| item | link | state |
+|---|---|---|
+| issue | https://github.com/OATML-Markslab/ProteinGym/issues/129 | open, `[new model]` |
+| pull request | https://github.com/OATML-Markslab/ProteinGym/pull/130 | draft, 3 files, +113 lines |
+| per-mutant scores | `../submission/predictions/fused_per_mutant.csv.gz` | 2,088,933 rows, 696,311 mutants x 3 schemes |
+
+Two facts the drafts now rely on, both verified this round:
+
+- **Coverage.** 217/217 assays match the official mutant counts exactly (696,311 mutants), and both
+  structural experts are fully non-null on every assay.
+- **The kernel was not rebuilt.** Everything except the kernel function was recovered from the saved
+  artifacts, and the best hypothesis reaches R^2 = 0.874 against the saved predictions — recorded in
+  `../submission/KERNEL_RECONSTRUCTION.md`. That is why the paper reports published per-mutant scores
+  rather than a reimplementation.
+
 ## Status
 
 These are **drafts**, not a submitted manuscript. No venue has been chosen and nothing here has been

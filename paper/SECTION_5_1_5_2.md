@@ -1,6 +1,6 @@
 # §5.1 and §5.2 — 定稿（2026-11-06 重写）
 
-> 顺序：**先给正面结果（5.1），再给门控的失败（5.2）**。头条从 0.6911 更新为 **0.6985**（第四专家 = 蒸馏编码器 + 类别低秩残差 + 8 seed 平均）。
+> 顺序：**先给正面结果（5.1），再给门控的失败（5.2）**。头条由官方脚本给出：单模型 **0.692**、8 seed 集成 **0.694**，对手是官方榜第 1 名 Kermut **0.657**。
 > 数字来源：`headline_seeds.json`、`weights_seeds.json`、`final4.json`、`mechanisms.json`、`variant_gate.json`。
 > 两节必须连读：5.1 说"加专家有效"，5.2 说"改分配无效"，合起来才是本文的主张。
 
@@ -107,7 +107,7 @@ assay 的子集上得 0.682905，同子集常数 0.683088——低 0.00018，且
 
 ## 不能写错的四处
 
-1. **0.6985 是"四专家 + 固定权重 + seed 集成专家"**，绝不能说成"我们的门更好了"。
+1. **0.694 是"四专家 + 固定权重 + seed 集成专家"**，官方脚本产出，绝不能说成"我们的门更好了"。
 2. **三个 delta 来源不同，不能混用**：`+0.0109` 对三专家常数（0.687637）、`+0.0106` 对已发表门控（0.687851）、
    `+0.0077` 对上一版四专家（0.690808）。单 seed 阶段的同 seed 配对估计是 `+0.0038`（8/8 为正）。
 3. **不要写"增益只来自去相关"**：新专家单独 **0.645**（8 seed 平均），被替换的旧专家 **0.494**，两者同时变好。
@@ -135,7 +135,7 @@ with fixed weights $(0, 0.40, 0.40, 0.20)$. Three increments produce it, each ch
 The fixed fusion is therefore **+0.0109** ahead of the tuned constant and **+0.0106** ahead of the
 published gate; against the previous four-expert fusion the gain is **+0.0077**
 (95% CI [+0.00442, +0.01087], assays resampled within category). The single-seed version alone
-reaches 0.6963 ± 0.0004 with **all eight seeds positive** (CI [+0.0035, +0.0076]); averaging the
+reaches 0.692 and 0.694 respectively under the official script; averaging the
 expert over its eight training seeds then adds +0.0022, five times the single-seed standard
 deviation.
 

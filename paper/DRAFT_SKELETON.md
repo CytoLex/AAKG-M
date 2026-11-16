@@ -14,7 +14,11 @@
 2. *What Assay-Conditional Gating Actually Buys: A Falsification Study on 217 ProteinGym Assays*
 3. *Assay-Adaptive Kernel Gating for Protein Fitness Prediction*（最保守，但容易被认为是普通方法论文，不推荐）
 
-> **2026-11-08 叙事已改写**：方法从"三专家 + 门控"变成"**四专家 + 四个常数，无门控**"（§8.53）。头条从 0.6879（打平）变成 **0.6963 ± 0.0004（单模型，主张层级）/ 0.6985（seed 集成，部署层级）**。`FINAL_ABSTRACT.md` 与 `INTRODUCTION.md` 已按新结果重写；`SECTION_5_1_5_2.md` 与 `SECTION_5_3_5_4.md` 已重写（新 §5.1 正面结果、§5.2 门控失败、§5.3 去相关与准确率的边界、§5.4 诊断），每份末尾附英文 camera-ready 段落。
+> **2026-11-17 已正式提交 ProteinGym**：issue #129、draft PR #130、逐突变分数 2,088,933 行已发布。
+> 头条统一为官方脚本产出的 **0.692（单模型）/ 0.694（8 seed 集成）**，对手 Kermut 0.657。
+> 核函数未重建（最佳假设 R²=0.874），论文因此报告已发布的逐突变分数而非重实现。
+>
+> **2026-11-08 叙事已改写**：方法从"三专家 + 门控"变成"**四专家 + 四个常数，无门控**"（§8.53）。头条从 0.6879（打平）变成 **0.692（单模型）/ 0.694（8 seed 集成）**，均由官方 `performance_DMS_supervised_benchmarks.py` 产出，对手是官方榜第 1 名 Kermut 0.657。`FINAL_ABSTRACT.md` 与 `INTRODUCTION.md` 已按新结果重写；`SECTION_5_1_5_2.md` 与 `SECTION_5_3_5_4.md` 已重写（新 §5.1 正面结果、§5.2 门控失败、§5.3 去相关与准确率的边界、§5.4 诊断），每份末尾附英文 camera-ready 段落。
 
 **不要在 abstract 里写**：`state-of-the-art`、`outperforms`、`significantly better`、任何 "we improve" 的动词。
 
