@@ -71,15 +71,20 @@ therefore reproduces the published per-assay values, not just the aggregate.
 
 ## Submission status
 
-**Issue opened:** https://github.com/OATML-Markslab/ProteinGym/issues/129 —
-`[new model] cytomuta-preview — supervised substitutions`, posted 2026-11-16.
+Both halves of the official process are submitted.
 
-The label could not be attached: GitHub only lets repository maintainers set labels, so the
-`[new model]` prefix in the title carries that information instead.
+| item | link | state |
+|---|---|---|
+| issue | https://github.com/OATML-Markslab/ProteinGym/issues/129 | open, `[new model]` in the title |
+| pull request | https://github.com/OATML-Markslab/ProteinGym/pull/130 | **draft**, 3 files, +95 lines, mergeable |
 
-The pull request is prepared but not opened. Their README asks for the PR and the issue together, but
-the scoring script cannot run without the expert prediction tables, and those are research-use only.
-Whether a score-file reproduction is enough is exactly what the issue asks.
+The label could not be attached to the issue: GitHub only lets repository maintainers set labels, so
+the `[new model]` prefix in the title carries that information instead.
+
+The PR is a **draft** on purpose. Its scoring script needs the structural-expert prediction tables,
+which are research-use only and not in the repository. The scores themselves reproduce without them
+(`reproduce_official.sh`), and the issue asks whether that satisfies the reproducible-scoring
+criterion. Marking the PR ready for review before that answer would be premature.
 
 ## Status in one line
 
