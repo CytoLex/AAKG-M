@@ -16,6 +16,7 @@ plus an honest statement of what is still missing.
 | `reproduce_official.sh` | clones ProteinGym and re-runs their script on that file — no GPU, no cluster, no proprietary tables |
 | `test_scoring.py` | smoke test: checks the scoring script really computes `0.4·K_z + 0.4·A_z + 0.2·X_z` |
 | `official_outputs/` | what the script writes: the DMS-level tables (overall and per scheme) and the summary row, i.e. the exact files a merged PR would carry |
+| `KERNEL_RECONSTRUCTION.md` | what was recovered of the structural-expert kernel, and why it was not rebuilt |
 | `predictions/fused_per_mutant.csv.gz` | **the per-mutant scores for all 696,311 mutants × 3 schemes** (15.4 MB), the artifact ProteinGym asks a submitter to provide |
 
 ## The numbers, as their own script reports them
