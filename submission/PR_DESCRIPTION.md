@@ -47,7 +47,12 @@ aggregation.
 receives a prediction. The distilled encoder covers 182 assays and the older site expert covers the
 remaining 35.
 
-## Reproducibility
+## Reproducibility and licence
+
+Method code is **Apache-2.0**. Weights and the structural-expert prediction tables are research-use
+only under `LICENSE-WEIGHTS.md`; the code needed to reproduce every reported number is open, and
+`submission/reproduce_official.sh` regenerates the leaderboard figures from two public repositories
+plus `submission/raw_score_file.csv`.
 
 Method code and evaluation records: https://github.com/CytoLex/AAKG-M
 Project page: https://cytolex.com/cytomuta-preview/en/

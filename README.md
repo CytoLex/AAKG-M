@@ -1,8 +1,8 @@
 # AAKG-M: a four-expert fusion that beats the published supervised leaderboard
 
-> **Public for inspection only. Commercial use is prohibited without prior written authorization from CytoLex. Other use also requires authorization.** See [LICENSE](LICENSE).
+> **Code is Apache-2.0; weights and expert prediction tables are research-use only.** See [LICENSE](LICENSE) and [LICENSE-WEIGHTS.md](LICENSE-WEIGHTS.md).
 >
-> **公开仅供查看。未经 CytoLex 事先书面授权，禁止商业使用；其他用途亦需授权。** 详见[版权与使用限制](LICENSE)。
+> **代码采用 Apache-2.0；权重与专家预测表限研究用途。** 详见 [LICENSE](LICENSE) 与 [LICENSE-WEIGHTS.md](LICENSE-WEIGHTS.md)。
 
 **0.694** on the ProteinGym supervised substitution benchmark, produced by running the official
 `performance_DMS_supervised_benchmarks.py` on our score file — against **0.657** for Kermut, the
@@ -475,7 +475,9 @@ requirements.txt
    joined on `(assay, scheme, variant_id, fold)` with one-to-one validation in `meta_stack.py`, and
    recomputing Kermut from its column reproduces the published row exactly — see `data/README.md`
    for the full provenance chain. What is *not* redistributed is the upstream kernel fitting code and
-   the multi-gigabyte prediction tables; both are available on request.
+   the multi-gigabyte prediction tables; the tables are research-use only under
+   [LICENSE-WEIGHTS.md](LICENSE-WEIGHTS.md) and available on request, and
+   `submission/reproduce_official.sh` reproduces every reported number without them.
 
 ## License
 

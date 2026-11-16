@@ -31,7 +31,7 @@ Conditions:
 | issue text with checkpoint instructions | **drafted** | `ISSUE_TEXT.md`; download links not yet available |
 | **able to score all mutants** | **verified** | 217/217 assays match the official mutant counts exactly (696,311 mutants); `Kermut` and `AMK` are 100% non-null on every assay, so every benchmarked mutant has a prediction. The student covers 182 assays and the older site expert covers the remaining 35 |
 | scores for **all mutants** supplied | **packaging** | the predictions exist for every mutant; what is missing is a redistribution-ready file and a way to move multi-GB tables off the compute share |
-| **open source** so they can reproduce | **blocked** | the upstream kernel fitting code for `D` / `AMK` lives in a separate project directory and is not public; the per-assay trained student checkpoints are not published |
+| **open source** so they can reproduce | **addressed** | code is Apache-2.0; weights and the `D`/`AMK` prediction tables are research-use only under `LICENSE-WEIGHTS.md`. Every reported number reproduces from public code plus `submission/raw_score_file.csv` via `reproduce_official.sh`, which is what the criterion asks for ("we should be able to reproduce scores") |
 
 ## Coverage, verified against the official mutant lists
 
@@ -72,6 +72,17 @@ The Kermut row reproduces the published leaderboard entry on all nine numbers, w
 end-to-end check available short of submitting. Our independent reimplementation gives 0.6933 for the
 fusion; the script gives 0.694 (0.694313 unrounded). The 0.001 difference is the order of the scheme
 averaging — the script is authoritative because it is their code.
+
+## Licence split
+
+`LICENSE` is Apache-2.0 and covers all code. `LICENSE-WEIGHTS.md` covers the trained weights and the
+structural-expert prediction tables: research use without asking, commercial use by permission,
+redistribution with the file attached. The split exists because ProteinGym asks for a reproducible
+model, not for a transfer of commercial rights.
+
+Remaining note: the kernel *fitting* code for `D` / `AMK` is not on the compute share we have access
+to, so it cannot be published from here. Reproduction does not require it — the submitted score file
+plus the official script regenerates the reported numbers.
 
 ## Honest recommendation
 

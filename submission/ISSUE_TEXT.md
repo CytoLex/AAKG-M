@@ -21,6 +21,10 @@ weight 0.00 in 14 of 15 (seed x fold) combinations and is not required at scorin
 
 ## Checkpoints and code
 
+Method code is Apache-2.0; the expert prediction tables are research-use only under the repository's
+`LICENSE-WEIGHTS.md`. Reproduction of every number requires only the public code plus the score file
+in `submission/`, not the tables.
+
 Method code, expert provenance and evaluation records: https://github.com/CytoLex/AAKG-M
 Project page: https://cytolex.com/cytomuta-preview/en/
 

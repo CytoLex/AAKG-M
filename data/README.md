@@ -33,7 +33,8 @@ The upstream kernel fitting code lives in a separate project directory
 (`cytolex-kernel-full217`, `cytolex-kernel-readout`), whose per-assay outputs are organised as
 `<assay>/<fold_scheme>/`, consistent with the per-fold keys above. That pipeline is not
 redistributed in this repository, and neither are the prediction tables themselves (they are
-multi-gigabyte). Both are available from the authors on request.
+multi-gigabyte). Both are available from the authors on request, and both are research-use only under
+[LICENSE-WEIGHTS.md](../LICENSE-WEIGHTS.md) — the Apache-2.0 licence covers the code, not the tables.
 
 ## Rebuilding the bundle
 
