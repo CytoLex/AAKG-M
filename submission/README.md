@@ -69,6 +69,18 @@ Cross-check: our generated Kermut column is **identical to the published
 217 assays** (mean absolute difference 0.0, three-decimal table). Running the pipeline end to end
 therefore reproduces the published per-assay values, not just the aggregate.
 
+## Submission status
+
+**Issue opened:** https://github.com/OATML-Markslab/ProteinGym/issues/129 —
+`[new model] cytomuta-preview — supervised substitutions`, posted 2026-11-16.
+
+The label could not be attached: GitHub only lets repository maintainers set labels, so the
+`[new model]` prefix in the title carries that information instead.
+
+The pull request is prepared but not opened. Their README asks for the PR and the issue together, but
+the scoring script cannot run without the expert prediction tables, and those are research-use only.
+Whether a score-file reproduction is enough is exactly what the issue asks.
+
 ## Status in one line
 
 The science and the packaging are ready; three things need a decision by the repository owners

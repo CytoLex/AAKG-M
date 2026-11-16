@@ -2,7 +2,7 @@
 
 **Model name:** cytomuta-preview
 **Benchmark:** supervised substitutions
-**Average Spearman (official aggregation):** 0.6933
+**Average Spearman (official aggregation):** 0.694  (single-model rung: 0.692)
 
 ## Method
 
@@ -36,6 +36,5 @@ encoder covers 182 assays; the remaining 35 are scored by an older site expert.
 
 ## Disclosure
 
-Kermut is one of the fused experts, so the gain over it (+0.036) is a fusion gain rather than an
-independent single-model result. The distilled encoder covers 182/217 assays; the other 35 are
-scored by an older site expert.
+Kermut is one of the fused experts, so the +0.037 over it is a fusion gain rather than an independent
+single-model result.
