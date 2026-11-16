@@ -35,6 +35,8 @@ PREFIX=preds_savg python headline_seeds.py
 |---|---|---|
 | `esm_mut_head.py` | OOF bundle (`assay, scheme, variant_id, target, category, folds`) + per-assay feature npz files | builds union features, runs distillation, trains the head and the category low-rank residual |
 | `make_seedavg.py` | `preds_*_s{1..8}.csv` | averages the eight seeds; **the average is over z-scored per-assay predictions** |
+| `extract_mutant_layers.py` | ESM-650 weights + per-assay `probability.pt` (wild-type sequence) | builds the mutant-sequence features: L20/L30/L33 site vectors plus ±4-residue neighbourhood means |
+| `esm650_map.py` | `esm650_merged.bin` | maps the published ESM-650 state dict onto the `esm` package's `ESM2` module layout |
 | `headline_seeds.py` | bundle + `preds_*_s*.csv` + cached expert predictions | nested simplex fusion, per-unit Spearman, category-balanced aggregate, two-level bootstrap |
 
 ## Reproducing the headline number

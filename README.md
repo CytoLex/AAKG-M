@@ -419,6 +419,8 @@ OOF tables are not included.
 ```text
 aakg_m.py                 the gate (negative result), kept for reproducibility
 meta_stack.py             OOF loading, features, context, metrics
+expert/extract_mutant_layers.py  mutant-sequence features from ESM-650 (site + neighbourhood)
+expert/esm650_map.py             maps the published ESM-650 state dict onto the esm package
 expert/esm_mut_head.py    the encoder expert: distillation + category low-rank residual
 expert/make_seedavg.py    average the expert over its eight training seeds
 expert/headline_seeds.py  nested four-expert fusion + two-level bootstrap
