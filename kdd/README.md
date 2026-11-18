@@ -13,12 +13,17 @@ Working directory for the retarget from CVPR to the KDD AI for Sciences track.
 | `RESULTS_FAILURE_ANALYSIS.md` | the regression set, the assay-size effect, the coverage coupling |
 | `SECTION_3_ALLOCATION.md` | §3 camera-ready: seven mechanisms, the oracle bound, the magnitude comparison |
 | `SECTION_4_EXPERT.md` | §4 camera-ready: differential representation, distillation, category residual, seed averaging |
-| `records/` | the JSON records every number in §3 and §4 points at |
+| `SECTION_1_INTRO.md` | §1 camera-ready: the domain problem, three claims, four contributions |
+| `SECTION_2_7_REST.md` | §2 related work and §7 discussion |
+| `SECTION_5_UTILITY.md` | §5 camera-ready: official metric, per category, top-of-list, the regressions |
+| `records/` | the JSON records every number in the drafted sections points at |
 
 ## Status
 
-**Ready to write:** requirements, angle, skeleton, abstract, mandated section, and all three analyses a
-reviewer will ask for.
+**All seven sections drafted**, 4,951 words total. Abstract drafted. Every number traced to
+`records/`. At ACM sigconf density this lands near seven pages; the remaining page should go to a
+dedicated experimental-setup subsection, not to padding.
+
 
 **Blocked on the authors:**
 

@@ -118,7 +118,28 @@ prior, which §3.4 showed was already worthless.
 against **0.657028** for Kermut, the published leaderboard leader — a gain of **+0.0085** over the
 previous fusion and **+0.037** over the leader.
 
-## 4.6 What the ablation rules out
+## 4.6 The control that decides the interpretation
+
+The category residual has five branches and the shared alternative has one, so a natural reading is that
+the gain is simply "more parameters". We ran the control.
+
+| branch | parameters | standalone delta vs plain | seeds positive | 95% CI |
+|---|---|---:|---:|---|
+| per-category, rank 8 | 5x | **+0.0214** | 4/4 | [+0.0157, +0.0274] |
+| shared, rank 8 | 1x | −0.0008 | 2/4 | [−0.0054, +0.0040] |
+
+The per-category branch beats the shared branch by **+0.0214** with every seed positive, on a matched
+parameter-per-branch comparison. The shared branch, which has the same rank and one fifth of the
+parameters, is indistinguishable from no branch at all. **The gain requires the category structure, not
+the parameters.** We regard this as the load-bearing ablation in the paper, because without it the
+residual reads as capacity and with it the residual reads as structure — the same five vectors carved
+per category rather than jointly.
+
+A second control fixes the rank. Rank 4 and rank 8 land within 0.0002 of each other standalone, so the
+branch is saturated at a rank far below what would be needed to memorise a category; the branch is not
+a lookup table.
+
+## 4.7 What the ablation rules out
 
 Nine directions were measured and rejected, and three of them are worth stating because they constrain
 what a reader should conclude.

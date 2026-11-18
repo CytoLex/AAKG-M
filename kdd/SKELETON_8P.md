@@ -112,6 +112,30 @@ activity ones; expect nothing on large assays). What we would measure next (a pr
 batch, which is the only way to test whether top-k lift becomes hit-rate lift). One-sentence close on
 the allocation result.
 
+## Measured state
+
+All seven sections are drafted. Word counts as written:
+
+| § | words | target | file |
+|---|---:|---:|---|
+| 1 Introduction | 678 | 850 | `SECTION_1_INTRO.md` |
+| 2 Related work | 386 | 500 | `SECTION_2_7_REST.md` |
+| 3 Allocation | 935 | 1350 | `SECTION_3_ALLOCATION.md` |
+| 4 The expert | 919 | 1350 | `SECTION_4_EXPERT.md` |
+| 5 Utility | 1039 | 1350 | `SECTION_5_UTILITY.md` |
+| 6 Limitations & ethics | 683 | 850 | `LIMITATIONS_ETHICS.md` |
+| 7 Discussion | 311 | 350 | `SECTION_2_7_REST.md` |
+| **total** | **4951** | 6600 | |
+
+My 8,500-word budget was a guess. At ACM sigconf density — roughly 1,200 words per full page of pure
+text — 4,951 words plus two figures, three tables and a references section lands at about **7 pages**,
+not 8. The gap is roughly one page.
+
+**Do not pad.** One page of genuine content is available and should be spent on a dedicated
+*Experimental setup* subsection (protocol, splits, baselines, the exact aggregation chain, and the
+reproduction commands), which §3.1 currently compresses into a paragraph. Everything else is at its
+natural length, and the honest move is to typeset and measure rather than to invent material.
+
 ## Writing constraints
 
 - No `state-of-the-art`, no `outperforms`, no `significantly`.
