@@ -18,15 +18,19 @@ Working directory for the retarget from CVPR to the KDD AI for Sciences track.
 | `SECTION_5_UTILITY.md` | §5 camera-ready: official metric, per category, top-of-list, the regressions |
 | `figures/` | the two figure sources (`make_figs.py`) and the rendered PDFs |
 | `latex/` | `make_tex.py`, `build.sh`, `paper.tex`, the compiled draft, and the measured page count |
+| `SUBMISSION_CHECKLIST.md` | every CFP requirement against what we have, with the author-only items marked |
+| `FIT_ASSESSMENT_2027.md` | the four 2027 evaluation criteria quoted, and the track recommendation |
 | `records/` | the JSON records every number in the drafted sections points at |
 
 ## Status
 
-**The paper compiles to 8 pages** — the track's limit — with nine tables and two figures. 5,727 words
-after cutting three redundant subsections to make room for the figures. Every number traced to
-`records/`. Build with `cd latex && ./build.sh`.
+**The paper compiles to 8 content pages plus 1 page of references**, with nine tables and two figures,
+5,735 words, both mandated sections present, and 14 verified references carrying 11 citations. Every
+number traces to `records/`. Build with `cd latex && ./build.sh`.
 
-What is left is authors, references, and the figures' final polish: no new analysis.
+The writing is done. What remains is entirely on the authors: the track decision, a domain co-author if
+AI4S is chosen, the author block, OpenReview profiles, and the reviewer nomination. See
+`SUBMISSION_CHECKLIST.md`, which marks each one.
 
 
 **Blocked on the authors:**
