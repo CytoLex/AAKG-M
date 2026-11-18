@@ -1,49 +1,46 @@
-# Bibliography status
+# Bibliography: what is verified and what is not
 
-`references.bib` has 14 entries, resolved through the OpenAlex API by title search rather than typed
-from memory. Every title, year, venue, author list and DOI in the file is what the API returned.
+`references.bib` holds 14 entries. Every one was checked against a **primary source**, not typed from
+memory — and that check caught two errors that would otherwise have shipped.
 
-Two kinds of entry still need a human:
+## How each entry was verified
 
-## Seven `[VENUE-CHECK]` entries
+| source | what it gave |
+|---|---|
+| `proceedings.neurips.cc` | venue, exact title and author list for the NeurIPS papers |
+| `proceedings.mlr.press` | venue, title, authors, PMLR volume and page range for the ICML papers |
+| `api.crossref.org/works/{doi}` | title, journal, volume, pages and authors for the journal articles |
 
-OpenAlex only has a preprint record for these, so the entry currently cites a bioRxiv or arXiv version.
-A conference version very likely exists and should replace it, but **I did not verify those venues** and
-did not want to assert them:
+## Two errors the verification caught
 
-| key | what the entry currently says | what to check |
-|---|---|---|
-| `esm1v` | bioRxiv 2021 | NeurIPS 2021 version |
-| `tranception` | arXiv 2022 | ICML 2022 version |
-| `msatransformer` | bioRxiv 2021 | ICML 2021 version |
-| `flip` | bioRxiv 2021 | NeurIPS 2021 Datasets & Benchmarks version |
-| `proteingym` | NeurIPS 2023, **DOI missing** | the NeurIPS record exists (seen in OpenAlex) but its DOI was not captured |
-| `kermut` | NeurIPS 2024 | venue confirmed; check the DOI OpenAlex gave |
-| `shazeer2017` | arXiv 2017 | ICLR 2017 version |
+**Fowler & Fields 2014 had the wrong title.** I had written "Deep mutational scanning: a new method for
+protein engineering". The paper is *Deep mutational scanning: a new **style** of protein science*,
+Nature Methods 11:801–807, doi:10.1038/nmeth.3027.
 
-## One `[REPLACE]` entry
+**An DOI I expected was wrong.** doi:10.1038/nmeth.2897, which is the one that seems right if you are
+recalling from memory, resolves to "A fair comparison" by Costea et al. — an unrelated letter in the same
+journal. Had it gone in unchecked, a reviewer would have found it.
 
-`fowler2014`. OpenAlex returned a different, unrelated 2015 review for that title. The entry now holds
-the canonical reference — Fowler & Fields, *Deep mutational scanning: a new method for protein
-engineering*, Nature Methods 2014 — with **volume, pages and DOI deliberately blank**. Fill them from
-the journal, do not guess.
+Both are now correct and carry the verified DOI.
 
-## How it was built
+## What is verified without a DOI
 
-```python
-# for each reference: OpenAlex title search, accept a hit only if >=60% of query tokens appear in the
-# returned title, then record the API's own metadata.
-```
+Five entries are conference papers in proceedings that do not mint DOIs. They are verified by the
+proceedings index (title, authors, venue, and PMLR volume/pages where applicable):
 
-The overlap guard matters: without it, two of the first attempts matched unrelated papers (Tranception
-resolved to a paper on C0[0,1]-valued autoregressive processes, and the MSA Transformer to a phylogeny
-paper). Both were caught and discarded.
+`proteingym` (NeurIPS 2023 Datasets & Benchmarks), `proteinnpt` (NeurIPS 2023), `kermut` (NeurIPS 2024),
+`esm1v` (NeurIPS 2021), `flip` (NeurIPS 2021 Datasets & Benchmarks), `tranception` (ICML 2022),
+`msatransformer` (ICML 2021).
+
+## The one entry still marked uncertain
+
+`shazeer2017`. The OpenReview API did not return the ICLR 2017 record for it, so the entry cites the
+venue but carries `note = {arXiv:1701.06538}` as its locator. If the ICLR proceedings page can be
+reached, replace the note with the proceedings URL.
 
 ## Before submission
 
-1. Resolve the seven venue checks and the one replacement.
-2. Add `\cite` commands to the text — **the manuscript currently cites nothing at all**, which is a
-   larger gap than the .bib itself. §2 names three literatures and should carry roughly a dozen
-   citations across them.
-3. Rebuild and confirm the bibliography section does not push the paper past 8 pages. ACM's reference
-   format sits outside the content limit, so this is safe, but the in-text additions are not.
+1. Spot-check two or three entries by hand. The pipeline is only as good as the index it queried, and
+   `others` appears in the author lists of the two large-consortium papers.
+2. Confirm the required section title against the KDD 2027 CFP verbatim.
+3. Rebuild and confirm the reference list does not displace content from page 8.
