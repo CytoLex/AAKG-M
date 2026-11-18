@@ -20,7 +20,7 @@ evaluated with the official performance script; averaging that expert over eight
 lifts it to **0.694**, against **0.657** for the published leader Kermut. The original experts
 correlate 0.78 to 0.96; the newcomer is the only one from a different representation — but it is
 also more accurate than the one it replaces (0.645 versus 0.494), so decorrelation alone does not
-explain it. The gain is aggregate, not universal (97 assays improve, 85 decline, 35 unchanged). The
+explain it. The gain is aggregate, not universal (130 assays improve, 87 decline, none unchanged; median +0.0016). The
 gate's failure is diagnosable: per-assay headroom is real, 49% surviving a variant-level split, but
 no label-free descriptor predicts it ($R^2 \le 0$).
 
@@ -73,7 +73,7 @@ adaptive weighting.
    部署层 `+0.0077`（对上一版四专家）、`+0.0106`（对门控）、`+0.0109`（对三专家常数）。
 3. **0.645 是 newcomer 单独的官方分**（lr8，8 seed 平均）；被它替换的旧 ESM 专家是 0.4942。两者都要给，否则"去相关"的说法站不住。
 4. **不要再写"增益来自去相关而不是准确率"**——新专家同时更准（**0.645** vs 旧专家的 **0.494**），这个因果已被自己的数据推翻。
-5. **必须写"聚合增益、非普遍改善"**：217 个 assay 里 97 正 / 85 负 / 35 零，中位差 0，增益主要由 Binding 拉动。
+5. **必须写"聚合增益、非普遍改善"**：217 个 assay 里 **130 正 / 87 负 / 0 零**，中位差 **+0.0016**，增益主要由 Binding 拉动；Expression 是唯一平均为负的类别（−0.0018）。
    任何"五类普涨"或"逐 assay 受益"的表述都不被证据支持。
 6. **超参：α 已做折内嵌套复选**（五个折都自选 0.9，嵌套分与固定分差 **0.000**）；rank 4 vs 8 差 0.0002；
    宽与 epoch 从未调过。**未嵌套的是"试了哪些机制"这个设计空间**——不要在摘要里暗示做过完整嵌套搜索。

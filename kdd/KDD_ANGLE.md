@@ -60,14 +60,16 @@ Concretely, the 8 pages would be:
 | 7 | limitations and ethical considerations (mandated) |
 | 8 | related work, and a reproducibility statement pointing at the published scores |
 
-## What must be measured before B or C can be written
+## The three measurements are done
 
-- **Top-of-ranking utility.** Spearman is a whole-list statistic; a wet lab assays tens of candidates,
-  not thousands. Precision in the top 1%, 5%, 10% per assay, aggregated the official way.
-- **The regression set.** The 85 assays where the fusion loses: is it a category pattern, a variant-count
-  effect, or noise? We have the per-assay table to answer this.
-- **Coverage effect.** How much of the aggregate gain survives if the 35 fallback assays are excluded —
-  a reviewer will ask whether the headline depends on them.
+None needed new training; all three are computations over the per-assay scores we already publish.
 
-None of these need new training runs; all three are computations over the per-assay scores we already
-publish.
+| question | answer | file |
+|---|---|---|
+| top-of-list utility | top 1% recall 0.119 vs 0.010 random (**11.8x**), top 5% **4.96x**, top 10% **3.50x**; best on Stability (7.7x), worst on Activity (3.4x) | `RESULTS_TOP_K.md` |
+| which assays regress | **87 of 217**; Expression is the only category negative on average (−0.0018); the largest assay quartile gains **+0.00003** | `RESULTS_FAILURE_ANALYSIS.md` |
+| coverage dependence | all +0.0038, encoder-covered +0.0047, fallback +0.0029 — the 35 are coupled through the nested weight search, not scored independently | `RESULTS_FAILURE_ANALYSIS.md` |
+
+Two of these change the paper. The regression count is **87 negative / 130 positive / 0 unchanged**, not
+the "85 / 97 / 35" the drafts carried, and the assay-size effect is a sharper limitation than any we
+had written down: on the largest quartile the method is at parity with its predecessor.
