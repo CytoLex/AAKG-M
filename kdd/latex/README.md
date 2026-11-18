@@ -10,29 +10,18 @@ TeX bundle on first run, so no local TeX installation is needed — only pandoc 
 
 ## Measured state
 
-**8 pages**, with nine tables and two figures. Verified twice: macOS metadata and by decompressing the
-PDF object streams and counting `/Type /Page` objects.
+**8 content pages + 1 page of references = 9 pages in the compiled PDF.**
 
-That is the target, and it was reached by cutting rather than by compressing. The intermediate state is
-worth recording because it inverted my earlier estimate:
+That is the ACM allowance, not a violation: the CFP specifies "8 content pages as main paper, followed
+by References and an optional Appendix that has no page limits". Verified by rebuilding with the
+bibliography disabled — the content alone is 8 pages — and by counting `/Type /Page` objects in the
+decompressed object streams.
 
-| state | words | figures | pages |
-|---|---:|---:|---:|
-| sections drafted, estimated from word count | 4,951 | — | ~7 (guess) |
-| first compile, no figures | 6,100 | 0 | **8** |
-| + two figures, no cuts | 6,100 | 2 | 9 |
-| + bibliography and 11 in-text citations | 5,656 | 2 | 9 |
-| **after also cutting §5.8** | **5,656** | **2** | **8** |
+I got this wrong twice before noticing. Two earlier rounds cut 370 and then 230 words chasing an 8-page
+*total*, when the limit applies to content only. The cuts that removed redundancy were worth making
+anyway; the one that removed a real ablation (ESM-C as a fourth expert) has been restored.
 
-Final state: 8 pages including the reference list, which fits on the last page rather than needing a
-ninth. Verified twice: macOS metadata and by counting `/Type /Page` objects in the decompressed object
-streams, and confirmed by rebuilding with the bibliography disabled — the content alone is also 8.
-
-The estimate was wrong in the direction that mattered: the draft was already full, not short. Adding the
-planned figures pushed it to nine pages, so roughly 370 words had to go before they could stay. What
-went: §3.7 "Scope of the claim" (its content survives as one sentence in §3.5), §5.6 on top-of-list
-methodology (three sentences folded into §5.4), and §5.7 on aggregate-versus-top-k ranking (merged into
-§5.3). All three restated material already carried elsewhere.
+Current: 5,735 words, 9 tables, 2 figures, 8 content pages, 9 pages total.
 
 ## Figures
 

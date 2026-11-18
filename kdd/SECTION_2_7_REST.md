@@ -31,29 +31,21 @@ know of no reason it should be specific to protein fitness.
 
 ## 7 Discussion
 
-Three things change depending on who is reading.
-
-**If you are building a fusion.** Report the oracle. It takes an afternoon to compute and it converts an
-open-ended search for better gating into a bounded question: how much is left? When the answer is a
-quarter of what a single expert change is worth, the search is over.
-
-**If you are ranking candidates for a campaign.** Trust the top of the list more than the middle, trust
-stability and binding predictions more than activity predictions, and do not expect an advantage on
-assays with tens of thousands of measurements. The per-mutant predictions are published so that this can
-be checked on the assays you care about before committing a library.
+**If you are building a fusion.** Report the oracle. It takes an afternoon and converts an open-ended
+search for better gating into a bounded question: how much is left? When the answer is a quarter of what
+a single expert change is worth, the search is over.
 
 **If you are evaluating.** A ranker's aggregate correlation and its top-of-list recall can disagree in
 significance — ours agree in direction but differ by a factor of two across categories — and the second
 is closer to what the downstream experiment measures. The cheapest version of this discipline is to
-report the oracle and the tuned constant alongside any learned weighting, and the second cheapest is to
-report the per-category breakdown rather than the mean. Neither takes more than an afternoon and both
-change what a reader concludes.
+report the oracle and the tuned constant alongside any learned weighting; the second cheapest is the
+per-category breakdown instead of the mean.
 
-**What would falsify us.** If a pool of experts were built to disagree — deliberately selected for low
-residual correlation rather than high standalone score — the oracle over that pool would be larger, and
-adaptive weighting might pay again. Our claim is about headroom under a pool built the usual way, and it
-should be re-measured whenever the pool changes. We would be glad to be wrong about this one.
+**What would falsify us.** If a pool of experts were built to disagree — selected for low residual
+correlation rather than high standalone score — the oracle over that pool would be larger, and adaptive
+weighting might pay again. Our claim is about headroom under a pool built the usual way, and it should be
+re-measured whenever the pool changes.
 
-The experiment we would run next is a prospective one: generate a candidate list from the ranking, assay
-it alongside a random control, and measure whether the top-of-list lift reported here becomes a hit-rate
-lift at the bench. Until that is done, the honest claim is about rankings, not about discoveries.
+The experiment we would run next is prospective: generate a candidate list from the ranking, assay it
+alongside a random control, and measure whether the top-of-list lift becomes a hit-rate lift at the
+bench. Until then the honest claim is about rankings, not discoveries.

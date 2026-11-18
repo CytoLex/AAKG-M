@@ -20,11 +20,10 @@ held-out assay's own labels and picks the best mixture for it. Everything honest
 
 ## 3.2 Seven mechanisms, one protocol
 
-We evaluate six label-free conditioning mechanisms plus the tuned constant they all have to beat, on
-ProteinGym \cite{proteingym}. Every
-mechanism is label-free with respect to the assay being scored: its weights for assay *a* come either
-from other assays or from no labels at all. All are measured on the 217 ProteinGym substitution assays,
-651 assay-by-split units, under the official category-balanced aggregation.
+We evaluate six label-free conditioning mechanisms plus the tuned constant they all must beat, on
+ProteinGym \cite{proteingym}: 217 substitution assays, 651 assay-by-split units, official
+category-balanced aggregation. Every mechanism is label-free with respect to the assay being scored —
+its weights for assay *a* come from other assays or from no labels at all.
 
 | mechanism | official | Δ vs constant | 95% CI | type |
 |---|---:|---:|---|---|
@@ -36,14 +35,12 @@ from other assays or from no labels at all. All are measured on the 217 ProteinG
 | ridge regression context → weights | 0.685109 | −0.002528 | [−0.007833, +0.000676] | linear, per-assay |
 | per-variant consensus (median) | 0.670492 | −0.017146 | [−0.026771, −0.011115] | unsupervised, per-variant |
 
-One mechanism clears the constant, by +0.00025, with a confidence interval straddling zero. Four more
-land within 0.0006 *below* it — the same magnitude, on the other side. The two that fail badly do so for
-instructive reasons: a ridge on context cannot beat a constant because the context does not predict the
-optimal weights (it scores below the constant, so the regression is actively harmful), and a per-variant
-median discards the magnitude information that separates a strong predictor from a weak one.
-
-The spread of the six is 0.017, and all of it is on the losing side. **Not one of them is separated from
-a tuned constant by more than the seed-to-seed spread of the models themselves.**
+One mechanism clears the constant, by +0.00025, with a confidence interval straddling zero; four more
+land within 0.0006 below it, the same magnitude on the other side. The two that fail badly do so
+instructively — a context regressed onto weights scores below the constant, so the regression is actively
+harmful, and a per-variant median discards the magnitude that separates a strong predictor from a weak
+one. **No mechanism is separated from a tuned constant by more than the seed-to-seed spread of the models
+themselves.**
 
 ## 3.3 The bound is small
 

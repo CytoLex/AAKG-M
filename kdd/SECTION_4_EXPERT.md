@@ -34,8 +34,8 @@ The encoder ladder, under the per-assay protocol, says where the signal actually
 | + ±4 neighbourhood | 0.480 |
 | **+ wild-type layers and difference terms** | **0.596** |
 
-Stacking layers alone is negative. The gain is in the difference and the wild-type context, worth
-+0.116 — an order of magnitude more than either of the other two steps.
+Stacking layers alone is negative; the gain is in the difference and the wild-type context, worth
++0.116, an order of magnitude more than either other step.
 
 ## 4.2 Distillation from the experts we already trust
 
@@ -136,9 +136,8 @@ the parameters.** We regard this as the load-bearing ablation in the paper, beca
 residual reads as capacity and with it the residual reads as structure — the same five vectors carved
 per category rather than jointly.
 
-A second control fixes the rank. Rank 4 and rank 8 land within 0.0002 of each other standalone, so the
-branch is saturated at a rank far below what would be needed to memorise a category; the branch is not
-a lookup table.
+A second control fixes the rank: rank 4 and rank 8 land within 0.0002 standalone, so the branch is
+saturated well below what memorising a category would require.
 
 ## 4.7 What the ablation rules out
 
@@ -155,8 +154,8 @@ every fold. The residual of a fitted ensemble is, by construction, the part thes
 explain.
 
 **A larger pre-trained backbone** (ESM-C 300M) is decorrelated but too weak: +0.0007 as a fourth expert
-with a confidence interval straddling zero, and −0.011 concatenated. Representation diversity without
-competence is worthless.
+with an interval straddling zero, and −0.011 concatenated. Representation diversity without competence
+buys nothing.
 
 The constructive reading: an expert earns its place through disagreement in the residual, and the way
 to get that disagreement is a different *view* of the same information — reference versus mutant, local

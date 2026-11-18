@@ -106,11 +106,10 @@ held-out assay's own labels and picks the best mixture for it. Everything honest
 
 ## 3.2 Seven mechanisms, one protocol
 
-We evaluate six label-free conditioning mechanisms plus the tuned constant they all have to beat, on
-ProteinGym \cite{proteingym}. Every
-mechanism is label-free with respect to the assay being scored: its weights for assay *a* come either
-from other assays or from no labels at all. All are measured on the 217 ProteinGym substitution assays,
-651 assay-by-split units, under the official category-balanced aggregation.
+We evaluate six label-free conditioning mechanisms plus the tuned constant they all must beat, on
+ProteinGym \cite{proteingym}: 217 substitution assays, 651 assay-by-split units, official
+category-balanced aggregation. Every mechanism is label-free with respect to the assay being scored —
+its weights for assay *a* come from other assays or from no labels at all.
 
 | mechanism | official | Δ vs constant | 95% CI | type |
 |---|---:|---:|---|---|
@@ -122,14 +121,12 @@ from other assays or from no labels at all. All are measured on the 217 ProteinG
 | ridge regression context → weights | 0.685109 | −0.002528 | [−0.007833, +0.000676] | linear, per-assay |
 | per-variant consensus (median) | 0.670492 | −0.017146 | [−0.026771, −0.011115] | unsupervised, per-variant |
 
-One mechanism clears the constant, by +0.00025, with a confidence interval straddling zero. Four more
-land within 0.0006 *below* it — the same magnitude, on the other side. The two that fail badly do so for
-instructive reasons: a ridge on context cannot beat a constant because the context does not predict the
-optimal weights (it scores below the constant, so the regression is actively harmful), and a per-variant
-median discards the magnitude information that separates a strong predictor from a weak one.
-
-The spread of the six is 0.017, and all of it is on the losing side. **Not one of them is separated from
-a tuned constant by more than the seed-to-seed spread of the models themselves.**
+One mechanism clears the constant, by +0.00025, with a confidence interval straddling zero; four more
+land within 0.0006 below it, the same magnitude on the other side. The two that fail badly do so
+instructively — a context regressed onto weights scores below the constant, so the regression is actively
+harmful, and a per-variant median discards the magnitude that separates a strong predictor from a weak
+one. **No mechanism is separated from a tuned constant by more than the seed-to-seed spread of the models
+themselves.**
 
 ## 3.3 The bound is small
 
@@ -218,8 +215,8 @@ number in this paper is produced by the benchmark's own
 reimplementation of its aggregation.
 
 **Splits are the published ones.** Our fold assignments are bit-identical to the released
-`cv_folds_singles_substitutions` files — we verified this on all three schemes for a 9,576-variant
-assay, 9,576 of 9,576 mutants matching. We did not regenerate splits.
+`cv_folds_singles_substitutions` files, verified on all three schemes for a 9,576-variant assay
+(9,576 of 9,576 mutants). We did not regenerate splits.
 
 **Models.** Four experts. Two are frozen predictions from published methods: Kermut, a composite
 Gaussian-process kernel over sequence and structure features, and AMK, an assay-adaptive mixed structure
@@ -246,17 +243,15 @@ is equal-compute. The grid is a step-0.1 simplex over four weights.
 D+Kermut blend. The tuned constant of §3. A nested constant whose weights are selected per fold. And
 Kermut alone, which is also the published leaderboard leader on this metric.
 
-**Statistics.** Seed-level intervals come from eight independent runs of the full pipeline. Assay-level
-intervals come from a two-level bootstrap that resamples assays within category and seeds together,
-4,000 replicates. Where a comparison is between two configurations evaluated on the same assays, we
-report paired differences rather than differences of means, because the assay-to-assay variance is
-roughly an order of magnitude larger than the effect.
+**Statistics.** Seed intervals from eight independent full-pipeline runs; assay intervals from a
+two-level bootstrap resampling assays within category and seeds together, 4,000 replicates. Comparisons
+between two configurations on the same assays use paired differences, because assay-to-assay variance is
+an order of magnitude larger than the effect.
 
-**Reproduction.** Two commands from two public repositories regenerate every number in this paper. The
-score file, the per-mutant predictions for all 696,311 variants, the fusion and evaluation scripts, and
-the recovered kernel for the two structural experts are in the released artifact (§8). The control row
-of §5.1 is produced by the same command as the headline, so a reader can verify that our aggregation is
-correct before trusting any comparison we make with it.
+**Reproduction.** Two commands from two public repositories regenerate every number here. The score
+file, per-mutant predictions for all 696,311 variants, the fusion and evaluation scripts, and the
+recovered kernel are in the released artifact. The control row of §5.1 comes from the same command as
+the headline, so a reader can check our aggregation before trusting any comparison built on it.
 
 **Compute.** One H200 GPU per encoder run, a few hours for a full panel with eight seeds. The structural
 experts are frozen, which is why their per-mutant predictions are published rather than left to be
@@ -291,8 +286,8 @@ The encoder ladder, under the per-assay protocol, says where the signal actually
 | + ±4 neighbourhood | 0.480 |
 | **+ wild-type layers and difference terms** | **0.596** |
 
-Stacking layers alone is negative. The gain is in the difference and the wild-type context, worth
-+0.116 — an order of magnitude more than either of the other two steps.
+Stacking layers alone is negative; the gain is in the difference and the wild-type context, worth
++0.116, an order of magnitude more than either other step.
 
 ## 4.2 Distillation from the experts we already trust
 
@@ -393,9 +388,8 @@ the parameters.** We regard this as the load-bearing ablation in the paper, beca
 residual reads as capacity and with it the residual reads as structure — the same five vectors carved
 per category rather than jointly.
 
-A second control fixes the rank. Rank 4 and rank 8 land within 0.0002 of each other standalone, so the
-branch is saturated at a rank far below what would be needed to memorise a category; the branch is not
-a lookup table.
+A second control fixes the rank: rank 4 and rank 8 land within 0.0002 standalone, so the branch is
+saturated well below what memorising a category would require.
 
 ## 4.7 What the ablation rules out
 
@@ -412,8 +406,8 @@ every fold. The residual of a fitted ensemble is, by construction, the part thes
 explain.
 
 **A larger pre-trained backbone** (ESM-C 300M) is decorrelated but too weak: +0.0007 as a fourth expert
-with a confidence interval straddling zero, and −0.011 concatenated. Representation diversity without
-competence is worthless.
+with an interval straddling zero, and −0.011 concatenated. Representation diversity without competence
+buys nothing.
 
 The constructive reading: an expert earns its place through disagreement in the residual, and the way
 to get that disagreement is a different *view* of the same information — reference versus mutant, local
@@ -467,11 +461,8 @@ spread is what matters: the method sits at 0.851 on stability assays and 0.642 o
 gap of 0.21 that the aggregate 0.694 conceals entirely. A practitioner applying this to an enzyme
 engineering problem is working at the bottom of our range, not the top.
 
-The aggregate and the top of the list do not rank categories identically: OrganismalFitness improves most
-in global ordering (+0.050) but sits mid-table in top-of-list lift, its assays being the largest in the
-panel and the most likely to regress (48%). We report both because neither alone is honest — the
-aggregate would overstate the practical gain on that category, and top-of-list alone would understate a
-real improvement in ordering.
+The two quantities rank categories differently — OrganismalFitness improves most in global ordering
+(+0.050) but sits mid-table in top-of-list lift — so we report both; either alone would mislead.
 
 ## 5.4 The number a wet lab actually cares about
 
@@ -547,9 +538,9 @@ uninformative about the individual assay.
 ### Limitations
 
 **The ranker is unreliable on most functional categories.** Top-of-list recall at 5% is 0.38 for
-stability assays but 0.17 for activity assays — a 2.2x spread — and activity is the category an
-enzyme-engineering campaign most often cares about. Aggregate Spearman hides this completely; a user
-who reads only the headline number will over-trust the method on function-oriented assays.
+stability assays but 0.17 for activity assays — a 2.2x spread — and activity is what an
+enzyme-engineering campaign most often cares about. Aggregate Spearman hides this; a user reading only
+the headline will over-trust the method on function-oriented assays.
 
 **The gain disappears on large assays.** Splitting the 217 assays into quartiles by mutant count, the
 mean improvement over the previous fusion is +0.0073 on the smallest quartile and +0.00003 on the
@@ -578,11 +569,6 @@ chose the same value in all five; the broader design space, however, was explore
 assays. There is no held-out cohort from a different source, and no wet-lab experiment. Whether
 top-of-list lift translates into hit-rate lift in a real screening campaign is untested; it is the
 next experiment, not a claim.
-
-**Feature storage is heavy.** The encoder's main features are 32 MB per assay — 762 variants x 10,368
-dimensions in float32 — which is 6.9 GB across the 217 assays and must be regenerated from ESM-C for
-any assay outside the panel. We therefore distribute per-mutant predictions rather than the feature
-pipeline.
 
 ### Ethical considerations
 
@@ -638,31 +624,59 @@ responsibility for the content, including any error introduced with assistance.
 ## 7 Discussion
 
 
+**Contributions to the domain.** A protein engineer choosing mutations against an assay budget needs a
+ranking they can act on, and the field's papers are not organised around that. Two deliverables follow.
+
+The first is a *calibrated expectation*. Taking the top 5% of our ranking recovers 24.7% of the true top
+5%, a five-fold lift over random — but 7.7-fold on stability assays and 3.4-fold on activity assays, and
+no advantage at all on the largest assay quartiles. A laboratory can use that profile to decide how much
+of the ordering to trust for the property it cares about. No previous protein-fitness paper makes this
+statement, because aggregate Spearman cannot express it.
+
+The second is the boundary in the negative direction: 87 of 217 assays regressing, the one category that
+regresses on average, and the size regime where the method is at parity with its predecessor. For a
+practitioner the boundary is worth more than the mean, because it is the difference between trusting a
+ranking on a familiar assay family and being surprised by it on a new one.
+
+**Challenges tackled with AI.** Three, in increasing difficulty. The ranking problem is small-data-per-task
+learning — a few thousand variants per assay, often fewer — so the question is regularisation and
+transfer, not capacity. It is a distribution-shift problem: assays differ in family, assay type and
+dynamic range, which is exactly why the field reached for adaptive weighting and why we show that
+weighting has no headroom. And it is a representation problem: the signal lives in the difference between
+two sequences and in the local structural neighbourhood, which is what the encoder in §4 exploits.
+
+**Challenges of using AI in this domain.** Wet-lab validation is the binding constraint and it is slow
+and expensive, so the field reports against retrospective benchmarks and hopes the ranking transfers; we
+have not closed that gap. Assay data is heterogeneous in ways metadata does not capture — two stability
+assays on one protein can disagree in sign — so a category-averaged metric can look stable while
+individual assays move sharply in both directions. And the benchmark ecosystem rewards leaderboard
+improvement over characterisation: no venue asks where a model fails, yet that is what a domain user
+needs most.
+
+**On our use of ProteinGym.** The track prefers domain-specific data to existing benchmarks, so we state
+what our use of ProteinGym adds rather than only takes. We verify it end to end — reproducing its
+published per-assay values for a reference method on 217 of 217 assays and confirming its folds are
+bit-identical to the released files — we publish per-mutant predictions for all 696,311 variants so the
+evaluation is reproducible without our code, and we characterise its difficulty structure across
+categories, sizes and splits. A reader can use that characterisation without adopting our method.
 
 
-Three things change depending on who is reading.
 
-**If you are building a fusion.** Report the oracle. It takes an afternoon to compute and it converts an
-open-ended search for better gating into a bounded question: how much is left? When the answer is a
-quarter of what a single expert change is worth, the search is over.
-
-**If you are ranking candidates for a campaign.** Trust the top of the list more than the middle, trust
-stability and binding predictions more than activity predictions, and do not expect an advantage on
-assays with tens of thousands of measurements. The per-mutant predictions are published so that this can
-be checked on the assays you care about before committing a library.
+**If you are building a fusion.** Report the oracle. It takes an afternoon and converts an open-ended
+search for better gating into a bounded question: how much is left? When the answer is a quarter of what
+a single expert change is worth, the search is over.
 
 **If you are evaluating.** A ranker's aggregate correlation and its top-of-list recall can disagree in
 significance — ours agree in direction but differ by a factor of two across categories — and the second
 is closer to what the downstream experiment measures. The cheapest version of this discipline is to
-report the oracle and the tuned constant alongside any learned weighting, and the second cheapest is to
-report the per-category breakdown rather than the mean. Neither takes more than an afternoon and both
-change what a reader concludes.
+report the oracle and the tuned constant alongside any learned weighting; the second cheapest is the
+per-category breakdown instead of the mean.
 
-**What would falsify us.** If a pool of experts were built to disagree — deliberately selected for low
-residual correlation rather than high standalone score — the oracle over that pool would be larger, and
-adaptive weighting might pay again. Our claim is about headroom under a pool built the usual way, and it
-should be re-measured whenever the pool changes. We would be glad to be wrong about this one.
+**What would falsify us.** If a pool of experts were built to disagree — selected for low residual
+correlation rather than high standalone score — the oracle over that pool would be larger, and adaptive
+weighting might pay again. Our claim is about headroom under a pool built the usual way, and it should be
+re-measured whenever the pool changes.
 
-The experiment we would run next is a prospective one: generate a candidate list from the ranking, assay
-it alongside a random control, and measure whether the top-of-list lift reported here becomes a hit-rate
-lift at the bench. Until that is done, the honest claim is about rankings, not about discoveries.
+The experiment we would run next is prospective: generate a candidate list from the ranking, assay it
+alongside a random control, and measure whether the top-of-list lift becomes a hit-rate lift at the
+bench. Until then the honest claim is about rankings, not discoveries.

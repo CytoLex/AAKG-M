@@ -22,8 +22,8 @@ number in this paper is produced by the benchmark's own
 reimplementation of its aggregation.
 
 **Splits are the published ones.** Our fold assignments are bit-identical to the released
-`cv_folds_singles_substitutions` files — we verified this on all three schemes for a 9,576-variant
-assay, 9,576 of 9,576 mutants matching. We did not regenerate splits.
+`cv_folds_singles_substitutions` files, verified on all three schemes for a 9,576-variant assay
+(9,576 of 9,576 mutants). We did not regenerate splits.
 
 **Models.** Four experts. Two are frozen predictions from published methods: Kermut, a composite
 Gaussian-process kernel over sequence and structure features, and AMK, an assay-adaptive mixed structure
@@ -50,17 +50,15 @@ is equal-compute. The grid is a step-0.1 simplex over four weights.
 D+Kermut blend. The tuned constant of §3. A nested constant whose weights are selected per fold. And
 Kermut alone, which is also the published leaderboard leader on this metric.
 
-**Statistics.** Seed-level intervals come from eight independent runs of the full pipeline. Assay-level
-intervals come from a two-level bootstrap that resamples assays within category and seeds together,
-4,000 replicates. Where a comparison is between two configurations evaluated on the same assays, we
-report paired differences rather than differences of means, because the assay-to-assay variance is
-roughly an order of magnitude larger than the effect.
+**Statistics.** Seed intervals from eight independent full-pipeline runs; assay intervals from a
+two-level bootstrap resampling assays within category and seeds together, 4,000 replicates. Comparisons
+between two configurations on the same assays use paired differences, because assay-to-assay variance is
+an order of magnitude larger than the effect.
 
-**Reproduction.** Two commands from two public repositories regenerate every number in this paper. The
-score file, the per-mutant predictions for all 696,311 variants, the fusion and evaluation scripts, and
-the recovered kernel for the two structural experts are in the released artifact (§8). The control row
-of §5.1 is produced by the same command as the headline, so a reader can verify that our aggregation is
-correct before trusting any comparison we make with it.
+**Reproduction.** Two commands from two public repositories regenerate every number here. The score
+file, per-mutant predictions for all 696,311 variants, the fusion and evaluation scripts, and the
+recovered kernel are in the released artifact. The control row of §5.1 comes from the same command as
+the headline, so a reader can check our aggregation before trusting any comparison built on it.
 
 **Compute.** One H200 GPU per encoder run, a few hours for a full panel with eight seeds. The structural
 experts are frozen, which is why their per-mutant predictions are published rather than left to be

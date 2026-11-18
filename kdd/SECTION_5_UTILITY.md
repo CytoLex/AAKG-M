@@ -52,11 +52,8 @@ spread is what matters: the method sits at 0.851 on stability assays and 0.642 o
 gap of 0.21 that the aggregate 0.694 conceals entirely. A practitioner applying this to an enzyme
 engineering problem is working at the bottom of our range, not the top.
 
-The aggregate and the top of the list do not rank categories identically: OrganismalFitness improves most
-in global ordering (+0.050) but sits mid-table in top-of-list lift, its assays being the largest in the
-panel and the most likely to regress (48%). We report both because neither alone is honest — the
-aggregate would overstate the practical gain on that category, and top-of-list alone would understate a
-real improvement in ordering.
+The two quantities rank categories differently — OrganismalFitness improves most in global ordering
+(+0.050) but sits mid-table in top-of-list lift — so we report both; either alone would mislead.
 
 ## 5.4 The number a wet lab actually cares about
 

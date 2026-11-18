@@ -24,7 +24,8 @@ sections = [
     ("## 5 What the ranker is worth", body("SECTION_5_UTILITY.md")),
     ("## 6 Limitations and Ethical Considerations", body("LIMITATIONS_ETHICS.md")),
     ("## 6.1 Generative AI Usage", body("SECTION_6B_GENAI.md")),
-    ("## 7 Discussion", "## 7 Discussion\n\n" + body("SECTION_2_7_REST.md").split("## 7 Discussion")[-1]),
+    ("## 7 Discussion", "## 7 Discussion\n\n" + body("SECTION_DOMAIN.md") + "\n\n" +
+     body("SECTION_2_7_REST.md").split("## 7 Discussion")[-1]),
 ]
 out = []
 for title, txt in sections:

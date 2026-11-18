@@ -11,9 +11,9 @@ anticipated.
 ### Limitations
 
 **The ranker is unreliable on most functional categories.** Top-of-list recall at 5% is 0.38 for
-stability assays but 0.17 for activity assays — a 2.2x spread — and activity is the category an
-enzyme-engineering campaign most often cares about. Aggregate Spearman hides this completely; a user
-who reads only the headline number will over-trust the method on function-oriented assays.
+stability assays but 0.17 for activity assays — a 2.2x spread — and activity is what an
+enzyme-engineering campaign most often cares about. Aggregate Spearman hides this; a user reading only
+the headline will over-trust the method on function-oriented assays.
 
 **The gain disappears on large assays.** Splitting the 217 assays into quartiles by mutant count, the
 mean improvement over the previous fusion is +0.0073 on the smallest quartile and +0.00003 on the
@@ -42,11 +42,6 @@ chose the same value in all five; the broader design space, however, was explore
 assays. There is no held-out cohort from a different source, and no wet-lab experiment. Whether
 top-of-list lift translates into hit-rate lift in a real screening campaign is untested; it is the
 next experiment, not a claim.
-
-**Feature storage is heavy.** The encoder's main features are 32 MB per assay — 762 variants x 10,368
-dimensions in float32 — which is 6.9 GB across the 217 assays and must be regenerated from ESM-C for
-any assay outside the panel. We therefore distribute per-mutant predictions rather than the feature
-pipeline.
 
 ### Ethical considerations
 
