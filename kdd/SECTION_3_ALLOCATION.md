@@ -112,16 +112,3 @@ oracle weights, with leave-one-out protection, reaches 0.6860 — below the cons
 direction is actively wrong rather than merely weak. (iii) The gate captures 3.6% of the oracle gain.
 A stable, informative function that recovers four percent of the available headroom is a representation
 failure, not an optimisation one.
-
-## 3.7 Scope of the claim
-
-The falsification is about *this* problem at *this* scale: 217 assays, three structural and sequence
-experts, single-residue substitution benchmarks. We do not claim adaptive weighting is worthless in
-general — in recommendation or in multi-task learning the mixture often carries real signal. We claim
-that for protein fitness prediction with this expert pool, the allocation headroom is smaller than the
-expert headroom by a factor of three, and that the field's effort is misallocated relative to those
-magnitudes.
-
-Whether a *better* pool would restore allocation headroom is an open question, and an interesting one:
-the oracle is a function of how much the experts disagree, so a pool built to disagree might well make
-gating worthwhile again. That would be a different paper, and it would have to report the oracle.

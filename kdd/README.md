@@ -16,13 +16,17 @@ Working directory for the retarget from CVPR to the KDD AI for Sciences track.
 | `SECTION_1_INTRO.md` | §1 camera-ready: the domain problem, three claims, four contributions |
 | `SECTION_2_7_REST.md` | §2 related work and §7 discussion |
 | `SECTION_5_UTILITY.md` | §5 camera-ready: official metric, per category, top-of-list, the regressions |
+| `figures/` | the two figure sources (`make_figs.py`) and the rendered PDFs |
+| `latex/` | `make_tex.py`, `build.sh`, `paper.tex`, the compiled draft, and the measured page count |
 | `records/` | the JSON records every number in the drafted sections points at |
 
 ## Status
 
-**All seven sections drafted**, 4,951 words total. Abstract drafted. Every number traced to
-`records/`. At ACM sigconf density this lands near seven pages; the remaining page should go to a
-dedicated experimental-setup subsection, not to padding.
+**The paper compiles to 8 pages** — the track's limit — with nine tables and two figures. 5,727 words
+after cutting three redundant subsections to make room for the figures. Every number traced to
+`records/`. Build with `cd latex && ./build.sh`.
+
+What is left is authors, references, and the figures' final polish: no new analysis.
 
 
 **Blocked on the authors:**

@@ -1,30 +1,35 @@
 #!/bin/bash
-# Build the KDD AI for Sciences draft.
-#
-# Tectonic fetches the TeX bundle on first run; the acmart class it needs is a package inside that
-# bundle, so no local TeX installation is required.
+# Build the KDD AI for Sciences draft from the markdown sources in the parent directory.
 #
 #   ./build.sh
 #
-# Output: AAKG_KDD_draft.pdf. Page count is printed at the end.
+# Needs: pandoc, and tectonic (a static binary; it fetches the TeX bundle on first run, so no local
+# TeX installation is required).
 set -euo pipefail
 cd "$(dirname "$0")"
 
-TECTONIC=${TECTONIC:-tectonic}
-if ! command -v "$TECTONIC" >/dev/null 2>&1 && [ ! -x /tmp/tectonic ]; then
-  echo "tectonic not found. Download a static binary from"
-  echo "  https://github.com/tectonic-typesetting/tectonic/releases"
-  echo "or install with: brew install tectonic"
-  exit 1
+TECTONIC=${TECTONIC:-}
+if [ -z "$TECTONIC" ]; then
+  if command -v tectonic >/dev/null 2>&1; then TECTONIC=tectonic
+  elif [ -x /tmp/tectonic ]; then TECTONIC=/tmp/tectonic
+  else
+    echo "tectonic not found. Install with 'brew install tectonic' or fetch a static binary from"
+    echo "  https://github.com/tectonic-typesetting/tectonic/releases"
+    exit 1
+  fi
 fi
-[ -x /tmp/tectonic ] && TECTONIC=/tmp/tectonic
 
-"$TECTONIC" -X compile paper.tex
+python3 make_tex.py
+TEXINPUTS=.:..:../figures: "$TECTONIC" -X compile paper.tex
 cp paper.pdf AAKG_KDD_draft.pdf
-# page count without external tools
 python3 - <<'PY'
-import re, pathlib
+import re, zlib, pathlib
 d = pathlib.Path("AAKG_KDD_draft.pdf").read_bytes()
-print("overfull hboxes are expected in this draft; run with --print to see them")
+n = len(re.findall(rb"/Type\s*/Page\b", d))
+for m in re.finditer(rb"stream\r?\n", d):
+    try:
+        n += len(re.findall(rb"/Type\s*/Page\b", zlib.decompress(d[m.end():m.end()+200000])))
+    except Exception:
+        pass
+print(f"AAKG_KDD_draft.pdf: {n} pages")
 PY
-mdls -name kMDItemNumberOfPages AAKG_KDD_draft.pdf 2>/dev/null || echo "page count: see PDF viewer"

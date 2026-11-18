@@ -55,6 +55,12 @@ spread is what matters: the method sits at 0.851 on stability assays and 0.642 o
 gap of 0.21 that the aggregate 0.694 conceals entirely. A practitioner applying this to an enzyme
 engineering problem is working at the bottom of our range, not the top.
 
+The aggregate and the top of the list do not rank categories identically: OrganismalFitness improves most
+in global ordering (+0.050) but sits mid-table in top-of-list lift, its assays being the largest in the
+panel and the most likely to regress (48%). We report both because neither alone is honest — the
+aggregate would overstate the practical gain on that category, and top-of-list alone would understate a
+real improvement in ordering.
+
 ## 5.4 The number a wet lab actually cares about
 
 Spearman is a whole-list statistic. An engineering campaign has a library and can assay tens of
@@ -88,6 +94,11 @@ The same ordering holds at the top 1%, where stability reaches 0.226 and activit
 roughly twice as good at prioritising stability mutants as activity mutants**, and activity is what
 function-oriented campaigns care about.
 
+Ranking and ground truth are both computed within an assay-by-split unit on the released DMS files, so
+the reference is independent of everything in §4, and aggregation follows the official chain. The lift,
+not the raw recall, is the quantity to compare across categories, because categories differ in size and
+in the base rate of top-*k* variants.
+
 ## 5.5 Where it fails
 
 The improvement is not uniform, and a paper that reported only §5.2 would be misleading.
@@ -117,44 +128,6 @@ assays; the other 35 fall back to an older expert. Those 35 still show +0.0029, 
 own predictions: the nested weight search fits one weight vector per fold over *all* training assays, so
 replacing the expert elsewhere moves the weights applied to them. Their delta is real for the system and
 uninformative about the individual assay.
-
-## 5.6 Why the top-of-list analysis is computed this way
-
-Three choices matter and a reviewer should be able to reproduce each.
-
-**Ranking unit.** Ties are broken by the published ordering; the `fused` column is a float and exact
-ties are rare outside the clipped extremes. Both the prediction and the label are ranked within an
-assay × split, so the per-scheme structure of the benchmark is preserved rather than pooled.
-
-**Ground truth.** The true top *k* is defined on measured `DMS_score` within the same unit, using the
-official released DMS files rather than our own copy, so the reference is independent of everything in
-§4.
-
-**Aggregation.** Per assay we average over the three splits, then per protein identifier, then per
-functional category, then over the five categories — the same chain the official metric uses. The
-`random` column in the tables is the expectation under a uniformly random ordering of the same unit,
-which differs from *k/N* only by rounding at the boundary.
-
-The interesting number in §5.4 is the lift, not the recall, because the lift is what controls for the
-size of the unit and for the base rate of top-*k* variants in each category. Since categories differ
-substantially in how many variants they contain, a raw recall comparison across categories would
-confound the two.
-
-## 5.7 The aggregate and the top of the list do not rank categories the same way
-
-§5.3 improves on every category and most on OrganismalFitness (+0.050), while §5.4 finds the best
-top-of-list behaviour on Stability (7.7x) and the worst on Activity (3.4x). OrganismalFitness sits in
-the middle of the top-of-list table despite leading the aggregate.
-
-The two quantities are measuring different things and it is worth saying so explicitly: the aggregate
-asks how well the whole ordering is preserved, the top-of-list asks whether the candidates a lab would
-actually order are the right ones. A category can improve its global ordering substantially while
-leaving the top decile unchanged, and that appears to be what happens for OrganismalFitness, whose
-assays are the largest in the panel and whose regression rate is the highest (48%).
-
-We report both because neither is sufficient. A paper that reported only the aggregate would
-overstate the practical gain on the category it helps most; a paper that reported only top-of-list would
-understate a real improvement in global ordering.
 
 ## 5.8 Reading the result correctly
 
