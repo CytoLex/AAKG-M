@@ -1,6 +1,9 @@
 """Assemble the markdown sections into paper.tex. Deterministic; run before build.sh."""
 import json, pathlib, re, subprocess, sys
 
+sys.path.insert(0, str(pathlib.Path(__file__).parent))
+from md2tex import md2tex
+
 KDD = pathlib.Path(__file__).resolve().parent.parent
 LATEX = KDD / "latex_icml"
 
@@ -23,8 +26,7 @@ sections = [
     ("## 5 What the ranker is worth", body("SECTION_5_UTILITY.md")),
     ("## 6 Limitations and Ethical Considerations", body("LIMITATIONS_ETHICS.md")),
     ("## 6.1 Generative AI Usage", body("SECTION_6B_GENAI.md")),
-    ("## 7 Discussion", "## 7 Discussion\n\n" + body("SECTION_DOMAIN.md") + "\n\n" +
-     body("SECTION_2_7_REST.md").split("## 7 Discussion")[-1]),
+    ("## 7 Discussion", "## 7 Discussion\n\n" + body("SECTION_2_7_REST.md").split("## 7 Discussion")[-1]),
 ]
 out = []
 for title, txt in sections:
@@ -88,7 +90,7 @@ def make_table(n):
 
 
 # ICML's page limit applies to the main body only, so the supporting tables live in the appendix.
-APPENDIX_TABLES = {2, 3, 7, 8, 9}
+APPENDIX_TABLES = {2, 3, 4, 6, 7, 8, 9}
 _moved = []
 for n in range(1, len(tables) + 1):
     if n in APPENDIX_TABLES:
@@ -129,7 +131,9 @@ APPENDIX = r"""
 \newpage
 \appendix
 \section{Experimental setup}
-""" + body("SECTION_SETUP.md").replace("## Setup", "").strip() + r"""
+""" + md2tex(body("SECTION_SETUP.md").replace("## Setup", "").strip()) + r"""
+\section{What this contributes to protein engineering}
+""" + md2tex(body("SECTION_DOMAIN.md").replace("## Draft", "").replace("## Notes", "").strip()) + r"""
 \section{Supporting tables}
 """ + "\n\n".join(_moved) + r"""
 """
@@ -152,6 +156,8 @@ the content.
 \bibliographystyle{icml2027}
 \bibliography{references}
 """
+
+
 
 PRE = r"""\documentclass{article}
 \usepackage{microtype}
@@ -196,6 +202,6 @@ predictions for all 696,311 mutants.
 \end{abstract}
 """
 
-(LATEX / "paper.tex").write_text(PRE + tex_body + "\n" + BIB + "\n\\end{document}\n")
+(LATEX / "paper.tex").write_text(PRE + tex_body + "\n" + APPENDIX + "\n" + BIB + "\n\\end{document}\n")
 n_words = len(re.findall(r"[A-Za-z][A-Za-z'\-]+", md))
 print("paper.tex written: %d tables, 2 figures, %d words" % (len(tables), n_words))

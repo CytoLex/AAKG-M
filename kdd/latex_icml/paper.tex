@@ -364,18 +364,7 @@ previous fusion and \textbf{+0.037} over the leader.
 The category residual has five branches and the shared alternative has one, so a natural reading is that
 the gain is simply ``more parameters''. We ran the control.
 
-\begin{table*}[t]
-\centering
-\small
-\begin{tabular}{lrrrr}
-\hline
-branch & parameters & standalone delta vs plain & seeds positive & 95\% CI \\
-\hline
-per-category, rank 8 & 5x & \textbf{+0.0214} & 4/4 & [+0.0157, +0.0274] \\
-shared, rank 8 & 1x & -0.0008 & 2/4 & [-0.0054, +0.0040] \\
-\hline
-\end{tabular}
-\end{table*}
+
 
 The per-category branch beats the shared branch by \textbf{+0.0214} with every seed positive, on a matched
 parameter-per-branch comparison. The shared branch, which has the same rank and one fifth of the
@@ -462,21 +451,7 @@ rung, which uses one trained expert rather than eight averaged ones.
 
 Per functional category, official aggregation:
 
-\begin{table*}[t]
-\centering
-\small
-\begin{tabular}{lrrr}
-\hline
-category & ours & Kermut & delta \\
-\hline
-Stability & \textbf{0.851} & 0.817 & +0.034 \\
-Expression & 0.693 & 0.670 & +0.023 \\
-Binding & 0.653 & 0.611 & +0.042 \\
-Activity & \textbf{0.642} & 0.605 & +0.037 \\
-OrganismalFitness & 0.632 & 0.582 & +0.050 \\
-\hline
-\end{tabular}
-\end{table*}
+
 
 Every category improves, which is the good news and also the least interesting part of the table. The
 spread is what matters: the method sits at 0.851 on stability assays and 0.642 on activity assays --- a
@@ -628,11 +603,91 @@ responsibility for the content, including any error introduced with assistance.
 
 \section{7 Discussion}\label{discussion}
 
+\textbf{If you are building a fusion.} Report the oracle. It takes an afternoon and converts an open-ended
+search for better gating into a bounded question: how much is left? When the answer is a quarter of what
+a single expert change is worth, the search is over.
+
+\textbf{If you are evaluating.} A ranker's aggregate correlation and its top-of-list recall can disagree in
+significance --- ours agree in direction but differ by a factor of two across categories --- and the second
+is closer to what the downstream experiment measures. The cheapest version of this discipline is to
+report the oracle and the tuned constant alongside any learned weighting; the second cheapest is the
+per-category breakdown instead of the mean.
+
+\textbf{What would falsify us.} If a pool of experts were built to disagree --- selected for low residual
+correlation rather than high standalone score --- the oracle over that pool would be larger, and adaptive
+weighting might pay again. Our claim is about headroom under a pool built the usual way, and it should be
+re-measured whenever the pool changes.
+
+The experiment we would run next is prospective: generate a candidate list from the ranking, assay it
+alongside a random control, and measure whether the top-of-list lift becomes a hit-rate lift at the
+bench. Until then the honest claim is about rankings, not discoveries.
+
+
+\newpage
+\appendix
+\section{Experimental setup}
+\textbf{Benchmark.} ProteinGym's \cite{proteingym} supervised substitution benchmark: 217 deep mutational scanning assays over
+186 UniProt identifiers, each with three official cross-validation splits --- \texttt{fold\_random\_5},
+\texttt{fold\_modulo\_5}, \texttt{fold\_contiguous\_5}. Following the benchmark's own protocol, a model is refitted per
+assay on four folds and predicts the fifth, and the ordering is evaluated by Spearman correlation
+within each assay-by-split unit, giving 651 units.
+
+\textbf{Aggregation.} We use the official chain without modification: per-unit Spearman, averaged over the
+three splits, then grouped by UniProt identifier and coarse functional category, then averaged over the
+five categories. The grouping step is the one most often skipped in reimplementations: several assays
+share a protein, and averaging them before the category step changes the result by about 0.005. Every
+number in this paper is produced by the benchmark's own
+\texttt{performance\_DMS\_supervised\_benchmarks.py}, run unmodified on a score file we provide, rather than by a
+reimplementation of its aggregation.
+
+\textbf{Splits are the published ones.} Our fold assignments are bit-identical to the released
+\texttt{cv\_folds\_singles\_substitutions} files, verified on all three schemes for a 9,576-variant assay
+(9,576 of 9,576 mutants). We did not regenerate splits.
+
+\textbf{Models.} Four experts. Two are frozen predictions from published methods: Kermut, a composite
+Gaussian-process kernel over sequence and structure features, and AMK, an assay-adaptive mixed structure
+kernel; a third, an additive structure kernel, receives weight 0.00 and does not affect scoring. The
+fourth is our encoder, described in §4, refitted per assay and per split.
+
+\textbf{Feature construction.} Per-residue representations come from ESM-2 650M at layers 20, 30 and 33, on
+both the wild-type and the mutated sequence, with a ±4-residue window pooled by mean at layers 30 and
+33. Concatenating site vectors, wild-type vectors, window pools and difference terms gives 12,800
+dimensions per variant. Features are standardised per assay with the statistics stored alongside each
+fit.
+
+\textbf{Training the encoder.} A 12,800 → 256 → 64 → 1 head with a category-specific rank-8 linear residual,
+trained by the distillation loss of §4.2 with α = 0.9 and selected by early stopping on the held-out
+fold of an inner split. Eight independent seeds per assay are trained and their per-variant predictions
+are averaged. α and the rank were both re-verified by inner selection: α re-selects to 0.9 in all five
+folds, and rank 4 and rank 8 differ by 0.0002.
+
+\textbf{Fusion.} Four fixed weights per fold, selected on the training assays by simplex grid search and
+applied to the held-out assays --- the same procedure the tuned-constant baseline uses, so the comparison
+is equal-compute. The grid is a step-0.1 simplex over four weights.
+
+\textbf{Baselines.} Five, in increasing strength. A fixed 50/50 blend of the two strongest experts. A fixed
+D+Kermut blend. The tuned constant of §3. A nested constant whose weights are selected per fold. And
+Kermut alone, which is also the published leaderboard leader on this metric.
+
+\textbf{Statistics.} Seed intervals from eight independent full-pipeline runs; assay intervals from a
+two-level bootstrap resampling assays within category and seeds together, 4,000 replicates. Comparisons
+between two configurations on the same assays use paired differences, because assay-to-assay variance is
+an order of magnitude larger than the effect.
+
+\textbf{Reproduction.} Two commands from two public repositories regenerate every number here. The score
+file, per-mutant predictions for all 696,311 variants, the fusion and evaluation scripts, and the
+recovered kernel are in the released artifact. The control row of §5.1 comes from the same command as
+the headline, so a reader can check our aggregation before trusting any comparison built on it.
+
+\textbf{Compute.} One H200 GPU per encoder run, a few hours for a full panel with eight seeds. The structural
+experts are frozen, which is why their per-mutant predictions are published rather than left to be
+regenerated.
+\section{What this contributes to protein engineering}
 \textbf{Contributions to the domain.} A protein engineer choosing mutations against an assay budget needs a
 ranking they can act on, and the field's papers are not organised around that. Two deliverables follow.
 
-The first is a \emph{calibrated expectation}. Taking the top 5\% of our ranking recovers 24.7\% of the true top
-5\%, a five-fold lift over random --- but 7.7-fold on stability assays and 3.4-fold on activity assays, and
+The first is a *calibrated expectation*. Taking the top 5% of our ranking recovers 24.7% of the true top
+5%, a five-fold lift over random --- but 7.7-fold on stability assays and 3.4-fold on activity assays, and
 no advantage at all on the largest assay quartiles. A laboratory can use that profile to decide how much
 of the ordering to trust for the property it cares about. No previous protein-fitness paper makes this
 statement, because aggregate Spearman cannot express it.
@@ -663,25 +718,109 @@ published per-assay values for a reference method on 217 of 217 assays and confi
 bit-identical to the released files --- we publish per-mutant predictions for all 696,311 variants so the
 evaluation is reproducible without our code, and we characterise its difficulty structure across
 categories, sizes and splits. A reader can use that characterisation without adopting our method.
+\section{Supporting tables}
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{lr}
+\hline
+representation & score \\
+\hline
+site vector only (layer 33) & 0.467 \\
++ multiple layers & 0.464 \\
++ ±4 neighbourhood & 0.480 \\
+\textbf{+ wild-type layers and difference terms} & \textbf{0.596} \\
+\hline
+\end{tabular}
+\end{table*}
 
-\textbf{If you are building a fusion.} Report the oracle. It takes an afternoon and converts an open-ended
-search for better gating into a bounded question: how much is left? When the answer is a quarter of what
-a single expert change is worth, the search is over.
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{lr}
+\hline
+configuration & official \\
+\hline
+previous four-expert fusion & 0.685538 \\
++ distilled encoder, category residual & 0.691130 \\
+\textbf{+ eight-seed averaging} & \textbf{0.693311} \\
+\hline
+\end{tabular}
+\end{table*}
 
-\textbf{If you are evaluating.} A ranker's aggregate correlation and its top-of-list recall can disagree in
-significance --- ours agree in direction but differ by a factor of two across categories --- and the second
-is closer to what the downstream experiment measures. The cheapest version of this discipline is to
-report the oracle and the tuned constant alongside any learned weighting; the second cheapest is the
-per-category breakdown instead of the mean.
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\hline
+branch & parameters & standalone delta vs plain & seeds positive & 95\% CI \\
+\hline
+per-category, rank 8 & 5x & \textbf{+0.0214} & 4/4 & [+0.0157, +0.0274] \\
+shared, rank 8 & 1x & -0.0008 & 2/4 & [-0.0054, +0.0040] \\
+\hline
+\end{tabular}
+\end{table*}
 
-\textbf{What would falsify us.} If a pool of experts were built to disagree --- selected for low residual
-correlation rather than high standalone score --- the oracle over that pool would be larger, and adaptive
-weighting might pay again. Our claim is about headroom under a pool built the usual way, and it should be
-re-measured whenever the pool changes.
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{lrrr}
+\hline
+category & ours & Kermut & delta \\
+\hline
+Stability & \textbf{0.851} & 0.817 & +0.034 \\
+Expression & 0.693 & 0.670 & +0.023 \\
+Binding & 0.653 & 0.611 & +0.042 \\
+Activity & \textbf{0.642} & 0.605 & +0.037 \\
+OrganismalFitness & 0.632 & 0.582 & +0.050 \\
+\hline
+\end{tabular}
+\end{table*}
 
-The experiment we would run next is prospective: generate a candidate list from the ranking, assay it
-alongside a random control, and measure whether the top-of-list lift becomes a hit-rate lift at the
-bench. Until then the honest claim is about rankings, not discoveries.
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{lrrr}
+\hline
+top of the list & recall of the true top & random & lift \\
+\hline
+1\% & \textbf{0.119} & 0.010 & \textbf{11.8x} \\
+5\% & \textbf{0.247} & 0.050 & \textbf{4.96x} \\
+10\% & \textbf{0.350} & 0.100 & \textbf{3.50x} \\
+\hline
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{lr}
+\hline
+category & lift over random \\
+\hline
+Stability & \textbf{7.7x} \\
+Binding & 4.9x \\
+OrganismalFitness & 4.6x \\
+Expression & 4.2x \\
+Activity & \textbf{3.4x} \\
+\hline
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\small
+\begin{tabular}{lrr}
+\hline
+quartile & mean delta & regress rate \\
+\hline
+Q1 (smallest) & \textbf{+0.0073} & 0.255 \\
+Q2 & +0.0017 & 0.444 \\
+Q3 & +0.0024 & 0.407 \\
+Q4 (largest) & \textbf{+0.00003} & 0.500 \\
+\hline
+\end{tabular}
+\end{table*}
 
 
 \section*{AI Disclosure Statement}
