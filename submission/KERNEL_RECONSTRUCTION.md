@@ -71,4 +71,4 @@ longer sealed. Given the cached feature blocks, `submission/kernel.py` plus the 
 reproduces their predictions exactly.
 
 The per-mutant prediction file remains the recommended distribution path — it needs no features and
-no 430 MB per-assay caches — but anyone who wants to rescore new mutants now has the kernel.
+no 32 MB per-assay feature caches — but anyone who wants to rescore new mutants now has the kernel.
