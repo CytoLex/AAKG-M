@@ -8,9 +8,19 @@ was read from the venue's own site on 2026-11-18, not recalled.
 | venue | CCF | abstract | full paper | notification | days from today |
 |---|---|---|---:|---:|---:|
 | **ACL 2027** (via ARR) | A | — | **Jan 4, 2027** | TBA | **47** |
-| **IJCAI-27** (Kyoto) | A | Jan 4, 2027 | **Jan 11, 2027** | Apr 21, 2027 | **54** |
 | **ICML 2027** | A | Jan 14, 2027 | **Jan 22, 2027** | first-stage Feb 23, 2027 | **65** |
 | KDD 2027 Cycle 2 | A | not published | expected ~Feb 2027 | — | ~90 |
+| ~~IJCAI-27~~ | **B** | Jan 4, 2027 | Jan 11, 2027 | Apr 21, 2027 | 54 |
+
+**Correction: IJCAI is CCF-B, not CCF-A.** An earlier version of this file listed it as A. The
+ccf-deadlines dataset records `ccf: B` for IJCAI (core: A\*, but CCF rank is what matters here), which
+matches how it is currently treated. I could not reach ccf.org.cn directly to re-read the official
+catalogue — the site is behind a captcha — so this rests on that dataset, which tracks the catalogue.
+
+**ACL has no AI for Sciences track.** Its 2027 theme track is "Homogenization and knowledge collapse in
+LLMs"; the nearest thing in its topic list is "Clinical and Biomedical Applications", which is biomedical
+NLP. A paper about ranking protein variants would have to be reframed around protein language models,
+which is not what it argues.
 
 Already closed, for completeness: ICLR 2027 (paper Sep 25, 2026), CVPR 2027 (submission Nov 16, 2026 —
 two days ago), NeurIPS 2026, AAAI-27.
@@ -24,13 +34,13 @@ publishes analysis and negative results — "we tested a class of mechanisms and
 what does" is a recognised ICML genre, whereas it is an awkward fit for a track whose criteria
 deprioritise papers that mainly build frameworks or mainly use existing benchmarks.
 
-**IJCAI-27 — eleven days earlier, slightly worse fit.** Same content, general-AI audience. No format
-advantage over ICML, and IJCAI's review culture is less sympathetic to a result whose contribution is a
-falsification.
+**IJCAI-27 — not an option for a CCF-A claim.** It is CCF-B. Eleven days earlier than ICML is not worth a
+rank drop for work whose venue choice is partly about what the degree or the review committee counts.
 
-**ACL 2027 — earliest, wrong framing.** ARR would want this framed around protein language models. The
-paper is not about language modelling; the encoder is one of four experts and the argument is about
-allocation. Forcing that framing would weaken it.
+**ACL 2027 — earliest, but there is no track for this.** Confirmed from the ACL 2027 CFP: the theme is
+LLM homogenisation, and the topic list has no AI-for-science area. ARR would want the paper framed around
+protein language models; the encoder is one of four experts here and the argument is about allocation.
+Forcing that framing would weaken it.
 
 **KDD 2027 Cycle 2 — furthest away and, on the 2027 criteria, the weakest fit.** See
 `FIT_ASSESSMENT_2027.md`: two of the four criteria deprioritise exactly our profile, and the page itself
