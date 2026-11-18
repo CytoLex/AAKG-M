@@ -79,15 +79,17 @@ Both halves of the official process are submitted.
 | item | link | state |
 |---|---|---|
 | issue | https://github.com/OATML-Markslab/ProteinGym/issues/129 | open, `[new model]` in the title |
-| pull request | https://github.com/OATML-Markslab/ProteinGym/pull/130 | **draft**, 3 files, +95 lines, mergeable |
+| pull request | https://github.com/OATML-Markslab/ProteinGym/pull/130 | **ready for review** (2026-11-18), 3 files, +113 lines, mergeable clean |
 
 The label could not be attached to the issue: GitHub only lets repository maintainers set labels, so
 the `[new model]` prefix in the title carries that information instead.
 
-The PR is a **draft** on purpose. Its scoring script needs the structural-expert prediction tables,
-which are research-use only and not in the repository. The scores themselves reproduce without them
-(`reproduce_official.sh`), and the issue asks whether that satisfies the reproducible-scoring
-criterion. Marking the PR ready for review before that answer would be premature.
+The PR was opened as a draft on 2026-11-16 and marked **ready for review** on 2026-11-18, once the
+per-mutant prediction file and the recovered kernel had closed both open questions.
+
+Context for the wait: three other baselines (#126, #127, #128) and a bug report (#125) had been open
+for 6 to 23 days with zero maintainer comments at the time. The silence is not specific to this
+submission, so holding the PR as a draft was protecting nothing.
 
 ## Status in one line
 
