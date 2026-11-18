@@ -425,6 +425,7 @@ expert/esm_mut_head.py    the encoder expert: distillation + category low-rank r
 expert/make_seedavg.py    average the expert over its eight training seeds
 expert/headline_seeds.py  nested four-expert fusion + two-level bootstrap
 expert/README.md          how to reproduce, and what is not redistributed
+kdd/                      retargeting to KDD AI for Sciences: requirements, angle, abstract
 paper/                    paper drafts (Chinese prose + English camera-ready blocks)
 paper/README.md           the headline convention and what §8.x refers to
 data/README.md            expert provenance: what each column is, and why it is out-of-fold
