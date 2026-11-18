@@ -17,7 +17,8 @@ Working directory for the retarget from CVPR to the KDD AI for Sciences track.
 | `SECTION_2_7_REST.md` | §2 related work and §7 discussion |
 | `SECTION_5_UTILITY.md` | §5 camera-ready: official metric, per category, top-of-list, the regressions |
 | `figures/` | the two figure sources (`make_figs.py`) and the rendered PDFs |
-| `latex/` | `make_tex.py`, `build.sh`, `paper.tex`, the compiled draft, and the measured page count |
+| `latex/` | ACM/KDD build: `make_tex.py`, `build.sh`, `paper.tex`, the compiled draft, measured page count |
+| `latex_icml/` | ICML 2027 build of the same paper: official style kit, 8-page main body + appendix |
 | `VENUE_COMPARISON.md` | CCF-A alternatives with verified deadlines: ICML (Jan 22), IJCAI (Jan 11), ACL (Jan 4) |
 | `SUBMISSION_CHECKLIST.md` | every CFP requirement against what we have, with the author-only items marked |
 | `FIT_ASSESSMENT_2027.md` | the four 2027 evaluation criteria quoted, and the track recommendation |
