@@ -17,11 +17,7 @@ categories.
 
 At the per-assay level the agreement is stronger still: our recomputed Kermut column matches the
 published `DMS_substitutions_Spearman_DMS_level.csv` on **217 of 217 assays** with mean absolute
-difference **0.0** and maximum 0.0005, the residual being the published table's three-decimal rounding.
-Our fold assignments are bit-identical to the released `cv_folds_singles_substitutions` files
-(9,576/9,576 mutants on all three schemes for the assay we checked).
-
-So the numbers below are on the leaderboard's scale, computed by the leaderboard's own code.
+difference **0.0**. The numbers below are on the leaderboard's scale, computed by its own code.
 
 ## 5.2 The headline, and what it is a headline of
 

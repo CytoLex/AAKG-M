@@ -62,10 +62,9 @@ the recovered kernel for the two structural experts are in the released artifact
 of §5.1 is produced by the same command as the headline, so a reader can verify that our aggregation is
 correct before trusting any comparison we make with it.
 
-**Compute.** One H200 GPU per encoder run; a full 217-assay panel with eight seeds takes a few hours on
-a single device. The structural experts are frozen and cost nothing at scoring time. This matters for
-the reproduction claim: a reader with one GPU can rebuild the encoder but not the experts, which is why
-their per-mutant predictions are published rather than left to be regenerated.
+**Compute.** One H200 GPU per encoder run, a few hours for a full panel with eight seeds. The structural
+experts are frozen, which is why their per-mutant predictions are published rather than left to be
+regenerated.
 
 ---
 

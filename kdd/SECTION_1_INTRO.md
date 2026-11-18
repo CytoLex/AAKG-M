@@ -64,11 +64,3 @@ for the field. The first is what makes both of them measurable.
 4. **A reproducible artifact.** Per-mutant predictions for all 696,311 mutants in the benchmark, the
    code that regenerates every number in two commands from two public repositories, and the recovered
    kernel of the structural experts verified to floating-point precision.
-
-## What this paper is not
-
-It is not a claim that conditional weighting is worthless in general. In recommendation and multi-task
-learning the mixture frequently carries real signal, and our result does not transfer there. It is not a
-state-of-the-art claim: we beat one leaderboard entry, with one of that entry's own components inside our
-ensemble, and we say so. And it is not a wet-lab validation: the top-of-list lift is a property of the
-ranking, not a measured hit rate, and the experiment that would connect them has not been run.

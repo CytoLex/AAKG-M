@@ -86,14 +86,6 @@ for the field. The first is what makes both of them measurable.
   kernel of the structural experts verified to floating-point precision.
 \end{enumerate}
 
-\section{What this paper is not}\label{what-this-paper-is-not}
-
-It is not a claim that conditional weighting is worthless in general. In recommendation and multi-task
-learning the mixture frequently carries real signal, and our result does not transfer there. It is not a
-state-of-the-art claim: we beat one leaderboard entry, with one of that entry's own components inside our
-ensemble, and we say so. And it is not a wet-lab validation: the top-of-list lift is a property of the
-ranking, not a measured hit rate, and the experiment that would connect them has not been run.
-
 \section{2 Related work}\label{related-work}
 
 \textbf{Protein fitness prediction.} Three lines converge here. Zero-shot predictors score variants from a
@@ -118,16 +110,6 @@ is a poor guide to deployment: it is insensitive to where in the ranking the err
 averages over subpopulations a practitioner treats separately. Our top-of-list analysis by functional
 category is a small step toward reporting what a downstream experiment would actually experience, and we
 know of no reason it should be specific to protein fitness.
-
-\textbf{What this paper does not span.} Three adjacent literatures bear on the claims and are not tested
-here. Calibration and uncertainty quantification are the natural next step after a ranking result: our
-predictions carry no calibrated error bars, and the per-assay regression rate of 40\% is a statement that
-a calibrated method could have flagged in advance. Active learning is the sequel rather than the
-alternative --- if the top of the list is enriched, the question becomes how quickly a batch can be chosen
-and how the posterior updates, which is a different experiment. And structure-based design methods take
-coordinates and propose sequences, whereas this work only ranks proposals someone else has made; the
-dual-use considerations in §6 differ accordingly, and we do not claim the design-side literature's
-results transfer.
 
 
 \begin{figure}[t]
@@ -313,10 +295,9 @@ the recovered kernel for the two structural experts are in the released artifact
 of §5.1 is produced by the same command as the headline, so a reader can verify that our aggregation is
 correct before trusting any comparison we make with it.
 
-\textbf{Compute.} One H200 GPU per encoder run; a full 217-assay panel with eight seeds takes a few hours on
-a single device. The structural experts are frozen and cost nothing at scoring time. This matters for
-the reproduction claim: a reader with one GPU can rebuild the encoder but not the experts, which is why
-their per-mutant predictions are published rather than left to be regenerated.
+\textbf{Compute.} One H200 GPU per encoder run, a few hours for a full panel with eight seeds. The structural
+experts are frozen, which is why their per-mutant predictions are published rather than left to be
+regenerated.
 
 \section{4 The expert}\label{the-expert}
 
@@ -521,11 +502,7 @@ categories.
 
 At the per-assay level the agreement is stronger still: our recomputed Kermut column matches the
 published \texttt{DMS\_substitutions\_Spearman\_DMS\_level.csv} on \textbf{217 of 217 assays} with mean absolute
-difference \textbf{0.0} and maximum 0.0005, the residual being the published table's three-decimal rounding.
-Our fold assignments are bit-identical to the released \texttt{cv\_folds\_singles\_substitutions} files
-(9,576/9,576 mutants on all three schemes for the assay we checked).
-
-So the numbers below are on the leaderboard's scale, computed by the leaderboard's own code.
+difference \textbf{0.0}. The numbers below are on the leaderboard's scale, computed by its own code.
 
 \section{5.2 The headline, and what it is a headline of}\label{the-headline-and-what-it-is-a-headline-of}
 
@@ -674,7 +651,7 @@ own predictions: the nested weight search fits one weight vector per fold over \
 replacing the expert elsewhere moves the weights applied to them. Their delta is real for the system and
 uninformative about the individual assay.
 
-\section{6 Limitations and ethical considerations}\label{limitations-and-ethical-considerations}
+\section{6 Limitations and Ethical Considerations}\label{limitations-and-ethical-considerations}
 
 \subsubsection{Limitations}\label{limitations}
 
@@ -744,6 +721,27 @@ and they are sufficient to re-derive every number in the paper.
 \textbf{Use of generative AI.} The paper's prose and analysis scripts were developed with AI assistance.
 Per the track's authorship policy this is disclosed in the submission form, and the authors take
 responsibility for all content.
+
+\section{6.1 Generative AI Usage}\label{generative-ai-usage}
+
+The research reported here was carried out with AI assistance, and we describe the extent precisely
+rather than gesturing at it.
+
+\textbf{Where AI tools were used.} Analysis scripts, evaluation harnesses and LaTeX assembly were written and
+revised with an AI coding assistant. The manuscript's prose was drafted with the same assistant and
+then reviewed, corrected and rewritten by the authors. Literature metadata was resolved programmatically
+against the NeurIPS and ICML proceedings indexes and the Crossref API rather than recalled, and the
+verification pass caught two errors --- a wrong paper title and a DOI belonging to a different article ---
+which are documented in the released artifact.
+
+\textbf{What was not delegated.} The experimental design, the choice of baselines, the falsification
+strategy, the decision to report a per-assay oracle, and every judgement about what the results mean
+were made by the authors. No result reported here was generated by a model. All quantitative claims
+come from deterministic scripts that are released and can be re-run; the two-command reproduction in the
+appendix regenerates every number in the paper from public inputs.
+
+\textbf{Authorship and responsibility.} No AI system is listed as an author. The authors take full
+responsibility for the content, including any error introduced with assistance.
 
 \section{7 Discussion}\label{discussion}
 

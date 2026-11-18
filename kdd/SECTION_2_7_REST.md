@@ -29,16 +29,6 @@ averages over subpopulations a practitioner treats separately. Our top-of-list a
 category is a small step toward reporting what a downstream experiment would actually experience, and we
 know of no reason it should be specific to protein fitness.
 
-**What this paper does not span.** Three adjacent literatures bear on the claims and are not tested
-here. Calibration and uncertainty quantification are the natural next step after a ranking result: our
-predictions carry no calibrated error bars, and the per-assay regression rate of 40% is a statement that
-a calibrated method could have flagged in advance. Active learning is the sequel rather than the
-alternative — if the top of the list is enriched, the question becomes how quickly a batch can be chosen
-and how the posterior updates, which is a different experiment. And structure-based design methods take
-coordinates and propose sequences, whereas this work only ranks proposals someone else has made; the
-dual-use considerations in §6 differ accordingly, and we do not claim the design-side literature's
-results transfer.
-
 ## 7 Discussion
 
 Three things change depending on who is reading.

@@ -61,14 +61,6 @@ for the field. The first is what makes both of them measurable.
    code that regenerates every number in two commands from two public repositories, and the recovered
    kernel of the structural experts verified to floating-point precision.
 
-## What this paper is not
-
-It is not a claim that conditional weighting is worthless in general. In recommendation and multi-task
-learning the mixture frequently carries real signal, and our result does not transfer there. It is not a
-state-of-the-art claim: we beat one leaderboard entry, with one of that entry's own components inside our
-ensemble, and we say so. And it is not a wet-lab validation: the top-of-list lift is a property of the
-ranking, not a measured hit rate, and the experiment that would connect them has not been run.
-
 ## 2 Related work
 
 
@@ -96,16 +88,6 @@ is a poor guide to deployment: it is insensitive to where in the ranking the err
 averages over subpopulations a practitioner treats separately. Our top-of-list analysis by functional
 category is a small step toward reporting what a downstream experiment would actually experience, and we
 know of no reason it should be specific to protein fitness.
-
-**What this paper does not span.** Three adjacent literatures bear on the claims and are not tested
-here. Calibration and uncertainty quantification are the natural next step after a ranking result: our
-predictions carry no calibrated error bars, and the per-assay regression rate of 40% is a statement that
-a calibrated method could have flagged in advance. Active learning is the sequel rather than the
-alternative — if the top of the list is enriched, the question becomes how quickly a batch can be chosen
-and how the posterior updates, which is a different experiment. And structure-based design methods take
-coordinates and propose sequences, whereas this work only ranks proposals someone else has made; the
-dual-use considerations in §6 differ accordingly, and we do not claim the design-side literature's
-results transfer.
 
 
 
@@ -276,10 +258,9 @@ the recovered kernel for the two structural experts are in the released artifact
 of §5.1 is produced by the same command as the headline, so a reader can verify that our aggregation is
 correct before trusting any comparison we make with it.
 
-**Compute.** One H200 GPU per encoder run; a full 217-assay panel with eight seeds takes a few hours on
-a single device. The structural experts are frozen and cost nothing at scoring time. This matters for
-the reproduction claim: a reader with one GPU can rebuild the encoder but not the experts, which is why
-their per-mutant predictions are published rather than left to be regenerated.
+**Compute.** One H200 GPU per encoder run, a few hours for a full panel with eight seeds. The structural
+experts are frozen, which is why their per-mutant predictions are published rather than left to be
+regenerated.
 
 ## 4 The expert
 
@@ -451,11 +432,7 @@ categories.
 
 At the per-assay level the agreement is stronger still: our recomputed Kermut column matches the
 published `DMS_substitutions_Spearman_DMS_level.csv` on **217 of 217 assays** with mean absolute
-difference **0.0** and maximum 0.0005, the residual being the published table's three-decimal rounding.
-Our fold assignments are bit-identical to the released `cv_folds_singles_substitutions` files
-(9,576/9,576 mutants on all three schemes for the assay we checked).
-
-So the numbers below are on the leaderboard's scale, computed by the leaderboard's own code.
+difference **0.0**. The numbers below are on the leaderboard's scale, computed by its own code.
 
 ## 5.2 The headline, and what it is a headline of
 
@@ -564,7 +541,7 @@ own predictions: the nested weight search fits one weight vector per fold over *
 replacing the expert elsewhere moves the weights applied to them. Their delta is real for the system and
 uninformative about the individual assay.
 
-## 6 Limitations and ethical considerations
+## 6 Limitations and Ethical Considerations
 
 
 ### Limitations
@@ -635,6 +612,28 @@ and they are sufficient to re-derive every number in the paper.
 **Use of generative AI.** The paper's prose and analysis scripts were developed with AI assistance.
 Per the track's authorship policy this is disclosed in the submission form, and the authors take
 responsibility for all content.
+
+## 6.1 Generative AI Usage
+
+
+The research reported here was carried out with AI assistance, and we describe the extent precisely
+rather than gesturing at it.
+
+**Where AI tools were used.** Analysis scripts, evaluation harnesses and LaTeX assembly were written and
+revised with an AI coding assistant. The manuscript's prose was drafted with the same assistant and
+then reviewed, corrected and rewritten by the authors. Literature metadata was resolved programmatically
+against the NeurIPS and ICML proceedings indexes and the Crossref API rather than recalled, and the
+verification pass caught two errors — a wrong paper title and a DOI belonging to a different article —
+which are documented in the released artifact.
+
+**What was not delegated.** The experimental design, the choice of baselines, the falsification
+strategy, the decision to report a per-assay oracle, and every judgement about what the results mean
+were made by the authors. No result reported here was generated by a model. All quantitative claims
+come from deterministic scripts that are released and can be re-run; the two-command reproduction in the
+appendix regenerates every number in the paper from public inputs.
+
+**Authorship and responsibility.** No AI system is listed as an author. The authors take full
+responsibility for the content, including any error introduced with assistance.
 
 ## 7 Discussion
 

@@ -1,20 +1,32 @@
 # Retargeting to KDD AI for Sciences
 
-Read from the KDD 2026 AI for Sciences track CFP (`kdd2026.kdd.org/ai4sciences-track-call-for-papers/`)
-on 2026-11-18. KDD 2027 will restate these; the structural requirements below have been stable, but
-every date and the reviewer clause should be re-checked against the 2027 page before submission.
+**Updated against the KDD 2027 CFP** (`kdd2027.kdd.org/ai4sciences-track-call-for-papers/`), read
+2026-11-18. The earlier version of this file was written against the 2026 page; three things changed and
+they matter:
+
+1. **A second required section.** Beyond *Limitations and Ethical Considerations*, the 2027 CFP requires
+   a separate section titled **Generative AI Usage**. Drafted in `SECTION_6B_GENAI.md`.
+2. **Stricter fit criteria.** Two of the four criteria now explicitly deprioritise papers that use
+   existing benchmarks directly and papers that build complex technical frameworks. See
+   `FIT_ASSESSMENT_2027.md`, which recommends deciding between this track and the Research Track before
+   any further writing.
+3. **A softer reviewer clause.** 2027 asks for "at least three papers in KDD **or other related
+   conferences**", where 2026 demanded three top AI/ML papers or one Nature/Science/Cell paper. Still a
+   requirement, materially easier to meet.
 
 ## What the track demands
 
 | requirement | detail | our status |
 |---|---|---|
-| **8 content pages** | ACM `sigconf,review`, double column, single PDF; references and an optional appendix outside the limit | drafts are CVPR single-column, ~3.5k English words total — a full rewrite, not a trim |
-| **Mandatory section** | a separate section titled *Limitations and Ethical Considerations* | not present; we have scattered caveats |
+| **8 content pages** | ACM `sigconf,review`, double column, single PDF; references and optional appendix outside the limit | **compiled at 8 pages**, 5,600 words, 9 tables, 2 figures |
+| **Mandatory section** | *Limitations and Ethical Considerations* | **drafted**, §6 of the built paper |
+| **Mandatory section** | *Generative AI Usage* (new in 2027) | **drafted**, §6.1 of the built paper |
 | **Single-blind** | author names and affiliations listed | n/a, but removes the anonymisation work |
-| **Second cycle only** | AI4S accepts submissions only in the February cycle | KDD 2026 was Feb 1 (abstract) / Feb 8 (paper); expect the same window for 2027 |
+| **Cycle** | KDD 2027 Cycle 1 closed on 2026-07-19 (abstract) / 2026-07-26 (paper), notification 2026-11-14. Cycle 2 dates are unpublished; the 2026 pattern implies ~February 2027 | **next realistic target, ~3 months out** |
+| **Generative AI Usage section** | required separately from Limitations, new in 2027 | drafted in `SECTION_6B_GENAI.md`, wired into the build |
 | **OpenReview** | every author needs a complete profile; institutional email avoids a 2-week moderation delay | needs action per author |
-| **Qualified reviewer** | each submission must nominate ≥1 author with ≥3 top AI/ML papers (KDD/NeurIPS/ICML/JMLR) or ≥1 Nature/Science/Cell paper, or the best-qualified author if none qualifies | **unverified — see risks** |
-| **Domain contribution** | reviewers expect co-authors from the studied domain and an explicit statement of what the work contributes *to that domain* | our authors are computational; framing is ML-first |
+| **Qualified reviewer** | 2027 wording: "at least three papers in KDD or other related conferences", or nominate the best-qualified author for the PC chairs | **unverified — the author list is still the open question** |
+| **Domain contribution** | "we expect submissions co-authored by experts from domains relevant to the studies... solely authored by AI/ML experts are less preferred" | our authors are computational; framing is ML-first. See `FIT_ASSESSMENT_2027.md` |
 | **Unique data & analysis** | one of the three headline evaluation criteria | strong: 217-assay panel, 651 units, published per-mutant scores, falsification of a whole mechanism class |
 
 ## What changes in the story
