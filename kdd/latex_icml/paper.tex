@@ -110,10 +110,12 @@ for the field. The first is what makes both of them measurable.
 
 \textbf{Protein fitness prediction.} Three lines converge here. Zero-shot predictors score variants from a
 sequence model's likelihood or from multiple-sequence-alignment statistics, without touching assay
-labels. Supervised approaches train on deep mutational scanning data, either per assay or across a
-panel; the current leaderboard leader is a composite kernel regression of this kind. The fusion line,
-which this paper belongs to, combines predictors that fail differently --- sequence kernels, structure
-kernels, and learned encoders --- and the combination is usually weighted per assay. Our contribution is
+labels \cite{esm1v,tranception,msatransformer}. Supervised approaches train on deep mutational scanning
+data \cite{fowler2014,yang2019}, either per assay or across a panel; the current leaderboard leader is a
+composite kernel regression of this kind. The fusion line, which this paper belongs to, combines
+predictors that fail differently --- sequence kernels, structure kernels, and learned encoders --- and the
+combination is usually weighted per assay. Benchmarks for this comparison are themselves a design
+choice \cite{flip}, which is why \S5.1 verifies the one we use rather than trusting it. Our contribution is
 not a new member of any of these lines but a measurement of which of them the fusion actually benefits
 from, and an expert built to exploit the answer.
 
@@ -134,7 +136,7 @@ know of no reason it should be specific to protein fitness.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{../figures/fig1_allocation_vs_expert.pdf}
+\includegraphics[width=0.86\columnwidth]{../figures/fig1_allocation_vs_expert.pdf}
 \caption{Allocation headroom against expert headroom, same protocol. The shaded band spans what any
 weighting rule could gain over a tuned constant (a per-assay oracle, +0.0027); the lower arrow spans
 what replacing one expert gained (+0.0077). Every adaptive mechanism we measured lands inside or below
@@ -401,7 +403,7 @@ versus global --- not a different optimiser, a different loss, or a bigger model
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{../figures/fig2_topk_by_category.pdf}
+\includegraphics[width=0.86\columnwidth]{../figures/fig2_topk_by_category.pdf}
 \caption{Top-of-list utility by functional category: recall of the true top-$k$ variants when the top
 $k$ of our ranking is taken, for $k \in \{1\%, 5\%, 10\%\}$, with the random-ordering expectation
 marked. Stability is consistently strongest and activity weakest, a spread the aggregate Spearman does

@@ -8,10 +8,12 @@ Camera-ready drafts, ~500 and ~350 words.
 
 **Protein fitness prediction.** Three lines converge here. Zero-shot predictors score variants from a
 sequence model's likelihood or from multiple-sequence-alignment statistics, without touching assay
-labels. Supervised approaches train on deep mutational scanning data, either per assay or across a
-panel; the current leaderboard leader is a composite kernel regression of this kind. The fusion line,
-which this paper belongs to, combines predictors that fail differently — sequence kernels, structure
-kernels, and learned encoders — and the combination is usually weighted per assay. Our contribution is
+labels \cite{esm1v,tranception,msatransformer}. Supervised approaches train on deep mutational scanning
+data \cite{fowler2014,yang2019}, either per assay or across a panel; the current leaderboard leader is a
+composite kernel regression of this kind. The fusion line, which this paper belongs to, combines
+predictors that fail differently — sequence kernels, structure kernels, and learned encoders — and the
+combination is usually weighted per assay. Benchmarks for this comparison are themselves a design
+choice \cite{flip}, which is why \S5.1 verifies the one we use rather than trusting it. Our contribution is
 not a new member of any of these lines but a measurement of which of them the fusion actually benefits
 from, and an expert built to exploit the answer.
 

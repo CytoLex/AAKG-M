@@ -105,7 +105,7 @@ for a in ("toprule", "midrule", "bottomrule"):
 FIG1 = r"""
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{../figures/fig1_allocation_vs_expert.pdf}
+\includegraphics[width=0.86\columnwidth]{../figures/fig1_allocation_vs_expert.pdf}
 \caption{Allocation headroom against expert headroom, same protocol. The shaded band spans what any
 weighting rule could gain over a tuned constant (a per-assay oracle, +0.0027); the lower arrow spans
 what replacing one expert gained (+0.0077). Every adaptive mechanism we measured lands inside or below
@@ -116,7 +116,7 @@ the band.}
 FIG2 = r"""
 \begin{figure}[t]
 \centering
-\includegraphics[width=\columnwidth]{../figures/fig2_topk_by_category.pdf}
+\includegraphics[width=0.86\columnwidth]{../figures/fig2_topk_by_category.pdf}
 \caption{Top-of-list utility by functional category: recall of the true top-$k$ variants when the top
 $k$ of our ranking is taken, for $k \in \{1\%, 5\%, 10\%\}$, with the random-ordering expectation
 marked. Stability is consistently strongest and activity weakest, a spread the aggregate Spearman does
