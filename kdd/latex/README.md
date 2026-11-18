@@ -46,10 +46,12 @@ methodology (three sentences folded into §5.4), and §5.7 on aggregate-versus-t
 ## What is still missing before submission
 
 - **Author block.** Placeholders. The track is single-blind, and the list must be final at the deadline.
-- **Bibliography.** 14 entries in `references.bib`, resolved through the OpenAlex API rather than
-  typed from memory; 11 `\cite` commands now appear in the text. Seven entries still cite a preprint
-  venue and one is a marked placeholder — see `REFERENCES_TODO.md` for the exact list and what to
-  check. Resolving those is a reading task, not a writing one.
+- **Bibliography.** 14 entries, each verified against the venue's own index or a Crossref DOI lookup
+  rather than typed from memory; 11 `\cite` commands appear in the text. Twelve carry full metadata
+  including a DOI where one exists; the five NeurIPS/ICML entries are verified by their proceedings
+  pages, which do not mint DOIs; `shazeer2017` carries its ICLR venue plus an arXiv locator. The
+  verification caught two errors — a wrong paper title and a DOI that resolved to an unrelated letter —
+  both recorded in `REFERENCES_TODO.md`.
 - **Required section title.** Rendered "Limitations and ethical considerations". KDD 2026 used
   "Limitations and Ethical Considerations" — match the 2027 CFP verbatim, since required-section wording
   is a desk-reject criterion.
