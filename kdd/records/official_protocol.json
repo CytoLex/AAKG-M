@@ -1,0 +1,47 @@
+{
+  "date": "2026-11-14",
+  "source": "official repo OATML-Markslab/ProteinGym, proteingym/performance_DMS_supervised_benchmarks.py",
+  "official_protocol": {
+    "schemes": [
+      "fold_random_5",
+      "fold_modulo_5",
+      "fold_contiguous_5"
+    ],
+    "step1": "per DMS x scheme Spearman, averaged over the three schemes",
+    "step2": "mean grouped by (model, UniProt_ID, coarse_selection_type)",
+    "step3": "mean over coarse_selection_type",
+    "reference": "reference_files/DMS_substitutions.csv (217 assays, 186 UniProt IDs)"
+  },
+  "official_scores": {
+    "D": 0.653717,
+    "Kermut": 0.657028,
+    "AMK": 0.661147,
+    "old_4expert_fusion": 0.685538,
+    "this_method_single": 0.69113,
+    "this_method_seedavg": 0.693311
+  },
+  "deltas": {
+    "final_vs_baseline": 0.007773,
+    "single_vs_baseline": 0.005592,
+    "final_vs_kermut": 0.036283
+  },
+  "correction": "my previous message switched to random-5 only plus a plain assay mean and reported 0.798. That was wrong: the official script averages all THREE schemes and category-balances over coarse_selection_type. It also groups by UniProt_ID before averaging categories, which I had omitted",
+  "comparison_to_my_original_protocol": {
+    "mine_before": {
+      "final": 0.698495,
+      "baseline": 0.690808,
+      "delta": 0.007687
+    },
+    "official": {
+      "final": 0.693311,
+      "baseline": 0.685538,
+      "delta": 0.007773
+    },
+    "effect": "the UniProt grouping plus using all 217 assays moves the absolute values by about -0.005 but leaves the delta essentially unchanged (+0.0078 vs +0.0077)"
+  },
+  "remaining_gap": [
+    "D / Kermut / AMK are cached out-of-fold predictions from earlier work, not retrained by me inside these exact folds",
+    "the fusion weights are assay-held-out, which is stricter than the official setting but not identical to it",
+    "nothing has been submitted to the ProteinGym evaluation harness"
+  ]
+}

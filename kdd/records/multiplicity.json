@@ -1,0 +1,25 @@
+{
+  "date": "2026-11-14",
+  "job": "local computation",
+  "concern": "22 distinct mechanisms were tried on the same 217-assay panel, so the surviving result could in principle be a selection artefact; a protocol cannot 'nest' the choice of what to try",
+  "method": "convert the paired bootstrap CI of the claim tier into an approximate standard error, then apply a two-sided Bonferroni correction for the number of attempts",
+  "numbers": {
+    "delta": 0.005442,
+    "ci": [
+      0.003464,
+      0.007597
+    ],
+    "se": 0.001054,
+    "z": 5.16,
+    "attempts_actually_tried": 22,
+    "bonferroni_z_crit_for_22": 3.052,
+    "corrected_ci_for_22": [
+      0.002225,
+      0.008659
+    ],
+    "attempts_the_claim_survives": ">100000 (z = 5.16 exceeds the 10^-5 level)"
+  },
+  "verdict": "the mechanism-selection concern is bounded to negligible. With 22 attempts the Bonferroni threshold is z = 3.05 and the observed effect is z = 5.16; the corrected 95% CI is [+0.00223, +0.00866], still entirely above zero. The claim would survive even if 10^5 configurations had been tried",
+  "caveat": "Bonferroni assumes independence; the attempts here are correlated (many share components), which makes the correction conservative in our favour. The SE is derived from a bootstrap CI and assumes approximate normality of the resampling distribution",
+  "what_remains": "an external panel is still the only way to confirm the effect on unseen assays; the multiplicity analysis bounds the selection risk but does not replace replication"
+}

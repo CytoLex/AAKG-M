@@ -11,6 +11,9 @@ Working directory for the retarget from CVPR to the KDD AI for Sciences track.
 | `LIMITATIONS_ETHICS.md` | the mandated *Limitations and Ethical Considerations* section, drafted |
 | `RESULTS_TOP_K.md` | top-of-list utility: 11.8x lift at 1%, 4.96x at 5%, by category |
 | `RESULTS_FAILURE_ANALYSIS.md` | the regression set, the assay-size effect, the coverage coupling |
+| `SECTION_3_ALLOCATION.md` | §3 camera-ready: seven mechanisms, the oracle bound, the magnitude comparison |
+| `SECTION_4_EXPERT.md` | §4 camera-ready: differential representation, distillation, category residual, seed averaging |
+| `records/` | the JSON records every number in §3 and §4 points at |
 
 ## Status
 

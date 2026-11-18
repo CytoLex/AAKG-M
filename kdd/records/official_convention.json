@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-14",
+  "jobs": [
+    "aakg-rand2",
+    "aakg-expoff2",
+    "aakg-both"
+  ],
+  "convention": "ProteinGym supervised: per-assay random 5-fold OOF Spearman, plain mean over the 217 assays (no category balancing, no scheme averaging)",
+  "official_table": {
+    "D": 0.751446,
+    "Kermut": 0.759878,
+    "AMK": 0.771011,
+    "old_4expert_fusion": 0.781739,
+    "plus_encoder_expert": 0.793742,
+    "plus_lowrank": 0.795333,
+    "plus_seed_averaging": 0.797994
+  },
+  "delta_final_vs_old_fusion": 0.016255,
+  "three_scheme_table": {
+    "old_4expert_fusion": 0.690808,
+    "final": 0.698495,
+    "delta": 0.007687
+  },
+  "bug_fixed": "an earlier run reported D=0.672212, Kermut=0.672875, AMK=0.677618 because the three schemes were POOLED into one Spearman per assay. Each scheme carries its own OOF predictions (a variant has three different Kermut values), so pooling corrupts the ranking. Restricting to fold_random_5 per scheme gives the numbers above",
+  "findings": [
+    "under the official convention the encoder-expert swap supplies most of the gain (+0.0120 of the +0.0163)",
+    "the low-rank branch is worth only +0.0016 on random folds but +0.024 on the harder scheme average, so its contribution is a generalisation effect, not a random-fold effect",
+    "seed averaging adds +0.0027 on random folds vs +0.0022 on the scheme average"
+  ],
+  "still_not": "a leaderboard submission: the splits are ours and the experts are cached OOF predictions, so the numbers are not directly comparable to the published board",
+  "_SUPERSEDED": "These `official_table` values come from an intermediate, WRONG convention: fold_random_5 only plus a plain assay mean. The official script averages all three schemes and category-balances, and its numbers are in official_protocol.json: old_4expert 0.685538, single 0.691130, seed-avg 0.693311, Kermut 0.657028, D 0.653717, AMK 0.661147. Do not cite official_table.",
+  "_corrected_source": "official_protocol.json"
+}

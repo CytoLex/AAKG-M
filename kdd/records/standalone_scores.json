@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-11",
+  "job": "aakg-standalone-1111-r1",
+  "method": "official per-assay Spearman of each expert's own OOF predictions, no fusion",
+  "standalone": {
+    "union_single_seed": 0.596472,
+    "union_seed_averaged": 0.626528,
+    "lr8_single_seed": 0.621521,
+    "lr8_seed_averaged": 0.644877,
+    "fusion": 0.698495
+  },
+  "reference_experts": {
+    "Kermut": 0.6625,
+    "AMK": 0.662,
+    "D": 0.6562,
+    "Kseq": 0.6391,
+    "old_esm_site": 0.4942
+  },
+  "findings": [
+    "seed averaging lifts the standalone score far more than the fusion score: +0.030 for union and +0.023 for lr8 standalone, versus +0.0012 and +0.0022 in the fusion",
+    "the final expert scores 0.644877 alone, close to but still below the strongest single expert Kermut (0.6625), yet still earns +0.0054 in the fusion",
+    "the fusion adds +0.0536 on top of the encoder, and that part comes from decorrelation between experts, not from the encoder itself"
+  ]
+}

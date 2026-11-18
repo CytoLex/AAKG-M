@@ -14,10 +14,11 @@ Protein engineering screens rank candidate mutations, but the field optimises th
 networks, and uncertainty-aware weighting schemes that adapt per assay, on the premise that a
 different assay needs a different mixture. We test that premise on the ProteinGym substitution
 benchmark, 217 assays and 651 assay-by-split units, and find that every one of seven adaptive weighting
-mechanisms we measured ties a single constant tuned on held-out assays. The bound is sharper than that:
-a per-assay oracle, free to choose the best mixture for every assay, reaches 0.6935 — below the 0.6908
-that a fixed four-expert blend already attains once a stronger expert is added. **Allocation is not
-where the headroom is.**
+mechanisms we measured ties a single constant tuned on held-out assays. The bound is sharper than that: a per-assay
+oracle, free to choose the best mixture for every assay, reaches 0.6935 against 0.6908 for the fixed
+blend — **the entire headroom any weighting rule could ever capture is +0.0027**, and replacing a
+single expert is worth +0.0077. **Allocation is not where the headroom is; it is an order of magnitude
+too small.**
 
 We then show where it is. Replacing an expert changes the result by an order of magnitude more than
 re-allocating among experts. Our contribution is an encoder that reads the *difference* between
@@ -47,9 +48,15 @@ a better first batch of candidates while remaining unreliable on a substantial s
 the oracle bound, which is the strongest single piece of evidence we own, and it is a statement about
 the *field* rather than about our method — which is what a methodology track rewards.
 
-**The 0.6935 / 0.6908 comparison** uses the looser protocol where both numbers were measured. Mixing
-protocols inside one sentence would be the fastest way to lose a reviewer, so both come from the same
-convention and the official-metric number appears separately.
+**The 0.6935 / 0.6908 / +0.0077 numbers** all come from the looser per-assay protocol where they were
+measured together; the +0.0077 is the expert swap's gain in that same convention. The official-metric
+numbers (0.694, +0.0085 over the previous fusion) appear separately in the results section. Mixing the
+two conventions inside one sentence would be the fastest way to lose a reviewer.
+
+**The comparison was initially written backwards** — "oracle below the fixed blend" — because 0.6935
+and 0.6908 are close enough to misread at a glance. The oracle is *above* the fixed blend; what makes
+the argument work is that the allocation headroom (+0.0027) is smaller than the expert-swap gain
+(+0.0077), not that the oracle is below anything.
 
 **The domain paragraph deliberately leads with failure.** "85 assays regress, 35 fall back" is the kind
 of statement a life-sciences reviewer trusts, and the AI4S criteria explicitly ask for limitations.

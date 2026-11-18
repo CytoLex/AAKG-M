@@ -1,0 +1,24 @@
+{
+  "date": "2026-11-11",
+  "jobs": [
+    "aakg-avgs-1111-r2"
+  ],
+  "question": "is the seed-averaging gain specific to lr8, or a general variance-reduction effect?",
+  "table": {
+    "union_single_seed_mean": 0.694837,
+    "union_seed_averaged": 0.696085,
+    "union_delta": 0.001248,
+    "lr8_single_seed_mean": 0.69625,
+    "lr8_seed_averaged": 0.698495,
+    "lr8_delta": 0.002245,
+    "mixture_of_the_two_averages": 0.697821
+  },
+  "verdict": "seed averaging helps BOTH experts (+0.0012 union, +0.0022 lr8), so the mechanism is general variance reduction rather than something peculiar to the low-rank branch",
+  "mixture": "averaging the two averaged experts gives 0.697821, WORSE than the lr8 average alone (0.698495): the weaker union expert dilutes the stronger one, consistent with the earlier finding that lr8 subsumes union (the five-expert simplex gives union zero weight)",
+  "best": {
+    "config": "lr8 expert, 8-seed averaged, four-expert fixed-weight fusion",
+    "score": 0.698495,
+    "vs_published_gate": 0.010644,
+    "vs_old_E": 0.007687
+  }
+}

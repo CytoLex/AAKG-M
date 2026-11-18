@@ -67,7 +67,9 @@ Three paragraphs, 170 words each.
 
 - The protocol: 217 assays, 651 assay-by-split units, official aggregation.
 - Seven mechanisms and their measured effect against a tuned constant (one table).
-- The oracle bound: 0.6935 against 0.6908 for the fixed blend. This is the load-bearing number.
+- The oracle bound: 0.6935 against 0.6908 for the fixed blend — **+0.0027 of total allocation
+  headroom**, against +0.0077 for the expert swap in the same protocol. This inequality is the
+  load-bearing result; state it as a comparison of magnitudes, not as "the oracle is below X".
 - Why it happens: the tuned optimum already puts weight 0.05 on the additive-structure expert, and
   deleting that expert costs nothing.
 - What it implies for anyone building a gating layer on this problem.

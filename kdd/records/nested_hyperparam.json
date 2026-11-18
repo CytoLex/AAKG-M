@@ -1,0 +1,35 @@
+{
+  "date": "2026-11-14",
+  "jobs": [
+    "aakg-as-*.s0/s1",
+    "aakg-na-1114-r2"
+  ],
+  "question": "caveat 4 said hyperparameters were selected after observing the 217-assay results; does that selection optimism survive a nested re-selection?",
+  "alpha_grid_standalone": {
+    "0.6": 0.606958,
+    "0.75": 0.617345,
+    "0.9": 0.621155,
+    "1.0": 0.618703
+  },
+  "nested_selection": {
+    "protocol": "for each of the five assay folds, pick alpha on the training assays only, then score the held-out assays with that alpha",
+    "picked_per_fold": [
+      "0.9",
+      "0.9",
+      "0.9",
+      "0.9",
+      "0.9"
+    ],
+    "nested_score": 0.620678,
+    "fixed_0_9_score": 0.620678,
+    "gap": 0.0,
+    "seed": 1
+  },
+  "rank": {
+    "rank4": 0.62093,
+    "rank8": 0.621155,
+    "note": "difference 0.0002, flat"
+  },
+  "verdict": "the one knob that materially changes the score is alpha: 0.607 at 0.6, 0.617 at 0.75, 0.621 at 0.9, 0.619 at 1.0. Re-selecting it inside every fold from the training assays alone picks 0.9 in all five folds, so the nested estimate is bit-identical to the fixed one (gap 0.000). The post-hoc choice of alpha therefore contributes no optimism",
+  "still_open": "width (256) and epochs (30) were never tuned at all, and the broader design space (which mechanisms to try) was explored on this panel; results do not nest over that"
+}
