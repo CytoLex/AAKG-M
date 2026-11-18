@@ -127,14 +127,17 @@ All seven sections are drafted. Word counts as written:
 | 7 Discussion | 311 | 350 | `SECTION_2_7_REST.md` |
 | **total** | **4951** | 6600 | |
 
-My 8,500-word budget was a guess. At ACM sigconf density — roughly 1,200 words per full page of pure
-text — 4,951 words plus two figures, three tables and a references section lands at about **7 pages**,
-not 8. The gap is roughly one page.
+**Measured, not estimated: the draft compiles to exactly 8 pages** with the ACM `acmart` sigconf
+class — nine tables, no figures, no references. See `latex/README.md`.
 
-**Do not pad.** One page of genuine content is available and should be spent on a dedicated
-*Experimental setup* subsection (protocol, splits, baselines, the exact aggregation chain, and the
-reproduction commands), which §3.1 currently compresses into a paragraph. Everything else is at its
-natural length, and the honest move is to typeset and measure rather than to invent material.
+That measurement changes the plan in the opposite direction from what I expected. The document is not
+short, it is full: adding the two planned figures would push it to about nine and a half pages, so the
+revision has to **cut 600–800 words** to make room for them. The natural candidates are §3.6 and §5.6,
+which restate material already carried by §3.3 and §5.4. **Do not add material to fill space; there is
+no space.**
+
+The experimental-setup subsection (`SECTION_SETUP.md`, 620 words) is what got the draft from an
+estimated seven pages to the measured eight, and it is content a reviewer would ask for anyway.
 
 ## Writing constraints
 
