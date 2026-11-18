@@ -3,11 +3,13 @@
 A protein engineering campaign begins with a library of candidate mutations and a budget that covers
 tens of assays, perhaps hundreds. Everything upstream of the bench is a ranking problem: which
 candidates are worth synthesising. The models that answer it have improved substantially — sequence
-language models, structure-informed kernels, supervised models trained on deep mutational scanning
-data — and the current practice is to combine several of them, because they fail on different assays.
+language models \cite{esm2}, structure-informed kernels \cite{kermut}, supervised models trained on deep
+mutational scanning data \cite{proteinnpt} — and the current practice is to combine several of them,
+because they fail on different assays \cite{proteingym}.
 
 The combination is almost always made **conditional**. A gate reads assay-level context and emits
-weights; a mixture layer routes by protein family; an uncertainty term reweights per variant. The
+weights; a mixture layer routes by protein family \cite{jacobs1991,shazeer2017}; an uncertainty
+term reweights per variant \cite{deepsong}. The
 premise is that different assays need different mixtures, and that learning the mapping from context to
 weights is worth its parameters. It is an appealing premise, and it has produced a decade of
 architectures.
@@ -122,7 +124,8 @@ held-out assay's own labels and picks the best mixture for it. Everything honest
 
 ## 3.2 Seven mechanisms, one protocol
 
-We evaluate six label-free conditioning mechanisms plus the tuned constant they all have to beat. Every
+We evaluate six label-free conditioning mechanisms plus the tuned constant they all have to beat, on
+ProteinGym \cite{proteingym}. Every
 mechanism is label-free with respect to the assay being scored: its weights for assay *a* come either
 from other assays or from no labels at all. All are measured on the 217 ProteinGym substitution assays,
 651 assay-by-split units, under the official category-balanced aggregation.
@@ -218,7 +221,7 @@ failure, not an optimisation one.
 ## 3.1 Setup
 
 
-**Benchmark.** ProteinGym's supervised substitution benchmark: 217 deep mutational scanning assays over
+**Benchmark.** ProteinGym's \cite{proteingym} supervised substitution benchmark: 217 deep mutational scanning assays over
 186 UniProt identifiers, each with three official cross-validation splits — `fold_random_5`,
 `fold_modulo_5`, `fold_contiguous_5`. Following the benchmark's own protocol, a model is refitted per
 assay on four folds and predicts the fifth, and the ordering is evaluated by Spearman correlation
@@ -285,8 +288,8 @@ A substitution is a difference. The reference and the mutant differ at one posit
 that difference depends on what the residue was, what it became, and what surrounds it. Three features
 follow from taking that literally.
 
-**The change, not the state.** For each variant we extract per-residue representations from three ESM-2
-650M layers (20, 30, 33) on both the wild-type and the mutated sequence, and keep `mut`, `wt`, and
+**The change, not the state.** For each variant we extract per-residue representations from three ESM-2 650M layers \cite{esm2}
+(20, 30, 33) on both the wild-type and the mutated sequence, and keep `mut`, `wt`, and
 `mut − wt`. The difference vector is what the model reads most: a substitution's effect is not a
 property of the mutant residue alone.
 
@@ -321,7 +324,8 @@ loss mixes the measured target with the teacher,
 L = (1 − α)·MSE(student, target) + α·MSE(student, teacher),   α = 0.9
 ```
 
-α was selected on held-out assays and the sweep is flat-topped: 0.607 at α = 0.6, 0.617 at 0.75, 0.621
+The ridge itself is the standard closed-form solution \cite{rasmussen2006}. α was selected on
+held-out assays and the sweep is flat-topped: 0.607 at α = 0.6, 0.617 at 0.75, 0.621
 at 0.9, 0.619 at 1.0. Re-selecting α inside each of the five folds, using only training assays, picks
 0.9 in all five — so the nested estimate equals the fixed one exactly.
 
@@ -440,7 +444,8 @@ versus global — not a different optimiser, a different loss, or a bigger model
 Before any claim, the measurement itself has to be trustworthy. We run the official
 `performance_DMS_supervised_benchmarks.py` unmodified on a score file containing our per-assay,
 per-scheme correlations for the 217 assays — and, as a control, the same correlations recomputed from
-Kermut's predictions through our pipeline. The control row reproduces the published leaderboard entry on
+Kermut's \cite{kermut} predictions through our pipeline. The control row reproduces the published
+leaderboard entry on
 all nine of its numbers: the average, the three cross-validation schemes, and the five functional
 categories.
 
@@ -457,7 +462,7 @@ So the numbers below are on the leaderboard's scale, computed by the leaderboard
 | model | official average | random | modulo | contiguous |
 |---|---:|---:|---:|---:|
 | ProteinNPT (published rank 2) | 0.619 | | | |
-| **Kermut (published rank 1)** | **0.657** | 0.745 | 0.633 | 0.593 |
+| **Kermut \cite{kermut} (published rank 1)** | **0.657** | 0.745 | 0.633 | 0.593 |
 | our fusion, single model | **0.691** | 0.782 | 0.671 | 0.624 |
 | **our fusion, seed-averaged expert** | **0.694** | 0.784 | 0.674 | 0.625 |
 
@@ -558,20 +563,6 @@ assays; the other 35 fall back to an older expert. Those 35 still show +0.0029, 
 own predictions: the nested weight search fits one weight vector per fold over *all* training assays, so
 replacing the expert elsewhere moves the weights applied to them. Their delta is real for the system and
 uninformative about the individual assay.
-
-## 5.8 Reading the result correctly
-
-Three sentences we would want a reader to take away, in order of confidence.
-
-**The fusion is better than the published leader on the official metric, by 0.037, with a control row
-that reproduces the leaderboard exactly.** That we can defend to the decimal.
-
-**The utility is category-specific and concentrated at the top of the ranking.** Five-fold lift in the
-top 5%, twice as strong on stability as on activity.
-
-**On large assays and on function-oriented categories, expect parity at best.** The aggregate number
-should not be read as a uniform improvement, and we have published the per-mutant predictions so that
-anyone can check this on their own assay.
 
 ## 6 Limitations and ethical considerations
 

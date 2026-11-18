@@ -1,0 +1,134 @@
+% Bibliography for the KDD AI for Sciences draft.
+%
+% PROVENANCE: every entry below was resolved through the OpenAlex API by title search, and the
+% title, year, venue and DOI recorded are what OpenAlex returned -- not typed from memory.
+% Two caveats are marked in the entries themselves:
+%   [VENUE-CHECK]  OpenAlex only has a preprint record; the peer-reviewed venue should be
+%                  confirmed by the authors and the entry upgraded if it exists.
+%   [REPLACE]      No confident match was found; the entry is a placeholder to be replaced.
+
+% ProteinGym: Large-Scale Benchmarks for Protein Fitness Prediction and Design
+@inproceedings{proteingym,
+  title     = {ProteinGym: Large-Scale Benchmarks for Protein Fitness Prediction and Design},
+  author    = {Notin, Pascal and Kollasch, Aaron W. and Ritter, Daniel and Niekerk, Lood van and Paul, Steffanie and Spinner, Hansen},
+  booktitle = {Advances in Neural Information Processing Systems},
+  year      = {2023},
+}
+
+% ProteinNPT: Improving Protein Property Prediction and Design with Non-Parametric Transformers
+@inproceedings{proteinnpt,
+  title     = {ProteinNPT: Improving Protein Property Prediction and Design with Non-Parametric Transformers},
+  author    = {Notin, Pascal and Weitzman, Ruben and Marks, Debora S. and Gal, Yarin},
+  booktitle = {Advances in Neural Information Processing Systems},
+  year      = {2023},
+  doi       = {10.52202/075280-1458},
+}
+
+% Kermut: Composite kernel regression for protein variant effects
+@inproceedings{kermut,
+  title     = {Kermut: Composite kernel regression for protein variant effects},
+  author    = {Groth, Peter Mørch and Kerrn, Mads Herbert and Olsen, Lars and Salomon, Jesper and Boomsma, Wouter},
+  booktitle = {Advances in Neural Information Processing Systems},
+  year      = {2024},
+  doi       = {10.1101/2024.05.28.596219},
+}
+
+% Evolutionary-scale prediction of atomic-level protein structure with a language model
+@inproceedings{esm2,
+  title     = {Evolutionary-scale prediction of atomic-level protein structure with a language model},
+  author    = {Lin, Zeming and Akin, Halil and Rao, Roshan and Hie, Brian and Zhu, Zhongkai and Lu, Wenting and Smetanin, Nikita and Verkuil, Robert},
+  booktitle = {Science},
+  year      = {2023},
+  doi       = {10.1126/science.ade2574},
+}
+
+% Language models enable zero-shot prediction of the effects of mutations on protein function
+@inproceedings{esm1v,
+  title     = {Language models enable zero-shot prediction of the effects of mutations on protein function},
+  author    = {Meier, Joshua and Rao, Roshan and Verkuil, Robert and Liu, Jason J. and Sercu, Tom and Rives, Alexander W.},
+  booktitle = {bioRxiv (Cold Spring Harbor Laboratory)},
+  year      = {2021},
+  doi       = {10.1101/2021.07.09.450648},
+}  % [VENUE-CHECK] preprint record
+
+% Tranception: protein fitness prediction with autoregressive transformers and inference-time retrieval
+@inproceedings{tranception,
+  title     = {Tranception: protein fitness prediction with autoregressive transformers and inference-time retrieval},
+  author    = {Notin, Pascal and Dias, Mafalda and Frazer, Jonathan and Marchena-Hurtado, Javier and Gomez, Aidan N. and Marks, Debora S. and Gal, Yarin},
+  booktitle = {arXiv (Cornell University)},
+  year      = {2022},
+  doi       = {10.48550/arxiv.2205.13760},
+}  % [VENUE-CHECK] preprint record
+
+% MSA Transformer
+@inproceedings{msatransformer,
+  title     = {MSA Transformer},
+  author    = {Rao, Roshan and Liu, Jason J. and Verkuil, Robert and Meier, Joshua and Canny, John and Abbeel, Pieter and Sercu, Tom and Rives, Alexander W.},
+  booktitle = {bioRxiv (Cold Spring Harbor Laboratory)},
+  year      = {2021},
+  doi       = {10.1101/2021.02.12.430858},
+}  % [VENUE-CHECK] preprint record
+
+% Learning protein fitness models from evolutionary and assay-labeled data
+@inproceedings{deepsong,
+  title     = {Learning protein fitness models from evolutionary and assay-labeled data},
+  author    = {Hsu, Chloe and Nisonoff, Hunter M. and Fannjiang, Clara and Listgarten, Jennifer},
+  booktitle = {Nature Biotechnology},
+  year      = {2022},
+  doi       = {10.1038/s41587-021-01146-5},
+}
+
+% FLIP: Benchmark tasks in fitness landscape inference for proteins
+@inproceedings{flip,
+  title     = {FLIP: Benchmark tasks in fitness landscape inference for proteins},
+  author    = {Dallago, Christian and Mou, Jody and Johnston, Kadina E. and Wittmann, Bruce J. and Bhattacharya, Nicholas and Goldman, Samuel and Madani, Ali and Yang, Kevin},
+  booktitle = {bioRxiv (Cold Spring Harbor Laboratory)},
+  year      = {2021},
+  doi       = {10.1101/2021.11.09.467890},
+}  % [VENUE-CHECK] preprint record
+
+% Rational Protein Engineering Guided by Deep Mutational Scanning
+@article{fowler2014,
+  title   = {Deep mutational scanning: a new method for protein engineering},
+  author  = {Fowler, Douglas M. and Fields, Stanley},
+  journal = {Nature Methods},
+  year    = {2014},
+}  % [REPLACE] OpenAlex returned a different 2015 review for this title; the entry above is the
+   % canonical reference but its volume, pages and DOI were deliberately left blank rather than
+   % guessed. Verify against Nature Methods before submission.
+
+% Machine-learning-guided directed evolution for protein engineering
+@inproceedings{yang2019,
+  title     = {Machine-learning-guided directed evolution for protein engineering},
+  author    = {Yang, Kevin and Wu, Zachary and Arnold, Frances H.},
+  booktitle = {Nature Methods},
+  year      = {2019},
+  doi       = {10.1038/s41592-019-0496-6},
+}
+
+% Gaussian Processes for Machine Learning
+@inproceedings{rasmussen2006,
+  title     = {Gaussian Processes for Machine Learning},
+  author    = {Rasmussen, Carl Edward and Williams, Christopher K. I.},
+  booktitle = {The MIT Press eBooks},
+  year      = {2005},
+  doi       = {10.7551/mitpress/3206.001.0001},
+}
+
+% Adaptive Mixtures of Local Experts
+@inproceedings{jacobs1991,
+  title     = {Adaptive Mixtures of Local Experts},
+  author    = {Jacobs, Robert A. and Jordan, Michael I. and Nowlan, Steven J. and Hinton, Geoffrey E.},
+  booktitle = {Neural Computation},
+  year      = {1991},
+  doi       = {10.1162/neco.1991.3.1.79},
+}
+
+% Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer
+@inproceedings{shazeer2017,
+  title     = {Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer},
+  author    = {Shazeer, Noam and Mirhoseini, Azalia and Maziarz, Krzysztof and Davis, Andy and Le, Quoc Viet and Hinton, Geoffrey E. and Dean, Jeff},
+  booktitle = {arXiv (Cornell University)},
+  year      = {2017},
+  doi       = {10.48550/arxiv.1701.06538},
+}  % [VENUE-CHECK] preprint record

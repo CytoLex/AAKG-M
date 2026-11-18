@@ -10,7 +10,8 @@ analyses in this directory.
 Before any claim, the measurement itself has to be trustworthy. We run the official
 `performance_DMS_supervised_benchmarks.py` unmodified on a score file containing our per-assay,
 per-scheme correlations for the 217 assays — and, as a control, the same correlations recomputed from
-Kermut's predictions through our pipeline. The control row reproduces the published leaderboard entry on
+Kermut's \cite{kermut} predictions through our pipeline. The control row reproduces the published
+leaderboard entry on
 all nine of its numbers: the average, the three cross-validation schemes, and the five functional
 categories.
 
@@ -27,7 +28,7 @@ So the numbers below are on the leaderboard's scale, computed by the leaderboard
 | model | official average | random | modulo | contiguous |
 |---|---:|---:|---:|---:|
 | ProteinNPT (published rank 2) | 0.619 | | | |
-| **Kermut (published rank 1)** | **0.657** | 0.745 | 0.633 | 0.593 |
+| **Kermut \cite{kermut} (published rank 1)** | **0.657** | 0.745 | 0.633 | 0.593 |
 | our fusion, single model | **0.691** | 0.782 | 0.671 | 0.624 |
 | **our fusion, seed-averaged expert** | **0.694** | 0.784 | 0.674 | 0.625 |
 
@@ -128,17 +129,3 @@ assays; the other 35 fall back to an older expert. Those 35 still show +0.0029, 
 own predictions: the nested weight search fits one weight vector per fold over *all* training assays, so
 replacing the expert elsewhere moves the weights applied to them. Their delta is real for the system and
 uninformative about the individual assay.
-
-## 5.8 Reading the result correctly
-
-Three sentences we would want a reader to take away, in order of confidence.
-
-**The fusion is better than the published leader on the official metric, by 0.037, with a control row
-that reproduces the leaderboard exactly.** That we can defend to the decimal.
-
-**The utility is category-specific and concentrated at the top of the ranking.** Five-fold lift in the
-top 5%, twice as strong on stability as on activity.
-
-**On large assays and on function-oriented categories, expect parity at best.** The aggregate number
-should not be read as a uniform improvement, and we have published the per-mutant predictions so that
-anyone can check this on their own assay.

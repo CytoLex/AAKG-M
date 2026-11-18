@@ -7,11 +7,13 @@ Camera-ready draft, English, ~850 words.
 A protein engineering campaign begins with a library of candidate mutations and a budget that covers
 tens of assays, perhaps hundreds. Everything upstream of the bench is a ranking problem: which
 candidates are worth synthesising. The models that answer it have improved substantially — sequence
-language models, structure-informed kernels, supervised models trained on deep mutational scanning
-data — and the current practice is to combine several of them, because they fail on different assays.
+language models \cite{esm2}, structure-informed kernels \cite{kermut}, supervised models trained on deep
+mutational scanning data \cite{proteinnpt} — and the current practice is to combine several of them,
+because they fail on different assays \cite{proteingym}.
 
 The combination is almost always made **conditional**. A gate reads assay-level context and emits
-weights; a mixture layer routes by protein family; an uncertainty term reweights per variant. The
+weights; a mixture layer routes by protein family \cite{jacobs1991,shazeer2017}; an uncertainty
+term reweights per variant \cite{deepsong}. The
 premise is that different assays need different mixtures, and that learning the mapping from context to
 weights is worth its parameters. It is an appealing premise, and it has produced a decade of
 architectures.

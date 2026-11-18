@@ -119,6 +119,11 @@ tex_body = tex_body.replace("\\section{3 Allocation has no headroom}",
 tex_body = tex_body.replace("\\section{5 What the ranker is worth}",
                             FIG2 + "\n\\section{5 What the ranker is worth}", 1)
 
+BIB = r"""
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{references}
+"""
+
 PRE = r"""\documentclass[sigconf,review,nonacm]{acmart}
 \usepackage{booktabs}
 \usepackage{graphicx}
@@ -141,6 +146,6 @@ predictions for all 696,311 mutants.
 \end{abstract}
 \maketitle
 """
-(LATEX / "paper.tex").write_text(PRE + tex_body + "\n\\end{document}\n")
+(LATEX / "paper.tex").write_text(PRE + tex_body + "\n" + BIB + "\n\\end{document}\n")
 n_words = len(re.findall(r"[A-Za-z][A-Za-z'\-]+", md))
 print("paper.tex written: %d tables, 2 figures, %d words" % (len(tables), n_words))

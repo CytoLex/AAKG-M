@@ -20,7 +20,8 @@ held-out assay's own labels and picks the best mixture for it. Everything honest
 
 ## 3.2 Seven mechanisms, one protocol
 
-We evaluate six label-free conditioning mechanisms plus the tuned constant they all have to beat. Every
+We evaluate six label-free conditioning mechanisms plus the tuned constant they all have to beat, on
+ProteinGym \cite{proteingym}. Every
 mechanism is label-free with respect to the assay being scored: its weights for assay *a* come either
 from other assays or from no labels at all. All are measured on the 217 ProteinGym substitution assays,
 651 assay-by-split units, under the official category-balanced aggregation.

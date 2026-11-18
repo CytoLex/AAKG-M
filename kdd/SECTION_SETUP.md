@@ -7,7 +7,7 @@ draft does not fill; it absorbs and replaces the compressed protocol paragraph c
 
 ## Setup
 
-**Benchmark.** ProteinGym's supervised substitution benchmark: 217 deep mutational scanning assays over
+**Benchmark.** ProteinGym's \cite{proteingym} supervised substitution benchmark: 217 deep mutational scanning assays over
 186 UniProt identifiers, each with three official cross-validation splits — `fold_random_5`,
 `fold_modulo_5`, `fold_contiguous_5`. Following the benchmark's own protocol, a model is refitted per
 assay on four folds and predicts the fifth, and the ordering is evaluated by Spearman correlation

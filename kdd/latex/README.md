@@ -21,7 +21,12 @@ worth recording because it inverted my earlier estimate:
 | sections drafted, estimated from word count | 4,951 | — | ~7 (guess) |
 | first compile, no figures | 6,100 | 0 | **8** |
 | + two figures, no cuts | 6,100 | 2 | 9 |
-| **after cutting §3.7, §5.6 and §5.7** | **5,727** | **2** | **8** |
+| + bibliography and 11 in-text citations | 5,656 | 2 | 9 |
+| **after also cutting §5.8** | **5,656** | **2** | **8** |
+
+Final state: 8 pages including the reference list, which fits on the last page rather than needing a
+ninth. Verified twice: macOS metadata and by counting `/Type /Page` objects in the decompressed object
+streams, and confirmed by rebuilding with the bibliography disabled — the content alone is also 8.
 
 The estimate was wrong in the direction that mattered: the draft was already full, not short. Adding the
 planned figures pushed it to nine pages, so roughly 370 words had to go before they could stay. What
@@ -41,8 +46,10 @@ methodology (three sentences folded into §5.4), and §5.7 on aggregate-versus-t
 ## What is still missing before submission
 
 - **Author block.** Placeholders. The track is single-blind, and the list must be final at the deadline.
-- **Bibliography.** Empty. `paper.tex` charges no `\cite` at all yet; this is the largest remaining
-  writing task.
+- **Bibliography.** 14 entries in `references.bib`, resolved through the OpenAlex API rather than
+  typed from memory; 11 `\cite` commands now appear in the text. Seven entries still cite a preprint
+  venue and one is a marked placeholder — see `REFERENCES_TODO.md` for the exact list and what to
+  check. Resolving those is a reading task, not a writing one.
 - **Required section title.** Rendered "Limitations and ethical considerations". KDD 2026 used
   "Limitations and Ethical Considerations" — match the 2027 CFP verbatim, since required-section wording
   is a desk-reject criterion.

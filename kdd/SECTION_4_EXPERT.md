@@ -12,8 +12,8 @@ A substitution is a difference. The reference and the mutant differ at one posit
 that difference depends on what the residue was, what it became, and what surrounds it. Three features
 follow from taking that literally.
 
-**The change, not the state.** For each variant we extract per-residue representations from three ESM-2
-650M layers (20, 30, 33) on both the wild-type and the mutated sequence, and keep `mut`, `wt`, and
+**The change, not the state.** For each variant we extract per-residue representations from three ESM-2 650M layers \cite{esm2}
+(20, 30, 33) on both the wild-type and the mutated sequence, and keep `mut`, `wt`, and
 `mut − wt`. The difference vector is what the model reads most: a substitution's effect is not a
 property of the mutant residue alone.
 
@@ -48,7 +48,8 @@ loss mixes the measured target with the teacher,
 L = (1 − α)·MSE(student, target) + α·MSE(student, teacher),   α = 0.9
 ```
 
-α was selected on held-out assays and the sweep is flat-topped: 0.607 at α = 0.6, 0.617 at 0.75, 0.621
+The ridge itself is the standard closed-form solution \cite{rasmussen2006}. α was selected on
+held-out assays and the sweep is flat-topped: 0.607 at α = 0.6, 0.617 at 0.75, 0.621
 at 0.9, 0.619 at 1.0. Re-selecting α inside each of the five folds, using only training assays, picks
 0.9 in all five — so the nested estimate equals the fixed one exactly.
 
