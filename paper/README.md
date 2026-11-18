@@ -37,28 +37,32 @@ with this repository. It records, for every number quoted here, the script that 
 seed range, and the paired statistics. Everything it supports is reproducible from `expert/` plus
 the numbers in the main README; the log is available from the authors on request.
 
-## Submission status (2026-11-17)
+## Submission status (2026-11-18)
 
 The method is formally submitted to ProteinGym:
 
 | item | link | state |
 |---|---|---|
 | issue | https://github.com/OATML-Markslab/ProteinGym/issues/129 | open, `[new model]` |
-| pull request | https://github.com/OATML-Markslab/ProteinGym/pull/130 | draft, 3 files, +113 lines |
+| pull request | https://github.com/OATML-Markslab/ProteinGym/pull/130 | **ready for review** (2026-11-18), 3 files, +113 lines |
 | per-mutant scores | `../submission/predictions/fused_per_mutant.csv.gz` | 2,088,933 rows, 696,311 mutants x 3 schemes |
 
-Two facts the drafts now rely on, both verified this round:
+Three facts the drafts now rely on, all verified:
 
 - **Coverage.** 217/217 assays match the official mutant counts exactly (696,311 mutants), and both
   structural experts are fully non-null on every assay.
-- **The kernel was not rebuilt.** Everything except the kernel function was recovered from the saved
-  artifacts, and the best hypothesis reaches R^2 = 0.874 against the saved predictions — recorded in
-  `../submission/KERNEL_RECONSTRUCTION.md`. That is why the paper reports published per-mutant scores
-  rather than a reimplementation.
+- **The kernel is recovered.** The fitting code was located, the kernel is
+  `[RBF(main; d=10368) + RBF(side; d=9) + 1[wt equal] + 1[mut equal]] / 4`, and it reproduces the
+  saved per-fold predictions to 8.2e-14 — see `../submission/kernel.py` and
+  `../submission/KERNEL_RECONSTRUCTION.md`. The structural experts are no longer a black box.
+- **The submission is ready for review**, not a draft. At the time of flipping it, three other
+  baseline PRs and a bug report in the same repository had been open 6 to 23 days with no maintainer
+  comment — the silence is repository-wide, not a verdict on this submission.
 
 ## Status
 
-These are **drafts**, not a submitted manuscript. No venue has been chosen and nothing here has been
-through peer review. Where the drafts state a limitation, the limitation is real and is repeated in
+These are **drafts of the manuscript**, not a peer-reviewed publication. No venue has been chosen and
+nothing here has been through review; the benchmark submission is a separate, reviewed-by-nobody-yet
+track that is now awaiting a maintainer response. Where the drafts state a limitation, the limitation is real and is repeated in
 the main README's caveat list (coverage is 182 of 217 assays, hyperparameters were not nested, the
 gain is aggregate rather than universal).
