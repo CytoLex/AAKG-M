@@ -63,6 +63,11 @@ tmp.unlink()
 tex_body = (LATEX / "_body.tex").read_text()
 tex_body = re.sub(r"\\hypertarget\{[^}]*\}\{%\s*\n", "", tex_body)
 tex_body = fix_headings(tex_body)
+
+# long monospace filenames cannot break inside \texttt and overflow the column; \path allows breaks
+tex_body = tex_body.replace("\\texttt{performance\\_DMS\\_supervised\\_benchmarks.py}",
+                            "\\path{performance_DMS_supervised_benchmarks.py}")
+
 tex_body = re.sub(r"(\\(?:sub)*section\{[^}]*\}(?:\\label\{[^}]*\})?)\}", r"\1", tex_body)
 
 
