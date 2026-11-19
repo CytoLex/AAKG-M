@@ -53,6 +53,19 @@ non-anonymous, adding the author block is a two-line change in `make_tex.py`.
 - **`\linenumbers` enabled** — the template keeps it on for submissions and comments it out for
   camera-ready
 - `\bibliographystyle{named}` — IJCAI's author-year style, so references render as names, not numbers
+- **Title in Title Case.** The kit states: "The title must be capitalized using Title Case." The earlier
+  sentence-case title was a formatting violation and is fixed.
+- `\tightlist` is defined locally, because pandoc emits it but the IJCAI preamble does not provide it.
+
+## Figures are redrawn for IJCAI's column
+
+IJCAI's column is (7.0 − 0.25)/2 = **3.375 in** and the build includes figures at 0.86 of that, 2.902 in.
+The ACM/ICML figures are authored 3.4 in wide, so including them there scales by 0.85 and an 8pt label
+renders at **6.8pt** — too small next to 10pt body text.
+
+`../figures/make_figs_ijcai.py` authors them at **2.90 in**, so the scale factor is 1.00 and an 8.5pt
+label renders at 8.5pt. Both figures carry the same data as the other builds; only the drawing size and
+label sizes changed.
 
 ## Still unknown until the track CFP appears
 
