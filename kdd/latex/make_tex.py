@@ -119,10 +119,10 @@ not reveal.}
 \label{fig:topk}
 \end{figure}
 """
-tex_body = tex_body.replace("\\section{3 Allocation has no headroom}",
-                            FIG1 + "\n\\section{3 Allocation has no headroom}", 1)
-tex_body = tex_body.replace("\\section{5 What the ranker is worth}",
-                            FIG2 + "\n\\section{5 What the ranker is worth}", 1)
+tex_body = tex_body.replace("\\section{Allocation has no headroom}",
+                            FIG1 + "\n\\section{Allocation has no headroom}", 1)
+tex_body = tex_body.replace("\\section{What the ranker is worth}",
+                            FIG2 + "\n\\section{What the ranker is worth}", 1)
 
 BIB = r"""
 \bibliographystyle{ACM-Reference-Format}

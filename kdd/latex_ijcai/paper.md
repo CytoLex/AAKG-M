@@ -51,8 +51,9 @@ for the field. The first is what makes both measurable.
 3. **A utility characterisation beyond aggregate correlation** — top-of-list recall by functional
    category, the 87 assays that regress, and the collapse to parity on large assays. This is the part a
    practitioner can act on and the part that keeps the headline honest.
-4. **A reproducible artifact**: per-mutant predictions for all 696,311 mutants, and code that regenerates
-   every number in two commands from two public repositories.
+4. **A reproducible artifact**: per-mutant predictions for all 696,311 mutants and the code that
+   regenerates every number in two commands from two public repositories, supplied with this submission
+   as anonymised supplementary material and released publicly on publication.
 
 ## 2 Related work
 
@@ -348,9 +349,11 @@ types, and our per-category results show performance is not uniform across them.
 family absent from ProteinGym should be expected to behave like the large-assay regime — parity, not
 improvement.
 
-**Released artifacts.** We publish per-mutant predictions for all 696,311 mutants, the code reproducing
-every reported number, and the recovered kernel for the structural experts. The expert prediction tables
-remain research-use only, as they derive from third-party methods.
+**Released artifacts.** The submission includes, as anonymised supplementary material, per-mutant
+predictions for all 696,311 mutants, the code reproducing every reported number, and the recovered kernel
+for the structural experts; all of it is released publicly on publication. The code is under a permissive
+licence, while the expert prediction tables remain research-use only because they derive from third-party
+methods — so a reader can re-run our evaluation but cannot redistribute those tables commercially.
 
 **Generative AI usage.** Analysis scripts, evaluation harnesses and LaTeX assembly were written and
 revised with an AI coding assistant; the prose was drafted with the same assistant and then reviewed,

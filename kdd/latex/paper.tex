@@ -113,6 +113,17 @@ averages over subpopulations a practitioner treats separately. Our top-of-list a
 category is a small step toward reporting what a downstream experiment would actually experience, and we
 know of no reason it should be specific to protein fitness.
 
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{../figures/fig1_allocation_vs_expert.pdf}
+\caption{Allocation headroom against expert headroom, same protocol. The shaded band spans what any
+weighting rule could gain over a tuned constant (a per-assay oracle, +0.0027); the lower arrow spans
+what replacing one expert gained (+0.0077). Every adaptive mechanism we measured lands inside or below
+the band.}
+\label{fig:allocation}
+\end{figure}
+
 \section{Allocation has no headroom}\label{allocation-has-no-headroom}
 
 Protein fitness models combine heterogeneous predictors: a sequence model, a structure kernel, an
@@ -463,6 +474,17 @@ buys nothing.
 The constructive reading: an expert earns its place through disagreement in the residual, and the way
 to get that disagreement is a different \emph{view} of the same information --- reference versus mutant, local
 versus global --- not a different optimiser, a different loss, or a bigger model.
+
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{../figures/fig2_topk_by_category.pdf}
+\caption{Top-of-list utility by functional category: recall of the true top-$k$ variants when the top
+$k$ of our ranking is taken, for $k \in \{1\%, 5\%, 10\%\}$, with the random-ordering expectation
+marked. Stability is consistently strongest and activity weakest, a spread the aggregate Spearman does
+not reveal.}
+\label{fig:topk}
+\end{figure}
 
 \section{What the ranker is worth}\label{what-the-ranker-is-worth}
 

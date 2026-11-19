@@ -49,5 +49,6 @@ for the field. The first is what makes both measurable.
 3. **A utility characterisation beyond aggregate correlation** — top-of-list recall by functional
    category, the 87 assays that regress, and the collapse to parity on large assays. This is the part a
    practitioner can act on and the part that keeps the headline honest.
-4. **A reproducible artifact**: per-mutant predictions for all 696,311 mutants, and code that regenerates
-   every number in two commands from two public repositories.
+4. **A reproducible artifact**: per-mutant predictions for all 696,311 mutants and the code that
+   regenerates every number in two commands from two public repositories, supplied with this submission
+   as anonymised supplementary material and released publicly on publication.
