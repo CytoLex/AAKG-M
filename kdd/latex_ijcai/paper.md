@@ -1,0 +1,377 @@
+## 1 Introduction
+
+A protein engineering campaign begins with a library of candidate mutations and a budget covering tens
+of assays, perhaps hundreds. Everything upstream of the bench is a ranking problem: which candidates are
+worth synthesising. The models that answer it have improved substantially — sequence language models
+\cite{esm2}, structure-informed kernels \cite{kermut}, supervised models trained on deep mutational
+scanning data \cite{proteinnpt} — and the practice is to combine several, because they fail on different
+assays \cite{proteingym}.
+
+The combination is almost always **conditional**: a gate reads assay-level context and emits weights, a
+mixture layer routes by protein family \cite{jacobs1991,shazeer2017}, an uncertainty term reweights per
+variant \cite{deepsong}. The premise is that different assays need different mixtures, and that learning
+the mapping from context to weights is worth its parameters. It has produced a decade of architectures.
+
+This paper tests it, and the answer reorganises the problem.
+
+**First, the allocation headroom is small enough to bound.** We evaluate six label-free conditioning
+mechanisms — parametric and nonparametric, per-assay, per-category and per-variant, supervised and not —
+against a single constant tuned on held-out assays. One clears it, by +0.00025 with a confidence interval
+straddling zero; four land within 0.0006 below. The sharper statement is an oracle: a rule that sees the
+held-out assay's own labels can gain **+0.0027** over the fixed blend, and that is the ceiling for any
+weighting of this pool. Replacing one expert is worth **+0.0077** in the same protocol. **The entire
+allocation headroom is a quarter of the expert headroom.**
+
+**Second, the expert headroom is in how a mutation is represented.** A substitution is a difference
+between two sequences, and the useful signal is the difference — not the mutant residue in isolation, not
+the site in isolation. We build an encoder over reference-minus-mutant features in a ±4-residue
+neighbourhood, distilled from the agreement of the two strongest experts, with a functional-category
+low-rank residual and predictions averaged over eight seeds. Fused with three published experts at four
+fixed weights, it reaches **0.694** on the official ProteinGym metric against **0.657** for Kermut, the
+leaderboard leader. We validate the measurement before reporting it: recomputing Kermut through our
+pipeline reproduces the published per-assay table on all 217 assays with mean absolute difference 0.0.
+
+**Third, the utility is category-specific and concentrated at the top.** The aggregate 0.694 conceals a
+0.21 spread across functional categories, and it conceals where the method is useful. Taking the top 5%
+of the ranking recovers 24.7% of the true top 5%, a **4.96x** lift over random — but 7.7x on stability
+assays against 3.4x on activity assays. On the largest assay quartile the improvement over the previous
+fusion is **+0.00003**: parity, with a 50% regression rate.
+
+We think the third point is the one that matters for practice, and the second is the one that matters
+for the field. The first is what makes both measurable.
+
+## Contributions
+
+1. **A falsification of adaptive weighting for this problem.** Seven mechanisms under one protocol, all
+   at or below a tuned constant, plus an oracle bounding the total allocatable gain at +0.0027. We argue
+   this should be a reported baseline, not a footnote.
+2. **An expert built from differential representations**, with the ablation that shows where the signal
+   is: the wild-type-minus-mutant difference and the local neighbourhood carry +0.116, while stacking
+   more layers alone is negative.
+3. **A utility characterisation beyond aggregate correlation** — top-of-list recall by functional
+   category, the 87 assays that regress, and the collapse to parity on large assays. This is the part a
+   practitioner can act on and the part that keeps the headline honest.
+4. **A reproducible artifact**: per-mutant predictions for all 696,311 mutants, and code that regenerates
+   every number in two commands from two public repositories.
+
+## 2 Related work
+
+**Protein fitness prediction.** Three lines converge here. Zero-shot predictors score variants from a
+sequence model's likelihood or from multiple-sequence-alignment statistics, without touching assay labels
+\cite{esm1v,tranception,msatransformer}. Supervised approaches train on deep mutational scanning data
+\cite{fowler2014,yang2019}, either per assay or across a panel; the leaderboard leader is a composite
+kernel regression of this kind. The fusion line, which this paper belongs to, combines predictors that
+fail differently, and the combination is usually weighted per assay. Benchmarks for this comparison are
+themselves a design choice \cite{flip}, which is why §5.1 verifies the one we use rather than trusting it.
+
+**Adaptive weighting and gating.** Mixture-of-experts layers and context-conditioned gates are standard
+across machine learning, usually justified by heterogeneity of the input distribution. Our negative
+result does not contradict that literature; it identifies a regime where the justification fails — the
+mixture components are correlated at 0.78 to 0.96 within a unit, and the conditioning variable is not the
+one the optimal weights depend on. Reported gains for gating in such regimes should be read against a
+tuned constant rather than a fixed prior, and against an oracle.
+
+**Evaluation practice in AI for science.** Aggregate correlation is the standard reporting unit and a poor
+guide to deployment: it is insensitive to where in the ranking errors fall, and it averages over
+subpopulations a practitioner treats separately. Our top-of-list analysis by functional category is a
+step toward reporting what a downstream experiment would experience.
+
+## 3 Allocation has no headroom
+
+
+We evaluate six label-free conditioning mechanisms plus the tuned constant they all must beat, on
+ProteinGym \cite{proteingym}: 217 substitution assays, 651 assay-by-split units, official
+category-balanced aggregation. Every mechanism is label-free with respect to the assay being scored —
+its weights for assay *a* come from other assays or from no labels at all. A model is refitted per assay
+on four of five published folds and predicts the fifth; our folds are bit-identical to the released
+files, verified on all three schemes for a 9,576-variant assay.
+
+| mechanism | official | Δ vs constant | 95% CI |
+|---|---:|---:|---|
+| tuned constant (0.05, 0.45, 0.50) | **0.687637** | — | — |
+| MLP gate over 17 context statistics | 0.687888 | **+0.000251** | [−0.001924, +0.002545] |
+| per-variant uncertainty weighting | 0.687106 | −0.000531 | [−0.001181, +0.000021] |
+| k-NN over assay context | 0.687170 | −0.000467 | [−0.001329, +0.000259] |
+| per-category constants | 0.687220 | −0.000417 | [−0.000784, −0.000084] |
+| ridge context → weights | 0.685109 | −0.002528 | [−0.007833, +0.000676] |
+| per-variant consensus (median) | 0.670492 | −0.017146 | [−0.026771, −0.011115] |
+
+One mechanism clears the constant, by +0.00025, with a confidence interval straddling zero; four more
+land within 0.0006 below it, the same magnitude on the other side. The two that fail badly do so
+instructively — a context regressed onto weights scores below the constant, so the regression is actively
+harmful, and a per-variant median discards the magnitude that separates a strong predictor from a weak
+one. **No mechanism is separated from a tuned constant by more than the seed-to-seed spread of the models
+themselves.**
+
+## 3.2 The bound is small
+
+The oracle over the same expert pool reaches **0.693544**, against **0.690808** for the fixed blend — a
+headroom of **+0.0027**. That is the entire amount any weighting rule, supervised or not, per-assay or
+not, could ever extract from this pool. For comparison, the same protocol attributes **+0.0077** to
+replacing a single expert.
+
+**The allocation headroom is a quarter of the expert headroom.** This is the paper's central magnitude
+comparison, and it is worth being precise about what it does and does not say. It does not say the gate
+is broken: its per-assay weights reproduce across independent seeds at r = 0.92–0.97, and shuffling them
+within category costs 0.0017. It says the object being learned is nearly irrelevant to the objective,
+because the pool does not contain enough disagreement for the choice to matter. The tuned optimum places
+weight 0.05 on the additive-structure expert, and deleting that expert entirely costs nothing measurable.
+
+## 3.3 The headroom is real, and it is not noise
+
+A small oracle gain invites the objection that the oracle is fitting its own noise. Variants of each
+assay are split into disjoint halves A and B; weights selected on A and evaluated on B transfer a gain of
+**+0.0041**, which is **49%** of the +0.0083 obtainable when selection and evaluation share variants. Half
+the oracle gain survives contact with unseen variants, so the per-assay optimum is a stable property of
+the assay rather than an artefact of selection.
+
+That half-surviving gain is still three times what any mechanism captures, which sharpens the diagnosis:
+the headroom exists, it is reproducible, and it is not a function of the context statistics anyone
+computes. A ridge from the same 17 statistics to the oracle weights, with leave-one-out protection,
+reaches 0.6860 — below the constant, meaning the fitted direction is actively wrong.
+
+## 3.4 What this means for the field
+
+**Report against tuned constants, not fixed blends.** A gate beating a fixed 50/50 blend by +0.0047 is
+commonly reported as evidence that conditioning works; against a constant tuned on held-out assays the
+same gate is +0.0002, a statistical tie. The gain attributed to conditioning is mostly the gain from
+*tuning at all*.
+
+**A per-assay oracle should be a reported baseline.** It costs nothing to compute and converts "our gate
+improves over the previous gate" into "our gate captures *x* percent of the available headroom", which is
+the only number telling a reader whether the mechanism is worth its complexity. Here *x* is four percent.
+
+**When the oracle is small, the pool is the problem.** If no weighting of these experts can gain more
+than +0.0027, the next +0.01 has to come from an expert that disagrees usefully. §4 builds one.
+
+The claim is bounded by the pool: the oracle is a function of how much the experts disagree, so a pool
+built to disagree might make gating worthwhile again — a different paper, and one that would have to
+report the oracle too.
+
+## 4 The expert
+
+
+A substitution is a difference. We extract per-residue representations from three ESM-2 650M layers
+\cite{esm2} (20, 30, 33) on both the wild-type and the mutated sequence, keep `mut`, `wt` and `mut − wt`,
+and pool a ±4-residue window by mean at layers 30 and 33. The union is 12,800 dimensions per variant. The
+ladder under the per-assay protocol says where the signal comes from:
+
+| representation | score |
+|---|---:|
+| site vector only (layer 33) | 0.467 |
+| + multiple layers | 0.464 |
+| + ±4 neighbourhood | 0.480 |
+| **+ wild-type layers and difference terms** | **0.596** |
+
+Stacking layers alone is negative; the gain is in the difference and the wild-type context, worth +0.116,
+an order of magnitude more than either other step.
+
+## 4.2 Distillation, and a residual per functional category
+
+A 12,800-dimensional head trained on a few thousand variants per assay overfits before it learns. We
+regularise it with the two strongest experts: their per-assay z-scores give a teacher
+`t = 0.4·Kermut_z + 0.5·AMK_z`, and the loss is `(1 − α)·MSE(student, target) + α·MSE(student, teacher)`
+with α = 0.9. Re-selecting α inside each of the five folds, using only training assays, picks 0.9 in all
+five. Distillation is worth +0.114 on the union representation — the largest single step in the encoder's
+development, larger than the feature union itself.
+
+Assays fall into five categories that behave differently, so we add a low-rank correction to the head:
+`y = MLP(x) + U_c V_cᵀ x`, with `U_c` zero-initialised and rank 8, `c` the assay's category. The branch is
+worth **+0.024** standalone and **+0.0014** in the fusion — the gap is the decorrelation argument in
+miniature, since a residual that makes an expert better can make it less useful to a pool already holding
+what it learned.
+
+**The control that decides the interpretation.** A shared branch with the same rank has one fifth of the
+parameters and is indistinguishable from no branch (−0.0008, 2/4 seeds); the per-category branch beats it
+by **+0.0214** standalone with every seed positive, on a matched per-branch comparison. **The gain needs
+the category structure, not the parameters.** Rank 4 and rank 8 differ by 0.0002, so the branch is
+saturated far below what memorising a category would require.
+
+## 4.3 Variance, and four fixed weights
+
+Eight independent runs of the same architecture differ by about 0.004 in the official metric. We average
+the predictions per variant rather than the scores: +0.023 standalone, +0.0022 in the fusion, the
+asymmetry being that the fusion already averages four experts.
+
+The fusion is four numbers, `0.00·D + 0.40·Kermut + 0.40·AMK + 0.20·X`, selected on the training assays
+of each fold and applied to the held-out ones — exactly the protocol the tuned constant uses. The search
+drives the additive-structure weight to 0.00 in 14 of 15 seed-by-fold cells and sets the new expert to
+0.20 in all 15. Under the official metric:
+
+| configuration | official |
+|---|---:|
+| previous four-expert fusion | 0.685538 |
+| + distilled encoder, category residual | 0.691130 |
+| **+ eight-seed averaging** | **0.693311** |
+
+against **0.657028** for Kermut \cite{kermut} — +0.0085 over the previous fusion, +0.037 over the leader.
+
+## 4.4 What the ablation rules out
+
+**Co-distillation from the fusion itself** lifts the expert by +0.0136 (8/8 seeds) and leaves the fusion
+at −0.0002: teaching an expert to imitate the pool removes the residual disagreement that gave it value.
+**A residual expert** trained on the fusion's own error receives weight exactly zero in every fold — the
+residual of a fitted ensemble is what these features cannot explain. **A larger backbone** (ESM-C 300M)
+is decorrelated but too weak: +0.0007 as a fourth expert with an interval straddling zero, and −0.011
+concatenated. Representation diversity without competence buys nothing.
+
+The constructive reading: an expert earns its place through disagreement in the residual, and the way to
+get that disagreement is a different *view* of the same information — reference versus mutant, local
+versus global — not a different optimiser, loss, or a bigger model.
+
+## 5 What the ranker is worth
+
+
+We run the official `performance_DMS_supervised_benchmarks.py` unmodified on a score file of our
+per-assay, per-scheme correlations, and as a control we run the same correlations recomputed from
+Kermut's predictions. The control reproduces the published per-assay table on **217 of 217 assays** with
+mean absolute difference **0.0**, the residual being the published table's three-decimal rounding, and
+our folds are bit-identical to the released distribution.
+
+| model | official | random | modulo | contiguous |
+|---|---:|---:|---:|---:|
+| Kermut (published rank 1) | 0.657 | 0.745 | 0.633 | 0.593 |
+| our fusion, single model | **0.691** | 0.782 | 0.671 | 0.624 |
+| our fusion, seed-averaged | **0.694** | 0.784 | 0.674 | 0.625 |
+
+The claim is a *fusion* claim and we state it plainly: Kermut is one of our four experts. The +0.037
+measures what adding complementary experts on top of the strongest single model is worth, not what a new
+standalone model achieves. A reader wanting the equal-compute statement should take the single-model rung.
+
+## 5.2 The aggregate hides the category, and the top of the list
+
+Per functional category, our fusion scores 0.851 on Stability, 0.693 on Expression, 0.653 on Binding,
+0.642 on Activity and 0.632 on OrganismalFitness, against 0.817, 0.670, 0.611, 0.605 and 0.582 for
+Kermut. Every category improves, which is the least interesting part. The spread matters: 0.851 against
+0.642 is a gap of 0.21 that the aggregate conceals entirely.
+
+Spearman is a whole-list statistic. A campaign has a library and can assay tens of candidates, so the
+question is whether the top of our ranking contains the top of the true ranking. For each assay and split
+we take the top *k* ∈ {1%, 5%, 10%} and measure how many land in the true top *k*, aggregating the
+official way:
+
+| top of the list | recall of the true top | random | lift |
+|---|---:|---:|---:|
+| 1% | **0.119** | 0.010 | **11.8x** |
+| 5% | **0.247** | 0.050 | **4.96x** |
+| 10% | **0.350** | 0.100 | **3.50x** |
+
+Ordering the top 5% recovers about a quarter of the true top 5%, roughly five times random. It is also
+category-dependent, in the direction §5.2 predicts: 7.7x on Stability, 4.9x Binding, 4.6x
+OrganismalFitness, 4.2x Expression, and **3.4x on Activity** — and activity is what function-oriented
+campaigns care about. **The ranker is roughly twice as good at prioritising stability mutants as
+activity mutants.**
+
+Ranking and ground truth are both computed within an assay-by-split unit on the released DMS files, so
+the reference is independent of §4, and the lift rather than the raw recall is the quantity to compare
+across categories.
+
+## 5.3 Where it fails
+
+**87 of 217 assays regress** against the previous four-expert fusion, with a median improvement of
++0.0016 — roughly half the mean, so the gain is carried by a subset. **Expression is the only category
+that regresses on average** (−0.0018).
+
+**The effect disappears on large assays.** By quartile of mutant count, the mean delta is +0.0073 on the
+smallest, +0.0017, +0.0024, and **+0.00003 on the largest**, with a 50% regression rate there. This is
+the sharpest honest limitation: the assays with the most measurements — the ones a serious campaign is
+most likely to run — are exactly where the method is at parity with its predecessor. It is not simply a
+sample-size effect in the correlation estimate, since the baseline has more data there too.
+
+**Coverage is partial and coupled.** The encoder needs a wild-type sequence and covers 182 of 217 assays;
+the other 35 fall back to an older expert, and still show +0.0029 — but not because of their own
+predictions: the nested weight search fits one vector per fold over all training assays, so replacing the
+expert elsewhere moves the weights applied to them.
+
+## 6 Limitations and Ethical Considerations
+
+
+**The ranker is unreliable on most functional categories**, with top-of-list recall at 5% of 0.38 for
+stability assays against 0.17 for activity — a 2.2x spread, and activity is what enzyme engineering most
+often cares about. **The gain disappears on large assays** (+0.00003 on the largest quartile), and **87 of
+217 assays regress**, with Expression the only category negative on average. **Coverage is partial** (182
+of 217 assays) and the fallback assays' deltas reflect coupling through the weight search rather than
+their own predictions. **The structural experts are inherited, not retrained inside each outer fold**;
+their kernel is recovered and verified to floating-point precision, and every reported number is
+reproducible from published per-mutant scores, but a fully nested protocol would retrain them within each
+fold. **One benchmark family, no prospective validation**: whether top-of-list lift becomes hit-rate lift
+in a real campaign is untested, and that is the next experiment rather than a claim.
+
+### Ethical considerations
+
+**Dual use.** Protein fitness predictors can be applied to gain-of-function engineering. Our method ranks
+a user-supplied set of single-residue variants; it does not generate sequences, does not perform design,
+and offers no capability beyond what public ProteinGym baselines already provide. Ranking is nevertheless
+the step deciding which candidates a laboratory synthesises. We release predictions for existing public
+assays only.
+
+**Data.** All assays are previously published deep mutational scanning datasets distributed by
+ProteinGym. No new experimental data, no human subjects, no clinical material, and no institutional
+review was required.
+
+**Bias and domain shift.** The panel is skewed toward particular protein families, organisms and assay
+types, and our per-category results show performance is not uniform across them. Applying this to a
+family absent from ProteinGym should be expected to behave like the large-assay regime — parity, not
+improvement.
+
+**Released artifacts.** We publish per-mutant predictions for all 696,311 mutants, the code reproducing
+every reported number, and the recovered kernel for the structural experts. The expert prediction tables
+remain research-use only, as they derive from third-party methods.
+
+**Generative AI usage.** Analysis scripts, evaluation harnesses and LaTeX assembly were written and
+revised with an AI coding assistant; the prose was drafted with the same assistant and then reviewed,
+corrected and rewritten by the authors. Reference metadata was resolved programmatically against the
+NeurIPS and ICML proceedings indexes and the Crossref API rather than recalled, and that verification
+caught a wrong paper title and a DOI belonging to a different article. No result reported here was
+generated by a model, no AI system is listed as an author, and the authors take full responsibility.
+
+## 7 Discussion
+
+
+A protein engineer choosing mutations against an assay budget needs a ranking they can act on, and the
+field's papers are not organised around that. Two deliverables follow. The first is a **calibrated
+expectation**: taking the top 5% recovers 24.7% of the true top 5%, but 7.7x on stability assays against
+3.4x on activity, and no advantage on the largest assays — a laboratory can use that profile to decide
+how much of the ordering to trust for the property it cares about, a statement aggregate Spearman cannot
+express. The second is **the boundary**: 87 regressing assays, the category that regresses on average, and
+the size regime at parity. For a practitioner the boundary is worth more than the mean, because it is the
+difference between trusting a ranking on a familiar assay family and being surprised on a new one.
+
+Three AI challenges are tackled. The ranking problem is small-data-per-task learning, so the question is
+regularisation and transfer rather than capacity. It is a distribution-shift problem, which is exactly why
+the field reached for adaptive weighting and why we show weighting has no headroom. And it is a
+representation problem: the signal lives in the difference between two sequences and in the local
+structural neighbourhood.
+
+Three challenges arise from using AI here. Wet-lab validation is the binding constraint and it is slow and
+expensive, so the field reports against retrospective benchmarks and hopes the ranking transfers; we have
+not closed that gap. Assay data is heterogeneous in ways metadata does not capture — two stability assays
+on one protein can disagree in sign — so a category-averaged metric can look stable while individual
+assays move sharply both ways. And the benchmark ecosystem rewards leaderboard movement over
+characterisation, while characterisation is what a domain user needs most.
+
+On our use of ProteinGym: the track prefers domain-specific data to existing benchmarks, so we state what
+this adds rather than only takes. We verify the benchmark end to end — reproducing its published
+per-assay values for a reference method on 217 of 217 assays, confirming its folds are bit-identical — we
+publish per-mutant predictions for all 696,311 variants so the evaluation is reproducible without our
+code, and we characterise its difficulty structure across categories, sizes and splits. A reader can use
+that characterisation without adopting our method.
+
+### Discussion
+
+**If you are building a fusion.** Report the oracle. It takes an afternoon and converts an open-ended
+search for better gating into a bounded question: how much is left? When the answer is a quarter of what
+a single expert change is worth, the search is over.
+
+**If you are evaluating.** A ranker's aggregate correlation and its top-of-list recall can disagree, and
+the second is closer to what the downstream experiment measures. The cheapest discipline is to report the
+oracle and the tuned constant alongside any learned weighting; the second cheapest is the per-category
+breakdown instead of the mean.
+
+**What would falsify us.** A pool built to disagree — selected for low residual correlation rather than
+high standalone score — would have a larger oracle, and adaptive weighting might pay again. Our claim is
+about headroom under a pool built the usual way, and should be re-measured whenever the pool changes.
+
+The experiment we would run next is prospective: generate a candidate list from the ranking, assay it
+alongside a random control, and measure whether the top-of-list lift becomes a hit-rate lift at the bench.
+Until then the honest claim is about rankings, not discoveries.
