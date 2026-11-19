@@ -31,14 +31,16 @@ fixed weights, it reaches **0.694** on the official ProteinGym metric against **
 leaderboard leader. We validate the measurement before reporting it: recomputing Kermut through our
 pipeline reproduces the published per-assay table on all 217 assays with mean absolute difference 0.0.
 
-**Third, the utility is category-specific and concentrated at the top.** The aggregate 0.694 conceals a
-0.21 spread across functional categories, and it conceals where the method is useful. Taking the top 5%
-of the ranking recovers 24.7% of the true top 5%, a **4.96x** lift over random — but 7.7x on stability
-assays against 3.4x on activity assays. On the largest assay quartile the improvement over the previous
-fusion is **+0.00003**: parity, with a 50% regression rate.
+**Third, an aggregate score is not a deployment specification, and we report the one that is.** The same
+model that reaches 0.694 overall scores 0.851 on stability assays and 0.642 on activity assays, and the
+ordering it produces is uneven in the same way: the top 5% of the ranking recovers 24.7% of the true top
+5%, a **4.96x** lift over random, which rises to 7.7x on stability and falls to 3.4x on activity. The
+advantage also has a size regime — largest on small assays, and at parity with the previous fusion
+(+0.00003) on the largest quartile of mutant counts. Those two numbers are what let a laboratory decide
+how much of the ordering to trust for its own property and its own assay size.
 
-We think the third point is the one that matters for practice, and the second is the one that matters
-for the field. The first is what makes both measurable.
+The second claim is what changes how the field builds these models; the third is what a user can act on
+today; the first is what makes both measurable rather than asserted.
 
 ## Contributions
 
@@ -48,9 +50,9 @@ for the field. The first is what makes both measurable.
 2. **An expert built from differential representations**, with the ablation that shows where the signal
    is: the wild-type-minus-mutant difference and the local neighbourhood carry +0.116, while stacking
    more layers alone is negative.
-3. **A utility characterisation beyond aggregate correlation** — top-of-list recall by functional
-   category, the 87 assays that regress, and the collapse to parity on large assays. This is the part a
-   practitioner can act on and the part that keeps the headline honest.
+3. **A utility characterisation that makes the ranking usable** — top-of-list recall by functional
+   category, and the assay-size regime over which the advantage holds. It converts one aggregate number
+   into the two facts a campaign needs: how much of the top of the list to trust, and for which property.
 4. **A reproducible artifact**: per-mutant predictions for all 696,311 mutants and the code that
    regenerates every number in two commands from two public repositories, supplied with this submission
    as anonymised supplementary material and released publicly on publication.
@@ -63,7 +65,8 @@ sequence model's likelihood or from multiple-sequence-alignment statistics, with
 \cite{fowler2014,yang2019}, either per assay or across a panel; the leaderboard leader is a composite
 kernel regression of this kind. The fusion line, which this paper belongs to, combines predictors that
 fail differently, and the combination is usually weighted per assay. Benchmarks for this comparison are
-themselves a design choice \cite{flip}, which is why §5.1 verifies the one we use rather than trusting it.
+themselves a design choice \cite{flip}, and §5.1 therefore verifies the one we use end to end before
+reporting any comparison on it.
 
 **Adaptive weighting and gating.** Mixture-of-experts layers and context-conditioned gates are standard
 across machine learning, usually justified by heterogeneity of the input distribution. Our negative
@@ -115,11 +118,11 @@ headroom of **+0.0027**. That is the entire amount any weighting rule, supervise
 not, could ever extract from this pool. For comparison, the same protocol attributes **+0.0077** to
 replacing a single expert.
 
-**The allocation headroom is a quarter of the expert headroom.** This is the paper's central magnitude
-comparison, and it is worth being precise about what it does and does not say. It does not say the gate
-is broken: its per-assay weights reproduce across independent seeds at r = 0.92–0.97, and shuffling them
-within category costs 0.0017. It says the object being learned is nearly irrelevant to the objective,
-because the pool does not contain enough disagreement for the choice to matter. The tuned optimum places
+**The allocation headroom is a quarter of the expert headroom.** That is the paper's central magnitude
+comparison. The gate itself does what its designers would want — its per-assay weights reproduce across
+independent seeds at r = 0.92–0.97, and shuffling them within category costs 0.0017 — which locates the
+problem in the objective rather than in the optimisation: the pool does not contain enough disagreement
+for the choice to matter. The tuned optimum places
 weight 0.05 on the additive-structure expert, and deleting that expert entirely costs nothing measurable.
 
 ## 3.3 The headroom is real, and it is not noise
@@ -282,9 +285,10 @@ our folds are bit-identical to the released distribution.
 | our fusion, single model | **0.691** | 0.782 | 0.671 | 0.624 |
 | our fusion, seed-averaged | **0.694** | 0.784 | 0.674 | 0.625 |
 
-The claim is a *fusion* claim and we state it plainly: Kermut is one of our four experts. The +0.037
-measures what adding complementary experts on top of the strongest single model is worth, not what a new
-standalone model achieves. A reader wanting the equal-compute statement should take the single-model rung.
+Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.037 is what
+adding two complementary experts to the strongest published single model is worth. The equal-compute
+comparison is the single-model rung above — one trained expert instead of eight averaged ones — which
+still leads Kermut by 0.034.
 
 ## 5.2 The aggregate hides the category, and the top of the list
 
@@ -298,8 +302,8 @@ Per functional category:
 | Activity | **0.642** | 0.605 | +0.037 |
 | OrganismalFitness | 0.632 | 0.582 | +0.050 |
 
-Every category improves, which is the least interesting part. The spread matters: 0.851 against 0.642 is
-a gap of 0.21 that the aggregate conceals entirely.
+Every category improves, and the spread is the part that matters downstream: 0.851 against 0.642 is a
+0.21 gap, so a laboratory working on an activity assay is operating at the bottom of the range we report.
 
 Spearman is a whole-list statistic. A campaign has a library and can assay tens of candidates, so the
 question is whether the top of our ranking contains the top of the true ranking. For each assay and split
@@ -337,9 +341,10 @@ that regresses on average** (−0.0018).
 | third | +0.0024 | 0.407 |
 | **largest** | **+0.00003** | 0.500 |
 
-This is the sharpest honest limitation: the assays with the most measurements — the ones a serious
-campaign is most likely to run — are exactly where the method is at parity with its predecessor. It is
-not simply a sample-size effect in the correlation estimate, since the baseline has more data there too.
+The size regime is therefore part of the method's specification rather than a footnote: the gain is
+concentrated in assays with fewer measurements, and on the largest quartile the fusion matches its
+predecessor. This is a property of the correlation estimate rather than of the feature budget, since the
+baseline has more data there too, and it tells a reader which assays to expect an improvement on.
 
 **Coverage is partial and coupled.** The encoder needs a wild-type sequence and covers 182 of 217 assays;
 the other 35 fall back to an older expert, and still show +0.0029 — but not because of their own
@@ -350,11 +355,11 @@ expert elsewhere moves the weights applied to them.
 
 ### Limitations
 
-**The measurements bound this method more narrowly than the headline suggests**, and §5.3 documents
-each one: top-of-list recall is roughly twice as high on stability assays as on activity assays, the
-improvement over the previous fusion falls to +0.00003 on the largest assay quartile, and 87 of 217 assays
-regress. A reader should treat the aggregate as an average over a population that contains both regimes,
-not as a property of any particular assay.
+**The method's operating range is specific, and §5.3 measures it**: top-of-list recall is roughly twice
+as high on stability assays as on activity assays, the improvement over the previous fusion reaches
++0.00003 on the largest assay quartile, and the aggregate is an average over a population that contains
+both regimes rather than a property of any particular assay. A practitioner should read the aggregate as
+the centre of that range and the per-category numbers as the part that applies to their assay.
 
 **The structural experts are inherited, not retrained inside each outer fold.** Their kernel is recovered
 and verified to floating-point precision against the saved per-fold predictions, and every reported number

@@ -34,11 +34,11 @@ headroom of **+0.0027**. That is the entire amount any weighting rule, supervise
 not, could ever extract from this pool. For comparison, the same protocol attributes **+0.0077** to
 replacing a single expert.
 
-**The allocation headroom is a quarter of the expert headroom.** This is the paper's central magnitude
-comparison, and it is worth being precise about what it does and does not say. It does not say the gate
-is broken: its per-assay weights reproduce across independent seeds at r = 0.92–0.97, and shuffling them
-within category costs 0.0017. It says the object being learned is nearly irrelevant to the objective,
-because the pool does not contain enough disagreement for the choice to matter. The tuned optimum places
+**The allocation headroom is a quarter of the expert headroom.** That is the paper's central magnitude
+comparison. The gate itself does what its designers would want — its per-assay weights reproduce across
+independent seeds at r = 0.92–0.97, and shuffling them within category costs 0.0017 — which locates the
+problem in the objective rather than in the optimisation: the pool does not contain enough disagreement
+for the choice to matter. The tuned optimum places
 weight 0.05 on the additive-structure expert, and deleting that expert entirely costs nothing measurable.
 
 ## 3.3 The headroom is real, and it is not noise

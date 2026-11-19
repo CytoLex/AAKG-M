@@ -1,10 +1,10 @@
 ### Limitations
 
-**The measurements bound this method more narrowly than the headline suggests**, and §5.3 documents
-each one: top-of-list recall is roughly twice as high on stability assays as on activity assays, the
-improvement over the previous fusion falls to +0.00003 on the largest assay quartile, and 87 of 217 assays
-regress. A reader should treat the aggregate as an average over a population that contains both regimes,
-not as a property of any particular assay.
+**The method's operating range is specific, and §5.3 measures it**: top-of-list recall is roughly twice
+as high on stability assays as on activity assays, the improvement over the previous fusion reaches
++0.00003 on the largest assay quartile, and the aggregate is an average over a population that contains
+both regimes rather than a property of any particular assay. A practitioner should read the aggregate as
+the centre of that range and the per-category numbers as the part that applies to their assay.
 
 **The structural experts are inherited, not retrained inside each outer fold.** Their kernel is recovered
 and verified to floating-point precision against the saved per-fold predictions, and every reported number

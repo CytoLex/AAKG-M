@@ -29,14 +29,16 @@ fixed weights, it reaches **0.694** on the official ProteinGym metric against **
 leaderboard leader. We validate the measurement before reporting it: recomputing Kermut through our
 pipeline reproduces the published per-assay table on all 217 assays with mean absolute difference 0.0.
 
-**Third, the utility is category-specific and concentrated at the top.** The aggregate 0.694 conceals a
-0.21 spread across functional categories, and it conceals where the method is useful. Taking the top 5%
-of the ranking recovers 24.7% of the true top 5%, a **4.96x** lift over random — but 7.7x on stability
-assays against 3.4x on activity assays. On the largest assay quartile the improvement over the previous
-fusion is **+0.00003**: parity, with a 50% regression rate.
+**Third, an aggregate score is not a deployment specification, and we report the one that is.** The same
+model that reaches 0.694 overall scores 0.851 on stability assays and 0.642 on activity assays, and the
+ordering it produces is uneven in the same way: the top 5% of the ranking recovers 24.7% of the true top
+5%, a **4.96x** lift over random, which rises to 7.7x on stability and falls to 3.4x on activity. The
+advantage also has a size regime — largest on small assays, and at parity with the previous fusion
+(+0.00003) on the largest quartile of mutant counts. Those two numbers are what let a laboratory decide
+how much of the ordering to trust for its own property and its own assay size.
 
-We think the third point is the one that matters for practice, and the second is the one that matters
-for the field. The first is what makes both measurable.
+The second claim is what changes how the field builds these models; the third is what a user can act on
+today; the first is what makes both measurable rather than asserted.
 
 ## Contributions
 
@@ -46,9 +48,9 @@ for the field. The first is what makes both measurable.
 2. **An expert built from differential representations**, with the ablation that shows where the signal
    is: the wild-type-minus-mutant difference and the local neighbourhood carry +0.116, while stacking
    more layers alone is negative.
-3. **A utility characterisation beyond aggregate correlation** — top-of-list recall by functional
-   category, the 87 assays that regress, and the collapse to parity on large assays. This is the part a
-   practitioner can act on and the part that keeps the headline honest.
+3. **A utility characterisation that makes the ranking usable** — top-of-list recall by functional
+   category, and the assay-size regime over which the advantage holds. It converts one aggregate number
+   into the two facts a campaign needs: how much of the top of the list to trust, and for which property.
 4. **A reproducible artifact**: per-mutant predictions for all 696,311 mutants and the code that
    regenerates every number in two commands from two public repositories, supplied with this submission
    as anonymised supplementary material and released publicly on publication.

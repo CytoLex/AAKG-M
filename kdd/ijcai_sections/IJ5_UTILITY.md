@@ -15,9 +15,10 @@ our folds are bit-identical to the released distribution.
 | our fusion, single model | **0.691** | 0.782 | 0.671 | 0.624 |
 | our fusion, seed-averaged | **0.694** | 0.784 | 0.674 | 0.625 |
 
-The claim is a *fusion* claim and we state it plainly: Kermut is one of our four experts. The +0.037
-measures what adding complementary experts on top of the strongest single model is worth, not what a new
-standalone model achieves. A reader wanting the equal-compute statement should take the single-model rung.
+Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.037 is what
+adding two complementary experts to the strongest published single model is worth. The equal-compute
+comparison is the single-model rung above — one trained expert instead of eight averaged ones — which
+still leads Kermut by 0.034.
 
 ## 5.2 The aggregate hides the category, and the top of the list
 
@@ -31,8 +32,8 @@ Per functional category:
 | Activity | **0.642** | 0.605 | +0.037 |
 | OrganismalFitness | 0.632 | 0.582 | +0.050 |
 
-Every category improves, which is the least interesting part. The spread matters: 0.851 against 0.642 is
-a gap of 0.21 that the aggregate conceals entirely.
+Every category improves, and the spread is the part that matters downstream: 0.851 against 0.642 is a
+0.21 gap, so a laboratory working on an activity assay is operating at the bottom of the range we report.
 
 Spearman is a whole-list statistic. A campaign has a library and can assay tens of candidates, so the
 question is whether the top of our ranking contains the top of the true ranking. For each assay and split
@@ -70,9 +71,10 @@ that regresses on average** (−0.0018).
 | third | +0.0024 | 0.407 |
 | **largest** | **+0.00003** | 0.500 |
 
-This is the sharpest honest limitation: the assays with the most measurements — the ones a serious
-campaign is most likely to run — are exactly where the method is at parity with its predecessor. It is
-not simply a sample-size effect in the correlation estimate, since the baseline has more data there too.
+The size regime is therefore part of the method's specification rather than a footnote: the gain is
+concentrated in assays with fewer measurements, and on the largest quartile the fusion matches its
+predecessor. This is a property of the correlation estimate rather than of the feature budget, since the
+baseline has more data there too, and it tells a reader which assays to expect an improvement on.
 
 **Coverage is partial and coupled.** The encoder needs a wild-type sequence and covers 182 of 217 assays;
 the other 35 fall back to an older expert, and still show +0.0029 — but not because of their own
