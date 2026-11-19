@@ -177,7 +177,8 @@ protection, reaches 0.6860 — below the constant, meaning the fitted direction 
 
 We repeat both measurements on ProteinGym's **indel** benchmark — 66 assays, 287,207 variants, a
 different mutation type, and a different expert pool: three published supervised indel models whose
-out-of-fold predictions ship with the benchmark, so no training is involved and the comparison is exact.
+out-of-fold predictions ship with the benchmark, so this half involves no training and the comparison is
+exact.
 
 | | substitution benchmark | indel benchmark |
 |---|---:|---:|
@@ -192,7 +193,13 @@ in-place gain. The difference is assay size. Across indel assay-size quartiles t
 −0.0023, −0.0002 and **+0.0044**; only the largest, at a median of 490 variants, recovers part of what an
 oracle fitted in place suggests.
 
-**The representation transfers, and it carries its own weight.** We build our differential encoder for
+**The representation transfers, and it carries its own weight.** For the encoder half we use 65 assays —
+the 226k-variant AAV library is excluded for runtime — and ProteinGym's released per-variant fold
+assignment, which lets our out-of-fold predictions sit on the same split as the published models.
+Fitting the constant on the whole panel rather than nested per held-out assay moves the indel headroom from
++0.0082 to +0.0084, so the choice of protocol does not affect anything below.
+
+We build our differential encoder for
 indels — the same wild-type/mutant difference and ±4 neighbourhood, with the edit site located by longest
 common prefix and suffix — and train it under ProteinGym's released fold assignment. On measured fitness
 alone, with no distillation, it scores **0.8380** against 0.8231 for the best published model and lifts the
