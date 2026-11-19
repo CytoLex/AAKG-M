@@ -193,11 +193,13 @@ in-place gain. The difference is assay size. Across indel assay-size quartiles t
 oracle fitted in place suggests.
 
 **The representation transfers, and it carries its own weight.** We build our differential encoder for
-indels — the same wild-type/mutant difference and ±4 neighbourhood over the edit site — and put it in the
-pool. Trained on measured fitness alone, with no distillation, it scores **0.8371** against 0.8234 for the
-best published model and lifts the three-expert blend from 0.8427 to **0.8565**. Distilling from the three
-published models then adds a further 0.035, reaching **0.8813**. The weighting headroom is unchanged
-throughout: a much stronger pool moves the level, not the allocation bound.
+indels — the same wild-type/mutant difference and ±4 neighbourhood, with the edit site located by longest
+common prefix and suffix — and train it under ProteinGym's released fold assignment. On measured fitness
+alone, with no distillation, it scores **0.8380** against 0.8231 for the best published model and lifts the
+three-expert blend from 0.8438 to **0.8536**. Distilling from the three published models then adds a further
+0.040, reaching **0.8844** and a four-expert blend of **0.8927**. The weighting headroom is unchanged
+throughout — between +0.006 and +0.009 across every pool we trained, against +0.0084 for the three
+published models alone. A much stronger pool moves the level, not the allocation bound.
 
 Per-assay weighting is therefore limited twice: by how much the pool disagrees, which the oracle measures,
 and by whether the assay carries enough variants to estimate the weights at all. Substitutions have a

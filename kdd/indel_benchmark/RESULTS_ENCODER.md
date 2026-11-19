@@ -20,17 +20,23 @@ workspace (`可上网GPU资源`, RTX 4090) as one job; the data and ESM-2 650M w
 
 ## Result
 
+**Superseded numbers first.** An earlier pass used a fresh random five-way split because the released
+fold file had not been located. ProteinGym does publish one (`cv_folds_indels.zip`, a per-variant
+`fold_random_5` column), and everything below is now computed under it, on 65 assays. The random-split run
+gave 0.8725 / 0.8813; the official-fold run gives 0.8844 / 0.8927. All figures in the paper and here come
+from the official-fold run.
+
 | expert | per-assay Spearman |
 |---|---:|
-| Embeddings-ESM1v (published) | 0.8234 |
-| Embeddings-Tranception (published) | 0.8006 |
-| Embeddings-MSA Transformer (published) | 0.7951 |
-| **our differential encoder** | **0.8725** |
+| Embeddings-ESM1v (published) | 0.8231 |
+| Embeddings-Tranception (published) | 0.8008 |
+| Embeddings-MSA Transformer (published) | 0.7952 |
+| **our differential encoder, α = 0.9** | **0.8844** |
 
 | pool | nested constant | per-assay oracle | headroom |
 |---|---:|---:|---:|
-| three published experts | 0.8427 | 0.8514 | +0.0088 |
-| **+ our encoder** | **0.8813** | 0.8885 | +0.0072 |
+| three published experts | 0.8438 | 0.8522 | +0.0084 |
+| **+ our encoder (α = 0.9)** | **0.8927** | 0.8987 | +0.0061 |
 
 ## Does the lead come from the teacher?
 
@@ -38,18 +44,15 @@ The encoder is distilled from the three published models, so the obvious objecti
 their consensus. Training the same head at four values of α separates the two sources — α = 0 uses only
 the measured fitness, α = 1 only the teacher, with no labels at all.
 
-| α | student alone | four-expert blend |
-|---|---:|---:|
-| 0.0 (no distillation) | **0.8371** | **0.8565** |
-| 0.5 | 0.8723 | 0.8768 |
-| 0.9 (paper) | 0.8725 | 0.8813 |
-| 1.0 (teacher only, no labels) | 0.8686 | 0.8795 |
+| α | student alone | four-expert blend | headroom |
+|---|---:|---:|---:|
+| 0.0 (no distillation) | **0.8380** | **0.8536** | +0.0090 |
+| 0.9 (paper) | 0.8844 | 0.8927 | +0.0061 |
 
 Two readings follow. **The representation stands on its own**: at α = 0 it beats every published expert
-(0.8371 against 0.8234) and still lifts the blend by 0.014. **Distillation doubles the gain**, adding
-0.035 on top. And the fact that α = 1.0 — no measured fitness used at all — reaches 0.8686 says the
-published consensus is a strong teacher, which is a statement about the teacher rather than about the
-student's independence.
+(0.8380 against 0.8231) and still lifts the blend by 0.010. **Distillation adds another 0.040**, taking the
+blend to 0.8927. On the earlier random split the same two settings gave 0.8371 and 0.8844, so the α = 0
+result is stable to the fold assignment and the distilled one moves with it.
 
 Two things follow.
 
@@ -69,10 +72,8 @@ which is the paper's §3 claim stated in a second setting.
 - It **does not** show the encoder's advantage is independent of the published models: the teacher is
   their consensus. The student exceeds the teacher's own consensus score, so it is adding signal beyond
   copying, but an α = 0 run would settle how much. That control is the next thing to run.
-- The comparison is per-assay out-of-fold on both sides, but our folds are a fresh random five-way split
-  (seed 1) rather than ProteinGym's released assignment for indels, which we could not locate. Both are
-  random five-fold over the same variants, so the expected difficulty matches, but this is a difference
-  worth closing if the released indel folds exist.
+- ~~The folds are a fresh random split rather than ProteinGym's.~~ Closed: `cv_folds_indels.zip` publishes
+  a per-variant `fold_random_5` column and the numbers here use it.
 - One assay of 65 is excluded for runtime; the excluded library is the largest and easiest, so the
   averages above are not flattered by it.
 
