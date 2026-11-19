@@ -18,10 +18,18 @@ standalone model achieves. A reader wanting the equal-compute statement should t
 
 ## 5.2 The aggregate hides the category, and the top of the list
 
-Per functional category, our fusion scores 0.851 on Stability, 0.693 on Expression, 0.653 on Binding,
-0.642 on Activity and 0.632 on OrganismalFitness, against 0.817, 0.670, 0.611, 0.605 and 0.582 for
-Kermut. Every category improves, which is the least interesting part. The spread matters: 0.851 against
-0.642 is a gap of 0.21 that the aggregate conceals entirely.
+Per functional category:
+
+| category | ours | Kermut | delta |
+|---|---:|---:|---:|
+| Stability | **0.851** | 0.817 | +0.034 |
+| Expression | 0.693 | 0.670 | +0.023 |
+| Binding | 0.653 | 0.611 | +0.042 |
+| Activity | **0.642** | 0.605 | +0.037 |
+| OrganismalFitness | 0.632 | 0.582 | +0.050 |
+
+Every category improves, which is the least interesting part. The spread matters: 0.851 against 0.642 is
+a gap of 0.21 that the aggregate conceals entirely.
 
 Spearman is a whole-list statistic. A campaign has a library and can assay tens of candidates, so the
 question is whether the top of our ranking contains the top of the true ranking. For each assay and split
@@ -50,11 +58,18 @@ across categories.
 +0.0016 — roughly half the mean, so the gain is carried by a subset. **Expression is the only category
 that regresses on average** (−0.0018).
 
-**The effect disappears on large assays.** By quartile of mutant count, the mean delta is +0.0073 on the
-smallest, +0.0017, +0.0024, and **+0.00003 on the largest**, with a 50% regression rate there. This is
-the sharpest honest limitation: the assays with the most measurements — the ones a serious campaign is
-most likely to run — are exactly where the method is at parity with its predecessor. It is not simply a
-sample-size effect in the correlation estimate, since the baseline has more data there too.
+**The effect disappears on large assays.**
+
+| quartile of mutant count | mean delta | regression rate |
+|---|---:|---:|
+| smallest | **+0.0073** | 0.255 |
+| second | +0.0017 | 0.444 |
+| third | +0.0024 | 0.407 |
+| **largest** | **+0.00003** | 0.500 |
+
+This is the sharpest honest limitation: the assays with the most measurements — the ones a serious
+campaign is most likely to run — are exactly where the method is at parity with its predecessor. It is
+not simply a sample-size effect in the correlation estimate, since the baseline has more data there too.
 
 **Coverage is partial and coupled.** The encoder needs a wild-type sequence and covers 182 of 217 assays;
 the other 35 fall back to an older expert, and still show +0.0029 — but not because of their own

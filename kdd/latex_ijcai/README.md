@@ -9,11 +9,18 @@ Built against the IJCAI 2027 author kit (`ijcai27.sty`, `named.bst`, fetched fro
 
 ## Measured state
 
-**7-page body + 1 page of references = 8 pages.** The limit is 9 (7 body + up to 2 for references,
+**6-page body + 1 page of references = 7 pages.** The limit is 9 (7 body + up to 2 for references,
 acknowledgements, contribution statement or ethics statement), so there is a page in hand.
 
 Verified by compiling with the bibliography disabled and counting `/Type /Page` objects in the
-decompressed PDF streams: the body alone is exactly 7.
+decompressed PDF streams: the body alone is 6.
+
+**This number was wrong twice before it was right**, and the reason is worth recording. The first
+measurement said "body 7 pages" because it cut the document at `\bibliographystyle`, which sat *after* an
+appendix inherited from the ICML build — so it was measuring body plus a duplicated appendix. Removing
+that appendix dropped the count to 6 and revealed a page of headroom, which is now spent on the two
+domain-facing tables (per-category agreement and the quartile breakdown) that the condensation had
+flattened into prose.
 
 ## Why this is a rewrite, not a reformat
 

@@ -3,6 +3,7 @@ import json, pathlib, re, subprocess, sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from md2tex import md2tex
+from headings import fix_headings
 
 KDD = pathlib.Path(__file__).resolve().parent.parent
 LATEX = KDD / "latex_icml"
@@ -63,7 +64,7 @@ tmp.unlink()
 
 tex_body = (LATEX / "_body.tex").read_text()
 tex_body = re.sub(r"\\hypertarget\{[^}]*\}\{%\s*\n", "", tex_body)
-tex_body = re.sub(r"\\subsection\{((?:[0-9]|[A-Z])[^}]*)\}", r"\\section{\1}", tex_body)
+tex_body = fix_headings(tex_body)
 tex_body = re.sub(r"(\\(?:sub)*section\{[^}]*\}(?:\\label\{[^}]*\})?)\}", r"\1", tex_body)
 
 
