@@ -1,3 +1,6 @@
+The preceding sections argue about where gain comes from. This one asks what the resulting ranker is worth: first on the benchmark's own terms, then on the terms a laboratory actually uses, and finally where it does
+not help — which is the part most papers leave out.
+
 ## 5.1 Measuring it the way the leaderboard measures it
 
 We run the official `performance_DMS_supervised_benchmarks.py` unmodified on a score file of our
@@ -43,7 +46,7 @@ official way:
 | 10% | **0.350** | 0.100 | **3.50x** |
 
 Ordering the top 5% recovers about a quarter of the true top 5%, roughly five times random. It is also
-category-dependent, in the direction §5.2 predicts: 7.7x on Stability, 4.9x Binding, 4.6x
+category-dependent, in the direction the category table above predicts: 7.7x on Stability, 4.9x Binding, 4.6x
 OrganismalFitness, 4.2x Expression, and **3.4x on Activity** — and activity is what function-oriented
 campaigns care about. **The ranker is roughly twice as good at prioritising stability mutants as
 activity mutants.**

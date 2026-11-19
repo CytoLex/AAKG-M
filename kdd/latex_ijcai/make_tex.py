@@ -149,7 +149,16 @@ PRE = r"""\documentclass{article}
 \pdfpagewidth=8.5in
 \pdfpageheight=11in
 \usepackage{ijcai27}
-\usepackage{times}
+% The kit says 'Use the postscript times font!'. Under XeTeX, \usepackage{times} silently falls
+% back to Latin Modern (TU/ptm/m/n undefined), so the typeface is set explicitly instead.
+% TeX Gyre Termes is a Times clone and ships with the engine's bundle, so the build is portable.
+\usepackage{fontspec}
+\setmainfont{texgyretermes}[Extension=.otf, UprightFont=*-regular, BoldFont=*-bold,
+  ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+\setmonofont{texgyrecursor}[Extension=.otf, UprightFont=*-regular, BoldFont=*-bold,
+  ItalicFont=*-italic, BoldItalicFont=*-bolditalic, Scale=0.9]
+\usepackage{unicode-math}
+\setmathfont{texgyretermes-math.otf}
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}
 \usepackage[utf8]{inputenc}

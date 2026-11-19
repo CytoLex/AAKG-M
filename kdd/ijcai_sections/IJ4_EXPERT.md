@@ -1,3 +1,6 @@
+If allocation is exhausted, the headroom has to be in the experts. This section builds one from a different view of the same information, and then asks which of its design choices actually carry the
+gain — including one that looks like capacity and turns out to be structure.
+
 ## 4.1 What a mutation is, as a signal
 
 A substitution is a difference. We extract per-residue representations from three ESM-2 650M layers

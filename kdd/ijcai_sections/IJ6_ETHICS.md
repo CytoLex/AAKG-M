@@ -1,15 +1,21 @@
 ### Limitations
 
-**The ranker is unreliable on most functional categories**, with top-of-list recall at 5% of 0.38 for
-stability assays against 0.17 for activity — a 2.2x spread, and activity is what enzyme engineering most
-often cares about. **The gain disappears on large assays** (+0.00003 on the largest quartile), and **87 of
-217 assays regress**, with Expression the only category negative on average. **Coverage is partial** (182
-of 217 assays) and the fallback assays' deltas reflect coupling through the weight search rather than
-their own predictions. **The structural experts are inherited, not retrained inside each outer fold**;
-their kernel is recovered and verified to floating-point precision, and every reported number is
-reproducible from published per-mutant scores, but a fully nested protocol would retrain them within each
-fold. **One benchmark family, no prospective validation**: whether top-of-list lift becomes hit-rate lift
-in a real campaign is untested, and that is the next experiment rather than a claim.
+**The measurements bound this method more narrowly than the headline suggests**, and §5.3 documents
+each one: top-of-list recall is roughly twice as high on stability assays as on activity assays, the
+improvement over the previous fusion falls to +0.00003 on the largest assay quartile, and 87 of 217 assays
+regress. A reader should treat the aggregate as an average over a population that contains both regimes,
+not as a property of any particular assay.
+
+**The structural experts are inherited, not retrained inside each outer fold.** Their kernel is recovered
+and verified to floating-point precision against the saved per-fold predictions, and every reported number
+is reproducible from the published per-mutant scores — but a fully nested protocol would retrain them
+within each fold. The one hyperparameter that materially matters, the distillation weight, was re-selected
+inside each fold and chose the same value in all five; the broader design space, however, was explored on
+this panel.
+
+**One benchmark family, no prospective validation.** All results are on ProteinGym substitution assays.
+There is no held-out cohort from a different source and no wet-lab experiment. Whether top-of-list lift
+becomes hit-rate lift in a real screening campaign is untested; it is the next experiment, not a claim.
 
 ### Ethical considerations
 

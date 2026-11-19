@@ -1,3 +1,5 @@
+Two things remain: what this work gives the domain it studies, and what would overturn it.
+
 ### What this contributes to protein engineering
 
 A protein engineer choosing mutations against an assay budget needs a ranking they can act on, and the
@@ -29,7 +31,7 @@ publish per-mutant predictions for all 696,311 variants so the evaluation is rep
 code, and we characterise its difficulty structure across categories, sizes and splits. A reader can use
 that characterisation without adopting our method.
 
-### Discussion
+### Implications, and what would falsify us
 
 **If you are building a fusion.** Report the oracle. It takes an afternoon and converts an open-ended
 search for better gating into a bounded question: how much is left? When the answer is a quarter of what

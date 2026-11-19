@@ -53,6 +53,28 @@ The AI4Science track's CFP has not been published, so this build is **anonymous*
 institutional references, no repository URLs naming the group. If the track turns out to be
 non-anonymous, adding the author block is a two-line change in `make_tex.py`.
 
+## The typeface was silently wrong until this round
+
+The kit says "Use the postscript times font!" and the template loads `\usepackage{times}`. Under XeTeX —
+which is what tectonic runs — that package's `TU/ptm/m/n` shapes do not exist, so LaTeX **substituted Latin
+Modern without failing**. The compiled PDF embedded `LMRoman10-Regular`, not a Times face, and the only
+signal was a font-shape warning in the log.
+
+The build now sets the typeface explicitly to **TeX Gyre Termes**, a Times clone that ships with the
+engine's bundle, so no system font is required and the build works anywhere:
+
+```latex
+\setmainfont{texgyretermes}[Extension=.otf, ...]
+\setmathfont{texgyretermes-math.otf}
+\setmonofont{texgyrecursor}[...]
+```
+
+Verified by reading `/BaseFont` entries out of the PDF: `TeXGyreTermes-Regular`, `-Bold`, `-Italic`,
+`TeXGyreTermesMath-Regular`, `TeXGyreCursor-Regular`.
+
+Termes is metrically narrower than Latin Modern, so the document shortened from 7 to 6 pages in the
+process — the same page of headroom either way.
+
 ## Format details taken from the kit
 
 - `\documentclass{article}` with `\pdfpagewidth=8.5in`, `\pdfpageheight=11in`

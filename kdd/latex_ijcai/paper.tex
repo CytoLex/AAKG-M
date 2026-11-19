@@ -2,7 +2,16 @@
 \pdfpagewidth=8.5in
 \pdfpageheight=11in
 \usepackage{ijcai27}
-\usepackage{times}
+% The kit says 'Use the postscript times font!'. Under XeTeX, \usepackage{times} silently falls
+% back to Latin Modern (TU/ptm/m/n undefined), so the typeface is set explicitly instead.
+% TeX Gyre Termes is a Times clone and ships with the engine's bundle, so the build is portable.
+\usepackage{fontspec}
+\setmainfont{texgyretermes}[Extension=.otf, UprightFont=*-regular, BoldFont=*-bold,
+  ItalicFont=*-italic, BoldItalicFont=*-bolditalic]
+\setmonofont{texgyrecursor}[Extension=.otf, UprightFont=*-regular, BoldFont=*-bold,
+  ItalicFont=*-italic, BoldItalicFont=*-bolditalic, Scale=0.9]
+\usepackage{unicode-math}
+\setmathfont{texgyretermes-math.otf}
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}
 \usepackage[utf8]{inputenc}
@@ -124,6 +133,9 @@ step toward reporting what a downstream experiment would experience.
 
 \section{Allocation has no headroom}\label{allocation-has-no-headroom}
 
+This section establishes that the mixture has nowhere to go. We first evaluate six label-free conditioning mechanisms against a tuned constant, then bound what \emph{any} weighting rule could extract from this expert pool, then show that the bound is reproducible rather than an artefact of fitting
+noise.
+
 \subsection{Seven mechanisms, one protocol}\label{seven-mechanisms-one-protocol}
 
 We evaluate six label-free conditioning mechanisms plus the tuned constant they all must beat, on
@@ -204,6 +216,9 @@ built to disagree might make gating worthwhile again --- a different paper, and 
 report the oracle too.
 
 \section{The expert}\label{the-expert}
+
+If allocation is exhausted, the headroom has to be in the experts. This section builds one from a different view of the same information, and then asks which of its design choices actually carry the
+gain --- including one that looks like capacity and turns out to be structure.
 
 \subsection{What a mutation is, as a signal}\label{what-a-mutation-is-as-a-signal}
 
@@ -293,6 +308,9 @@ versus global --- not a different optimiser, loss, or a bigger model.
 
 \section{What the ranker is worth}\label{what-the-ranker-is-worth}
 
+The preceding sections argue about where gain comes from. This one asks what the resulting ranker is worth: first on the benchmark's own terms, then on the terms a laboratory actually uses, and finally where it does
+not help --- which is the part most papers leave out.
+
 \subsection{Measuring it the way the leaderboard measures it}\label{measuring-it-the-way-the-leaderboard-measures-it}
 
 We run the official \texttt{performance\_DMS\_supervised\_benchmarks.py} unmodified on a score file of our
@@ -362,7 +380,7 @@ top of the list & recall of the true top & random & lift \\
 \end{table*}
 
 Ordering the top 5\% recovers about a quarter of the true top 5\%, roughly five times random. It is also
-category-dependent, in the direction §5.2 predicts: 7.7x on Stability, 4.9x Binding, 4.6x
+category-dependent, in the direction the category table above predicts: 7.7x on Stability, 4.9x Binding, 4.6x
 OrganismalFitness, 4.2x Expression, and \textbf{3.4x on Activity} --- and activity is what function-oriented
 campaigns care about. \textbf{The ranker is roughly twice as good at prioritising stability mutants as
 activity mutants.}
@@ -407,16 +425,22 @@ expert elsewhere moves the weights applied to them.
 
 \subsubsection*{Limitations}\label{limitations}
 
-\textbf{The ranker is unreliable on most functional categories}, with top-of-list recall at 5\% of 0.38 for
-stability assays against 0.17 for activity --- a 2.2x spread, and activity is what enzyme engineering most
-often cares about. \textbf{The gain disappears on large assays} (+0.00003 on the largest quartile), and \textbf{87 of
-217 assays regress}, with Expression the only category negative on average. \textbf{Coverage is partial} (182
-of 217 assays) and the fallback assays' deltas reflect coupling through the weight search rather than
-their own predictions. \textbf{The structural experts are inherited, not retrained inside each outer fold};
-their kernel is recovered and verified to floating-point precision, and every reported number is
-reproducible from published per-mutant scores, but a fully nested protocol would retrain them within each
-fold. \textbf{One benchmark family, no prospective validation}: whether top-of-list lift becomes hit-rate lift
-in a real campaign is untested, and that is the next experiment rather than a claim.
+\textbf{The measurements bound this method more narrowly than the headline suggests}, and §5.3 documents
+each one: top-of-list recall is roughly twice as high on stability assays as on activity assays, the
+improvement over the previous fusion falls to +0.00003 on the largest assay quartile, and 87 of 217 assays
+regress. A reader should treat the aggregate as an average over a population that contains both regimes,
+not as a property of any particular assay.
+
+\textbf{The structural experts are inherited, not retrained inside each outer fold.} Their kernel is recovered
+and verified to floating-point precision against the saved per-fold predictions, and every reported number
+is reproducible from the published per-mutant scores --- but a fully nested protocol would retrain them
+within each fold. The one hyperparameter that materially matters, the distillation weight, was re-selected
+inside each fold and chose the same value in all five; the broader design space, however, was explored on
+this panel.
+
+\textbf{One benchmark family, no prospective validation.} All results are on ProteinGym substitution assays.
+There is no held-out cohort from a different source and no wet-lab experiment. Whether top-of-list lift
+becomes hit-rate lift in a real screening campaign is untested; it is the next experiment, not a claim.
 
 \subsubsection*{Ethical considerations}\label{ethical-considerations}
 
@@ -447,6 +471,8 @@ caught a wrong paper title and a DOI belonging to a different article. No result
 generated by a model, no AI system is listed as an author, and the authors take full responsibility.
 
 \section{Discussion}\label{discussion}
+
+Two things remain: what this work gives the domain it studies, and what would overturn it.
 
 \subsubsection*{What this contributes to protein engineering}\label{what-this-contributes-to-protein-engineering}
 
@@ -479,7 +505,7 @@ publish per-mutant predictions for all 696,311 variants so the evaluation is rep
 code, and we characterise its difficulty structure across categories, sizes and splits. A reader can use
 that characterisation without adopting our method.
 
-\subsubsection*{Discussion}\label{discussion-1}
+\subsubsection*{Implications, and what would falsify us}\label{implications-and-what-would-falsify-us}
 
 \textbf{If you are building a fusion.} Report the oracle. It takes an afternoon and converts an open-ended
 search for better gating into a bounded question: how much is left? When the answer is a quarter of what
