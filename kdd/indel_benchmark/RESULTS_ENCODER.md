@@ -25,12 +25,31 @@ workspace (`可上网GPU资源`, RTX 4090) as one job; the data and ESM-2 650M w
 | Embeddings-ESM1v (published) | 0.8234 |
 | Embeddings-Tranception (published) | 0.8006 |
 | Embeddings-MSA Transformer (published) | 0.7951 |
-| **our differential encoder** | **0.8699** |
+| **our differential encoder** | **0.8725** |
 
 | pool | nested constant | per-assay oracle | headroom |
 |---|---:|---:|---:|
 | three published experts | 0.8427 | 0.8514 | +0.0088 |
-| **+ our encoder** | **0.8787** | 0.8875 | +0.0087 |
+| **+ our encoder** | **0.8813** | 0.8885 | +0.0072 |
+
+## Does the lead come from the teacher?
+
+The encoder is distilled from the three published models, so the obvious objection is that it is copying
+their consensus. Training the same head at four values of α separates the two sources — α = 0 uses only
+the measured fitness, α = 1 only the teacher, with no labels at all.
+
+| α | student alone | four-expert blend |
+|---|---:|---:|
+| 0.0 (no distillation) | **0.8371** | **0.8565** |
+| 0.5 | 0.8723 | 0.8768 |
+| 0.9 (paper) | 0.8725 | 0.8813 |
+| 1.0 (teacher only, no labels) | 0.8686 | 0.8795 |
+
+Two readings follow. **The representation stands on its own**: at α = 0 it beats every published expert
+(0.8371 against 0.8234) and still lifts the blend by 0.014. **Distillation doubles the gain**, adding
+0.035 on top. And the fact that α = 1.0 — no measured fitness used at all — reaches 0.8686 says the
+published consensus is a strong teacher, which is a statement about the teacher rather than about the
+student's independence.
 
 Two things follow.
 
