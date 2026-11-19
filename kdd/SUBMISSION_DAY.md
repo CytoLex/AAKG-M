@@ -61,19 +61,20 @@ so the commitments are on record rather than in memory.
    dependency. Excluded from the initiative and therefore harmless: Senior Researchers' Position Talks,
    Journal Track, Sister Conferences Track, Early Career Highlights, Competitions, Demos, Doctoral
    Consortium. Non-primary payment deadline: **January 18, 2027**.
-2. **Reciprocal reviewer — confirmed available, and it must actually be designated in the system.** One of
-   the paper's own authors must be recorded as the reciprocal reviewer
-   by the full-paper deadline. Qualification, verbatim from the Reciprocal Review Policy: "at least
-   **five full papers in total** across the following venues: IJCAI, AAAI, ECAI, AAMAS, KR, NeurIPS,
-   ICML, ICLR, ACL, EMNLP, CVPR, ICCV, ECCV, UAI, AISTATS, COLT, ICAPS, KDD, and AIJ"; serving IJCAI 2027
-   as PC, SPC or Area Chair also qualifies, and for those the existing duties count instead.
-   **If any author qualifies, an exemption is not available** — one must be designated. An unqualified
-   designation is a desk reject, and so is a designated reviewer who does not complete their assigned
-   reviewing in Phase 1 or Phase 2: every submission that designated that person is desk rejected.
-   (An earlier version of this file said "three papers in KDD or related conferences"; that is KDD's
-   rule, not IJCAI's.) **Because a qualified author exists, an exemption is not available** — the
-   designation is mandatory, and the person must complete Phase 1 and Phase 2 reviewing or this paper is
-   desk rejected with every other submission that named them.
+2. **Reciprocal reviewer — confirmed available; designation is mandatory.** One of the paper's own
+   authors must be recorded as the reciprocal reviewer by the full-paper deadline. Qualification, verbatim
+   from the Reciprocal Review Policy: "at least **five full papers in total** across the following venues:
+   IJCAI, AAAI, ECAI, AAMAS, KR, NeurIPS, ICML, ICLR, ACL, EMNLP, CVPR, ICCV, ECCV, UAI, AISTATS, COLT,
+   ICAPS, KDD, and AIJ"; serving IJCAI 2027 as PC, SPC or Area Chair also qualifies, and for those the
+   existing duties count instead of new assignments.
+
+   **Because a qualified author exists, an exemption is not available.** An unqualified designation is a
+   desk reject, and a designated reviewer who does not complete Phase 1 or Phase 2 takes every submission
+   that named them down with them. Eligibility is assessed against what the submission system records at
+   the deadline, so the designation cannot be settled afterwards.
+
+   (An earlier version of this file said "three papers in KDD or related conferences" — that is KDD's
+   rule, not IJCAI's.)
 3. **In-person presentation** at Kyoto or Hengqin — **confirmed by the authors**. Papers not presented are
    excluded from the proceedings unless IJCAI grants prior approval for exceptional circumstances.
 
