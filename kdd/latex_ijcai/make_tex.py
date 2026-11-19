@@ -23,6 +23,7 @@ sections = [
     ("## 2 Related work", (KDD / "ijcai_sections" / "IJ2_RELATED.md").read_text().strip()),
     ("## 3 Allocation has no headroom", (KDD / "ijcai_sections" / "IJ3_ALLOCATION.md").read_text().strip()),
     ("## 4 The expert", (KDD / "ijcai_sections" / "IJ4_EXPERT.md").read_text().strip()),
+    ("## 3.5 Protocol and reproducibility", (KDD / "ijcai_sections" / "IJ3B_SETUP.md").read_text().strip()),
     ("## 5 What the ranker is worth", (KDD / "ijcai_sections" / "IJ5_UTILITY.md").read_text().strip()),
     ("## 6 Limitations and Ethical Considerations", (KDD / "ijcai_sections" / "IJ6_ETHICS.md").read_text().strip()),
     ("## 7 Discussion", (KDD / "ijcai_sections" / "IJ7_DISCUSSION.md").read_text().strip()),
