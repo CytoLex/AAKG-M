@@ -21,16 +21,19 @@ def body(name, end_marker="## Note"):
 sections = [
     ("## 1 Introduction", (KDD / "ijcai_sections" / "IJ1_INTRO.md").read_text().strip()),
     ("## 2 Related work", (KDD / "ijcai_sections" / "IJ2_RELATED.md").read_text().strip()),
-    ("## 3 Allocation has no headroom", (KDD / "ijcai_sections" / "IJ3_ALLOCATION.md").read_text().strip()),
+    ("## 3 Allocation has no headroom", (KDD / "ijcai_sections" / "IJ3_LEAD.md").read_text().strip()),
+    ("", (KDD / "ijcai_sections" / "IJ3A_PROTOCOL.md").read_text().strip()),
+    ("", (KDD / "ijcai_sections" / "IJ3B_MECHANISMS.md").read_text().strip()),
+    ("", (KDD / "ijcai_sections" / "IJ3D_INDELS.md").read_text().strip()),
+    ("", (KDD / "ijcai_sections" / "IJ3E_MEANING.md").read_text().strip()),
     ("## 4 The expert", (KDD / "ijcai_sections" / "IJ4_EXPERT.md").read_text().strip()),
-    ("## 3.5 Protocol and reproducibility", (KDD / "ijcai_sections" / "IJ3B_SETUP.md").read_text().strip()),
     ("## 5 What the ranker is worth", (KDD / "ijcai_sections" / "IJ5_UTILITY.md").read_text().strip()),
     ("## 6 Limitations and Ethical Considerations", (KDD / "ijcai_sections" / "IJ6_ETHICS.md").read_text().strip()),
     ("## 7 Discussion", (KDD / "ijcai_sections" / "IJ7_DISCUSSION.md").read_text().strip()),
 ]
 out = []
 for title, txt in sections:
-    out.append(f"{title}\n\n{txt}")
+    out.append(f"{title}\n\n{txt}" if title else txt)
 md = "\n\n".join(out)
 
 # --- pull the markdown pipe tables out and replace with placeholders
@@ -190,7 +193,10 @@ Protein engineering screens rank candidate mutations, but the field optimises th
 structure models. We test that premise on the ProteinGym substitution benchmark, 217 assays and 651
 assay-by-split units, and find that every one of seven adaptive weighting mechanisms we measured ties a
 single constant tuned on held-out assays. A per-assay oracle bounds the entire headroom any weighting
-rule could capture at +0.0027, against +0.0077 for replacing a single expert. We then show where the
+rule could capture at +0.0027, against +0.0077 for replacing a single expert. A second benchmark --
+ProteinGym's indel assays, a different mutation type and a different expert pool -- shows the bound has
+two parts: its oracle gap is three times larger there, yet weights fitted on half an assay's variants lose
+to a fixed blend on the other half, and assay size decides which part binds. We then show where the
 headroom is: an encoder over reference-minus-mutant representations in a local neighbourhood, distilled
 from the strongest experts, with a category-specific low-rank residual and eight-seed averaging, fused
 as four fixed weights reaches 0.694 on the official metric against 0.657 for the published leader. The

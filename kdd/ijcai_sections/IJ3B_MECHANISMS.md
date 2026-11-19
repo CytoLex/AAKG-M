@@ -1,7 +1,4 @@
-This section establishes that the mixture has nowhere to go. We first evaluate six label-free conditioning mechanisms against a tuned constant, then bound what *any* weighting rule could extract from this expert pool, then show that the bound is reproducible rather than an artefact of fitting
-noise.
-
-## 3.1 Seven mechanisms, one protocol
+## 3.2 Seven mechanisms, one protocol
 
 We evaluate six label-free conditioning mechanisms plus the tuned constant they all must beat, on
 ProteinGym \cite{proteingym}: 217 substitution assays, 651 assay-by-split units, official
@@ -27,7 +24,7 @@ harmful, and a per-variant median discards the magnitude that separates a strong
 one. **No mechanism is separated from a tuned constant by more than the seed-to-seed spread of the models
 themselves.**
 
-## 3.2 The bound is small
+## 3.3 The bound is small
 
 The oracle over the same expert pool reaches **0.693544**, against **0.690808** for the fixed blend — a
 headroom of **+0.0027**. That is the entire amount any weighting rule, supervised or not, per-assay or
@@ -41,7 +38,7 @@ problem in the objective rather than in the optimisation: the pool does not cont
 for the choice to matter. The tuned optimum places
 weight 0.05 on the additive-structure expert, and deleting that expert entirely costs nothing measurable.
 
-## 3.3 The headroom is real, and it is not noise
+## 3.4 The headroom is real, and it is not noise
 
 A small oracle gain invites the objection that the oracle is fitting its own noise. Variants of each
 assay are split into disjoint halves A and B; weights selected on A and evaluated on B transfer a gain of
@@ -53,21 +50,3 @@ That half-surviving gain is still three times what any mechanism captures, which
 the headroom exists, it is reproducible, and it is not a function of the context statistics anyone
 computes. A ridge \cite{rasmussen2006} from the same 17 statistics to the oracle weights, with leave-one-out
 protection, reaches 0.6860 — below the constant, meaning the fitted direction is actively wrong.
-
-## 3.4 What this means for the field
-
-**Report against tuned constants, not fixed blends.** A gate beating a fixed 50/50 blend by +0.0047 is
-commonly reported as evidence that conditioning works; against a constant tuned on held-out assays the
-same gate is +0.0002, a statistical tie. The gain attributed to conditioning is mostly the gain from
-*tuning at all*.
-
-**A per-assay oracle should be a reported baseline.** It costs nothing to compute and converts "our gate
-improves over the previous gate" into "our gate captures *x* percent of the available headroom", which is
-the only number telling a reader whether the mechanism is worth its complexity. Here *x* is four percent.
-
-**When the oracle is small, the pool is the problem.** If no weighting of these experts can gain more
-than +0.0027, the next +0.01 has to come from an expert that disagrees usefully. §4 builds one.
-
-The claim is bounded by the pool: the oracle is a function of how much the experts disagree, so a pool
-built to disagree might make gating worthwhile again — a different paper, and one that would have to
-report the oracle too.

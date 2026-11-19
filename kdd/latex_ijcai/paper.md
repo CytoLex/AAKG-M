@@ -44,9 +44,11 @@ today; the first is what makes both measurable rather than asserted.
 
 ## Contributions
 
-1. **A falsification of adaptive weighting for this problem.** Seven mechanisms under one protocol, all
-   at or below a tuned constant, plus an oracle bounding the total allocatable gain at +0.0027. We argue
-   this should be a reported baseline, not a footnote.
+1. **A falsification of adaptive weighting for this problem, replicated on a second benchmark.**
+   Seven mechanisms under one protocol, all at or below a tuned constant, plus an oracle bounding the
+   total allocatable gain at +0.0027. On ProteinGym's indel assays the same bound is measured and shown to
+   have a second part: how much of it the assay can estimate. We argue both the oracle and the tuned
+   constant belong in the baseline table.
 2. **An expert built from differential representations**, with the ablation that shows where the signal
    is: the wild-type-minus-mutant difference and the local neighbourhood carry +0.116, while stacking
    more layers alone is negative.
@@ -85,7 +87,40 @@ step toward reporting what a downstream experiment would experience.
 This section establishes that the mixture has nowhere to go. We first evaluate six label-free conditioning mechanisms against a tuned constant, then bound what *any* weighting rule could extract from this expert pool, then show that the bound is reproducible rather than an artefact of fitting
 noise.
 
-## 3.1 Seven mechanisms, one protocol
+## 3.1 Protocol and reproducibility
+
+**Benchmark and aggregation.** ProteinGym's supervised substitution benchmark: 217 assays over 186
+UniProt identifiers, each with the three official splits, giving 651 assay-by-split units. We use the
+benchmark's own aggregation chain unmodified — per-unit Spearman, averaged over splits, grouped by
+UniProt identifier and coarse functional category, then averaged over the five categories — and run its
+published evaluation script on a score file we supply rather than reimplementing the metric. The grouping
+step is the one most often skipped: several assays share a protein, and averaging before the category step
+moves the result by about 0.005.
+
+**Models.** Four experts: two frozen published predictions (Kermut, an assay-adaptive mixed structure
+kernel), an additive structure kernel that receives weight 0.00 and does not affect scoring, and the
+encoder of §4, refitted per assay and per split. Feature construction, the distillation loss, the
+category residual and the seed averaging are specified in §4; α and the residual rank were re-selected by
+inner selection on training assays only.
+
+**Fusion.** Four weights per fold by step-0.1 simplex search on the training assays, applied to the
+held-out ones — the same procedure the tuned-constant baseline uses, so the comparison is equal-compute.
+
+**Baselines.** Five, in increasing strength: a fixed 50/50 blend of the two strongest experts; a fixed
+D+Kermut blend; the tuned constant of §3; a nested constant with per-fold weights; and Kermut alone, which
+is also the published leaderboard leader.
+
+**Statistics.** Seed intervals from eight independent full-pipeline runs; assay intervals from a two-level
+bootstrap resampling assays within category and seeds together, 4,000 replicates. Comparisons between two
+configurations on the same assays use paired differences, because assay-to-assay variance is an order of
+magnitude larger than the effect.
+
+**Compute and reproduction.** One H200 GPU per encoder run, a few hours for a full panel with eight seeds;
+the structural experts are frozen and cost nothing at scoring time. Two commands from two public
+repositories regenerate every number here, and the control row of §5.1 is produced by the same command as
+the headline, so a reader can check our aggregation before trusting any comparison built on it.
+
+## 3.2 Seven mechanisms, one protocol
 
 We evaluate six label-free conditioning mechanisms plus the tuned constant they all must beat, on
 ProteinGym \cite{proteingym}: 217 substitution assays, 651 assay-by-split units, official
@@ -111,7 +146,7 @@ harmful, and a per-variant median discards the magnitude that separates a strong
 one. **No mechanism is separated from a tuned constant by more than the seed-to-seed spread of the models
 themselves.**
 
-## 3.2 The bound is small
+## 3.3 The bound is small
 
 The oracle over the same expert pool reaches **0.693544**, against **0.690808** for the fixed blend — a
 headroom of **+0.0027**. That is the entire amount any weighting rule, supervised or not, per-assay or
@@ -125,7 +160,7 @@ problem in the objective rather than in the optimisation: the pool does not cont
 for the choice to matter. The tuned optimum places
 weight 0.05 on the additive-structure expert, and deleting that expert entirely costs nothing measurable.
 
-## 3.3 The headroom is real, and it is not noise
+## 3.4 The headroom is real, and it is not noise
 
 A small oracle gain invites the objection that the oracle is fitting its own noise. Variants of each
 assay are split into disjoint halves A and B; weights selected on A and evaluated on B transfer a gain of
@@ -138,8 +173,32 @@ the headroom exists, it is reproducible, and it is not a function of the context
 computes. A ridge \cite{rasmussen2006} from the same 17 statistics to the oracle weights, with leave-one-out
 protection, reaches 0.6860 — below the constant, meaning the fitted direction is actively wrong.
 
-## 3.4 What this means for the field
+## 3.5 A second benchmark: the bound has two parts
 
+We repeat both measurements on ProteinGym's **indel** benchmark — 66 assays, 287,207 variants, a
+different mutation type, and a different expert pool: three published supervised indel models whose
+out-of-fold predictions ship with the benchmark, so no training is involved and the comparison is exact.
+
+| | substitution benchmark | indel benchmark |
+|---|---:|---:|
+| per-assay oracle minus tuned constant | +0.0027 | **+0.0082** |
+| share of that gap surviving a held-out-variant split | 49% | **−9%** |
+| median variants per assay | thousands | **154** |
+
+The oracle gap is three times larger on indels, which on its own would say allocation headroom is
+substantial here. The split test says otherwise: weights selected on half an assay's variants **lose** to
+the constant by 0.0010 on the other half, where the same procedure on substitutions transfers 49% of the
+in-place gain. The difference is assay size. Across indel assay-size quartiles the transfer is −0.0053,
+−0.0023, −0.0002 and **+0.0044**; only the largest, at a median of 490 variants, recovers part of what an
+oracle fitted in place suggests.
+
+Per-assay weighting is therefore limited twice: by how much the pool disagrees, which the oracle measures,
+and by whether the assay carries enough variants to estimate the weights at all. Substitutions have a
+small first bound and a partly estimable one; indels have a larger first bound that is almost entirely
+estimation noise. **Assay size, not only pool diversity, decides whether adapting weights is worth
+attempting** — a rule that a practitioner can apply before fitting anything.
+
+## 3.6 What this means for the field
 **Report against tuned constants, not fixed blends.** A gate beating a fixed 50/50 blend by +0.0047 is
 commonly reported as evidence that conditioning works; against a constant tuned on held-out assays the
 same gate is +0.0002, a statistical tie. The gain attributed to conditioning is mostly the gain from
@@ -230,41 +289,6 @@ concatenated. Representation diversity without competence buys nothing.
 The constructive reading: an expert earns its place through disagreement in the residual, and the way to
 get that disagreement is a different *view* of the same information — reference versus mutant, local
 versus global — not a different optimiser, loss, or a bigger model.
-
-## 3.5 Protocol and reproducibility
-
-### Protocol and reproducibility
-
-**Benchmark and aggregation.** ProteinGym's supervised substitution benchmark: 217 assays over 186
-UniProt identifiers, each with the three official splits, giving 651 assay-by-split units. We use the
-benchmark's own aggregation chain unmodified — per-unit Spearman, averaged over splits, grouped by
-UniProt identifier and coarse functional category, then averaged over the five categories — and run its
-published evaluation script on a score file we supply rather than reimplementing the metric. The grouping
-step is the one most often skipped: several assays share a protein, and averaging before the category step
-moves the result by about 0.005.
-
-**Models.** Four experts: two frozen published predictions (Kermut, an assay-adaptive mixed structure
-kernel), an additive structure kernel that receives weight 0.00 and does not affect scoring, and the
-encoder of §4, refitted per assay and per split. Feature construction, the distillation loss, the
-category residual and the seed averaging are specified in §4; α and the residual rank were re-selected by
-inner selection on training assays only.
-
-**Fusion.** Four weights per fold by step-0.1 simplex search on the training assays, applied to the
-held-out ones — the same procedure the tuned-constant baseline uses, so the comparison is equal-compute.
-
-**Baselines.** Five, in increasing strength: a fixed 50/50 blend of the two strongest experts; a fixed
-D+Kermut blend; the tuned constant of §3; a nested constant with per-fold weights; and Kermut alone, which
-is also the published leaderboard leader.
-
-**Statistics.** Seed intervals from eight independent full-pipeline runs; assay intervals from a two-level
-bootstrap resampling assays within category and seeds together, 4,000 replicates. Comparisons between two
-configurations on the same assays use paired differences, because assay-to-assay variance is an order of
-magnitude larger than the effect.
-
-**Compute and reproduction.** One H200 GPU per encoder run, a few hours for a full panel with eight seeds;
-the structural experts are frozen and cost nothing at scoring time. Two commands from two public
-repositories regenerate every number here, and the control row of §5.1 is produced by the same command as
-the headline, so a reader can check our aggregation before trusting any comparison built on it.
 
 ## 5 What the ranker is worth
 

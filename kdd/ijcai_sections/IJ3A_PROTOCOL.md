@@ -1,4 +1,4 @@
-### Protocol and reproducibility
+## 3.1 Protocol and reproducibility
 
 **Benchmark and aggregation.** ProteinGym's supervised substitution benchmark: 217 assays over 186
 UniProt identifiers, each with the three official splits, giving 651 assay-by-split units. We use the

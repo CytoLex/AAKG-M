@@ -42,9 +42,11 @@ today; the first is what makes both measurable rather than asserted.
 
 ## Contributions
 
-1. **A falsification of adaptive weighting for this problem.** Seven mechanisms under one protocol, all
-   at or below a tuned constant, plus an oracle bounding the total allocatable gain at +0.0027. We argue
-   this should be a reported baseline, not a footnote.
+1. **A falsification of adaptive weighting for this problem, replicated on a second benchmark.**
+   Seven mechanisms under one protocol, all at or below a tuned constant, plus an oracle bounding the
+   total allocatable gain at +0.0027. On ProteinGym's indel assays the same bound is measured and shown to
+   have a second part: how much of it the assay can estimate. We argue both the oracle and the tuned
+   constant belong in the baseline table.
 2. **An expert built from differential representations**, with the ablation that shows where the signal
    is: the wild-type-minus-mutant difference and the local neighbourhood carry +0.116, while stacking
    more layers alone is negative.
