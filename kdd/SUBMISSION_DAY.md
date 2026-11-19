@@ -44,13 +44,24 @@ of a page without touching a claim; all five buy roughly half a page.
 
 ## 4. The three decisions only the authors can make
 
-1. **USD 100 fee**, waived only if no author appears on another IJCAI 2027 submission in any track covered
-   by the Primary Paper Initiative.
-2. **Reciprocal reviewer**: designate one author who qualifies — the 2027 main-track wording is "at least
-   three papers in KDD or other related conferences". Failing to comply, or a designated reviewer not
-   doing the work, is grounds for rejection.
-3. **In-person presentation** at Kyoto or Hengqin; papers not presented are excluded from the proceedings
-   unless prior approval is granted.
+1. **USD 100 fee.** It is waived only for a *primary paper*, defined verbatim as "papers for which none of
+   the authors appear as an author on any **other** submission to IJCAI 2027". So the waiver holds only if
+   this is the team's sole IJCAI 2027 submission in a covered track; if any author is also on a second
+   submission, **both** pay. Excluded from the initiative, and therefore harmless: Senior Researchers'
+   Position Talks, Journal Track, Sister Conferences Track, Early Career Highlights, Competitions, Demos,
+   and the Doctoral Consortium. Non-primary payment deadline: **January 18, 2027**.
+2. **Reciprocal reviewer** — one of the paper's own authors must be designated in the submission system
+   by the full-paper deadline. Qualification, verbatim from the Reciprocal Review Policy: "at least
+   **five full papers in total** across the following venues: IJCAI, AAAI, ECAI, AAMAS, KR, NeurIPS,
+   ICML, ICLR, ACL, EMNLP, CVPR, ICCV, ECCV, UAI, AISTATS, COLT, ICAPS, KDD, and AIJ"; serving IJCAI 2027
+   as PC, SPC or Area Chair also qualifies, and for those the existing duties count instead.
+   **If any author qualifies, an exemption is not available** — one must be designated. An unqualified
+   designation is a desk reject, and so is a designated reviewer who does not complete their assigned
+   reviewing in Phase 1 or Phase 2: every submission that designated that person is desk rejected.
+   (An earlier version of this file said "three papers in KDD or related conferences"; that is KDD's
+   rule, not IJCAI's.)
+3. **In-person presentation** at Kyoto or Hengqin — **confirmed by the authors**. Papers not presented are
+   excluded from the proceedings unless IJCAI grants prior approval for exceptional circumstances.
 
 ## 5. Final build check
 
