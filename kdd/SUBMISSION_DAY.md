@@ -3,6 +3,12 @@
 Everything here assumes the build in `latex_ijcai/` and the assumptions recorded in
 `SUBMISSION_CHECKLIST_IJCAI.md`. Work through it in order; nothing below needs the paper to be rewritten.
 
+**State of play.** The paper is complete and verified. All three author-only decisions are resolved — the
+fee is payable, a qualified reciprocal reviewer is available, and in-person attendance is confirmed. The
+only thing still outstanding is the AI4Science track's own call for papers, which IJCAI has not published;
+section 2 lists the five items it could change and what each would cost. Apart from those, nothing blocks a
+submission.
+
 ## 1. Confirm the two dates
 
 | | |
@@ -42,15 +48,21 @@ costs the paper least:
 Those are measured word counts, not estimates. The first three together — 204 words — buy about a third
 of a page without touching a claim; all five buy roughly half a page.
 
-## 4. The three decisions only the authors can make
+## 4. The three author-only decisions — **all resolved**
 
-1. **USD 100 fee.** It is waived only for a *primary paper*, defined verbatim as "papers for which none of
-   the authors appear as an author on any **other** submission to IJCAI 2027". So the waiver holds only if
-   this is the team's sole IJCAI 2027 submission in a covered track; if any author is also on a second
-   submission, **both** pay. Excluded from the initiative, and therefore harmless: Senior Researchers'
-   Position Talks, Journal Track, Sister Conferences Track, Early Career Highlights, Competitions, Demos,
-   and the Doctoral Consortium. Non-primary payment deadline: **January 18, 2027**.
-2. **Reciprocal reviewer** — one of the paper's own authors must be designated in the submission system
+Status as of this writing: in-person attendance confirmed; the fee is payable (or the paper qualifies as
+primary); a qualified author is available to designate as reciprocal reviewer. The mechanics below are kept
+so the commitments are on record rather than in memory.
+
+1. **USD 100 fee — confirmed payable.** It is waived only for a *primary paper*, defined verbatim as
+   "papers for which none of the authors appear as an author on any **other** submission to IJCAI 2027",
+   so the waiver applies only if this is the team's sole covered submission; a second one sharing any
+   author makes both payable. Since the fee is acceptable, the waiver is now an optimisation rather than a
+   dependency. Excluded from the initiative and therefore harmless: Senior Researchers' Position Talks,
+   Journal Track, Sister Conferences Track, Early Career Highlights, Competitions, Demos, Doctoral
+   Consortium. Non-primary payment deadline: **January 18, 2027**.
+2. **Reciprocal reviewer — confirmed available, and it must actually be designated in the system.** One of
+   the paper's own authors must be recorded as the reciprocal reviewer
    by the full-paper deadline. Qualification, verbatim from the Reciprocal Review Policy: "at least
    **five full papers in total** across the following venues: IJCAI, AAAI, ECAI, AAMAS, KR, NeurIPS,
    ICML, ICLR, ACL, EMNLP, CVPR, ICCV, ECCV, UAI, AISTATS, COLT, ICAPS, KDD, and AIJ"; serving IJCAI 2027
@@ -59,7 +71,9 @@ of a page without touching a claim; all five buy roughly half a page.
    designation is a desk reject, and so is a designated reviewer who does not complete their assigned
    reviewing in Phase 1 or Phase 2: every submission that designated that person is desk rejected.
    (An earlier version of this file said "three papers in KDD or related conferences"; that is KDD's
-   rule, not IJCAI's.)
+   rule, not IJCAI's.) **Because a qualified author exists, an exemption is not available** — the
+   designation is mandatory, and the person must complete Phase 1 and Phase 2 reviewing or this paper is
+   desk rejected with every other submission that named them.
 3. **In-person presentation** at Kyoto or Hengqin — **confirmed by the authors**. Papers not presented are
    excluded from the proceedings unless IJCAI grants prior approval for exceptional circumstances.
 

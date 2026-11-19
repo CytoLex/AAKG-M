@@ -15,10 +15,10 @@ anything below marked *assumed* is inferred from the main-track rules and from t
 | IJCAI style enforced; margins and font sizes must not be altered | **done** — `ijcai27.sty` used unmodified |
 | Overlength papers rejected without review | **done** — 7 body pages, 8 total |
 | Ethics statement optional, placeable in body or reference pages | **done** — §6 covers limitations and ethics |
-| USD 100 submission fee under the Primary Paper Initiative, waived for primary papers | **YOU** — decide whether to pay or to submit as a sole IJCAI submission |
-| Reciprocal reviewing: one qualified author must be designated in the system by the deadline; qualification is five full papers across nineteen named venues, or IJCAI 2027 PC/SPC/AC | **YOU** — no author qualifies yet as far as this session knows |
+| USD 100 submission fee under the Primary Paper Initiative, waived for primary papers | **confirmed payable**, so the waiver is an optimisation |
+| Reciprocal reviewing: one qualified author must be designated in the system by the deadline; qualification is five full papers across nineteen named venues, or IJCAI 2027 PC/SPC/AC | **confirmed available** — designation still has to be made in the system, and the reviewing actually completed |
 | At least one author must attend in person (Kyoto or Hengqin) | **confirmed** |
-| No dual submission while under review — which spans every other AI/ML deadline in this window | **YOU** — this forecloses ICML and KDD for the same paper |
+| No dual submission while under review — which spans every other AI/ML deadline in this window | noted — this forecloses ICML and KDD for the same paper |
 
 ## Assumed until the AI4Science CFP appears
 
@@ -38,7 +38,7 @@ anything below marked *assumed* is inferred from the main-track rules and from t
 ## Before submitting
 
 1. Re-read the AI4Science CFP when it appears; reconcile the table above.
-2. Decide the fee/primary-paper question, and designate the reciprocal reviewer **in the submission
-   system before the deadline** — the policy assesses eligibility against what is recorded there.
+2. Designate the reciprocal reviewer **in the submission system before the deadline** — eligibility is
+   assessed against what is recorded there, not against what was agreed.
 3. Add the author block **only if** the track is non-anonymous.
 4. Rebuild with `cd latex_ijcai && ./build.sh` and confirm 8 pages.
