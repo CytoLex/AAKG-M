@@ -193,10 +193,10 @@ Protein engineering screens rank candidate mutations, but the field optimises th
 structure models. We test that premise on the ProteinGym substitution benchmark, 217 assays and 651
 assay-by-split units, and find that every one of seven adaptive weighting mechanisms we measured ties a
 single constant tuned on held-out assays. A per-assay oracle bounds the entire headroom any weighting
-rule could capture at +0.0027, against +0.0077 for replacing a single expert. A second benchmark --
+rule could capture at +0.0051, against +0.0122 for adding a single expert. A second benchmark --
 ProteinGym's indel assays, a different mutation type and a different expert pool -- shows the bound has
-two parts: its oracle gap is three times larger there, yet weights fitted on half an assay's variants lose
-to a fixed blend on the other half, and assay size decides which part binds. We then show where the
+two parts: its oracle gap is larger there, yet weights fitted on half an assay's variants lose to a fixed
+blend on the other half, and assay size decides which part binds. We then show where the
 headroom is: an encoder over reference-minus-mutant representations in a local neighbourhood, distilled
 from the strongest experts, with a category-specific low-rank residual and eight-seed averaging, fused
 as four fixed weights reaches 0.694 on the official metric against 0.657 for the published leader. The

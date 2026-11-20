@@ -13,7 +13,9 @@ within each fold. The one hyperparameter that materially matters, the distillati
 inside each fold and chose the same value in all five; the broader design space, however, was explored on
 this panel.
 
-**One benchmark family, no prospective validation.** All results are on ProteinGym substitution assays.
+**Coverage and shift.** The panel is skewed toward particular protein families, organisms and assay types,
+and performance is not uniform across them; applying this to a family absent from the benchmark should be
+expected to behave like the large-assay regime. There is also no prospective validation. All results are on ProteinGym substitution assays.
 There is no held-out cohort from a different source and no wet-lab experiment. Whether top-of-list lift
 becomes hit-rate lift in a real screening campaign is untested; it is the next experiment, not a claim.
 
@@ -29,10 +31,7 @@ assays only.
 ProteinGym. No new experimental data, no human subjects, no clinical material, and no institutional
 review was required.
 
-**Bias and domain shift.** The panel is skewed toward particular protein families, organisms and assay
-types, and our per-category results show performance is not uniform across them. Applying this to a
-family absent from ProteinGym should be expected to behave like the large-assay regime — parity, not
-improvement.
+
 
 **Released artifacts.** The submission includes, as anonymised supplementary material, per-mutant
 predictions for all 696,311 mutants, the code reproducing every reported number, and the recovered kernel

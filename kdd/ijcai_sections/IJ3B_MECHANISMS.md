@@ -24,29 +24,40 @@ harmful, and a per-variant median discards the magnitude that separates a strong
 one. **No mechanism is separated from a tuned constant by more than the seed-to-seed spread of the models
 themselves.**
 
-## 3.3 The bound is small
+## 3.3 The bound, measured against the expert lever
 
-The oracle over the same expert pool reaches **0.693544**, against **0.690808** for the fixed blend — a
-headroom of **+0.0027**. That is the entire amount any weighting rule, supervised or not, per-assay or
-not, could ever extract from this pool. For comparison, the same protocol attributes **+0.0077** to
-replacing a single expert.
+Two quantities decide where the effort belongs, and they have to be measured in one pipeline or the
+comparison is meaningless. Both below use the same aggregation — per-split Spearman, mean over schemes,
+grouped by UniProt identity then by functional category — on the 182 assays where the distilled expert
+covers the panel, so that both pools are evaluated on the same units.
 
-**The allocation headroom is a quarter of the expert headroom.** That is the paper's central magnitude
-comparison. The gate itself does what its designers would want — its per-assay weights reproduce across
-independent seeds at r = 0.92–0.97, and shuffling them within category costs 0.0017 — which locates the
-problem in the objective rather than in the optimisation: the pool does not contain enough disagreement
-for the choice to matter. The tuned optimum places
-weight 0.05 on the additive-structure expert, and deleting that expert entirely costs nothing measurable.
+**The allocation bound.** Inside the three-expert pool, a per-assay oracle reaches **0.6881** against
+**0.6830** for the constant fitted on the other assays: a headroom of **+0.0051** (95% CI [0.0038, 0.0066]).
+That is the entire amount any weighting rule, supervised or not, per-assay or not, could ever extract from
+this pool, and its interval is estimated by resampling assays and re-aggregating each resample.
+
+**The expert lever.** Adding the distilled encoder to the same pool raises the nested constant from 0.6830
+to **0.6952**, a gain of **+0.0122** (95% CI [0.0099, 0.0144]).
+
+**The allocation headroom is 42% of the expert gain, and the intervals do not overlap.** Per-assay weighting
+is therefore a real but secondary lever: everything a weighting rule could reach is less than half of what
+one expert change delivers. The two quantities are easy to conflate: an oracle over one pool compared against a fixed blend of a
+*different*, stronger pool understates the allocation side.
+
+The gate itself behaves as intended — its per-assay weights reproduce across independent seeds at
+r = 0.92–0.97 — which locates the shortfall in the objective rather than the optimisation.
 
 ## 3.4 The headroom is real, and it is not noise
 
-A small oracle gain invites the objection that the oracle is fitting its own noise. Variants of each
-assay are split into disjoint halves A and B; weights selected on A and evaluated on B transfer a gain of
-**+0.0041**, which is **49%** of the +0.0083 obtainable when selection and evaluation share variants. Half
-the oracle gain survives contact with unseen variants, so the per-assay optimum is a stable property of
-the assay rather than an artefact of selection.
+A small oracle gain invites the objection that the oracle is fitting its own noise. Variants of each assay
+are split into disjoint halves A and B; weights selected on A and evaluated on B transfer a gain of
+**+0.0028 ± 0.0008** over ten independent splits, which is **44%** of the +0.0063 ± 0.0006 obtainable when
+selection and evaluation share variants. Both halves are aggregated the same way as §3.3, so the two
+quantities are comparable.
 
-That half-surviving gain is still three times what any mechanism captures, which sharpens the diagnosis:
-the headroom exists, it is reproducible, and it is not a function of the context statistics anyone
-computes. A ridge \cite{rasmussen2006} from the same 17 statistics to the oracle weights, with leave-one-out
-protection, reaches 0.6860 — below the constant, meaning the fitted direction is actively wrong.
+The per-assay optimum is therefore a stable property of the assay rather than an artefact of selection,
+and what survives (+0.0028) is an order of magnitude above the best of the seven mechanisms (+0.00025) —
+the headroom exists and is partly estimable, and it is not a function of the context statistics anyone
+computes: a ridge \cite{rasmussen2006} from those statistics to the oracle weights reaches 0.6860, below the
+constant, so the fitted direction is actively wrong.
+

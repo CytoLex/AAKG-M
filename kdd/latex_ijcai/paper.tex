@@ -37,10 +37,10 @@ Protein engineering screens rank candidate mutations, but the field optimises th
 structure models. We test that premise on the ProteinGym substitution benchmark, 217 assays and 651
 assay-by-split units, and find that every one of seven adaptive weighting mechanisms we measured ties a
 single constant tuned on held-out assays. A per-assay oracle bounds the entire headroom any weighting
-rule could capture at +0.0027, against +0.0077 for replacing a single expert. A second benchmark --
+rule could capture at +0.0051, against +0.0122 for adding a single expert. A second benchmark --
 ProteinGym's indel assays, a different mutation type and a different expert pool -- shows the bound has
-two parts: its oracle gap is three times larger there, yet weights fitted on half an assay's variants lose
-to a fixed blend on the other half, and assay size decides which part binds. We then show where the
+two parts: its oracle gap is larger there, yet weights fitted on half an assay's variants lose to a fixed
+blend on the other half, and assay size decides which part binds. We then show where the
 headroom is: an encoder over reference-minus-mutant representations in a local neighbourhood, distilled
 from the strongest experts, with a category-specific low-rank residual and eight-seed averaging, fused
 as four fixed weights reaches 0.694 on the official metric against 0.657 for the published leader. The
@@ -68,9 +68,9 @@ This paper tests it, and the answer reorganises the problem.
 mechanisms --- parametric and nonparametric, per-assay, per-category and per-variant, supervised and not ---
 against a single constant tuned on held-out assays. One clears it, by +0.00025 with a confidence interval
 straddling zero; four land within 0.0006 below. The sharper statement is an oracle: a rule that sees the
-held-out assay's own labels can gain \textbf{+0.0027} over the fixed blend, and that is the ceiling for any
-weighting of this pool. Replacing one expert is worth \textbf{+0.0077} in the same protocol. \textbf{The entire
-allocation headroom is a quarter of the expert headroom.}
+held-out assay's own labels can gain \textbf{+0.0051} over a constant fitted on the other assays, and that is
+the ceiling for any weighting of this pool. Adding one expert to the same pool is worth \textbf{+0.0122}. \textbf{The
+entire allocation headroom is 42\% of the expert gain, and the two intervals do not overlap.}
 
 \textbf{Second, the expert headroom is in how a mutation is represented.} A substitution is a difference
 between two sequences, and the useful signal is the difference --- not the mutant residue in isolation, not
@@ -100,7 +100,7 @@ today; the first is what makes both measurable rather than asserted.
 \item
   \textbf{A falsification of adaptive weighting for this problem, replicated on a second benchmark.}
   Seven mechanisms under one protocol, all at or below a tuned constant, plus an oracle bounding the
-  total allocatable gain at +0.0027. On ProteinGym's indel assays the same bound is measured and shown to
+  total allocatable gain at +0.0051. On ProteinGym's indel assays the same bound is measured and shown to
   have a second part: how much of it the assay can estimate. We argue both the oracle and the tuned
   constant belong in the baseline table.
 \item
@@ -158,13 +158,11 @@ noise.
 
 \subsection{Protocol and reproducibility}\label{protocol-and-reproducibility}
 
-\textbf{Benchmark and aggregation.} ProteinGym's supervised substitution benchmark: 217 assays over 186
-UniProt identifiers, each with the three official splits, giving 651 assay-by-split units. We use the
-benchmark's own aggregation chain unmodified --- per-unit Spearman, averaged over splits, grouped by
-UniProt identifier and coarse functional category, then averaged over the five categories --- and run its
-published evaluation script on a score file we supply rather than reimplementing the metric. The grouping
-step is the one most often skipped: several assays share a protein, and averaging before the category step
-moves the result by about 0.005.
+\textbf{Benchmark and aggregation.} ProteinGym's supervised substitution benchmark: 217 assays over 186 UniProt
+identifiers and the three official splits. We run the benchmark's own aggregation --- per-unit Spearman,
+averaged over splits, grouped by UniProt identity and coarse functional category, then averaged over the
+five categories --- and its published evaluation script on a score file we supply rather than reimplementing
+the metric.
 
 \textbf{Models.} Four experts: two frozen published predictions (Kermut, an assay-adaptive mixed structure
 kernel), an additive structure kernel that receives weight 0.00 and does not affect scoring, and the
@@ -183,11 +181,6 @@ is also the published leaderboard leader.
 bootstrap resampling assays within category and seeds together, 4,000 replicates. Comparisons between two
 configurations on the same assays use paired differences, because assay-to-assay variance is an order of
 magnitude larger than the effect.
-
-\textbf{Compute and reproduction.} One H200 GPU per encoder run, a few hours for a full panel with eight seeds;
-the structural experts are frozen and cost nothing at scoring time. Two commands from two public
-repositories regenerate every number here, and the control row of §5.1 is produced by the same command as
-the headline, so a reader can check our aggregation before trusting any comparison built on it.
 
 \subsection{Seven mechanisms, one protocol}\label{seven-mechanisms-one-protocol}
 
@@ -223,32 +216,42 @@ harmful, and a per-variant median discards the magnitude that separates a strong
 one. \textbf{No mechanism is separated from a tuned constant by more than the seed-to-seed spread of the models
 themselves.}
 
-\subsection{The bound is small}\label{the-bound-is-small}
+\subsection{The bound, measured against the expert lever}\label{the-bound-measured-against-the-expert-lever}
 
-The oracle over the same expert pool reaches \textbf{0.693544}, against \textbf{0.690808} for the fixed blend --- a
-headroom of \textbf{+0.0027}. That is the entire amount any weighting rule, supervised or not, per-assay or
-not, could ever extract from this pool. For comparison, the same protocol attributes \textbf{+0.0077} to
-replacing a single expert.
+Two quantities decide where the effort belongs, and they have to be measured in one pipeline or the
+comparison is meaningless. Both below use the same aggregation --- per-split Spearman, mean over schemes,
+grouped by UniProt identity then by functional category --- on the 182 assays where the distilled expert
+covers the panel, so that both pools are evaluated on the same units.
 
-\textbf{The allocation headroom is a quarter of the expert headroom.} That is the paper's central magnitude
-comparison. The gate itself does what its designers would want --- its per-assay weights reproduce across
-independent seeds at r = 0.92--0.97, and shuffling them within category costs 0.0017 --- which locates the
-problem in the objective rather than in the optimisation: the pool does not contain enough disagreement
-for the choice to matter. The tuned optimum places
-weight 0.05 on the additive-structure expert, and deleting that expert entirely costs nothing measurable.
+\textbf{The allocation bound.} Inside the three-expert pool, a per-assay oracle reaches \textbf{0.6881} against
+\textbf{0.6830} for the constant fitted on the other assays: a headroom of \textbf{+0.0051} (95\% CI {[}0.0038, 0.0066{]}).
+That is the entire amount any weighting rule, supervised or not, per-assay or not, could ever extract from
+this pool, and its interval is estimated by resampling assays and re-aggregating each resample.
+
+\textbf{The expert lever.} Adding the distilled encoder to the same pool raises the nested constant from 0.6830
+to \textbf{0.6952}, a gain of \textbf{+0.0122} (95\% CI {[}0.0099, 0.0144{]}).
+
+\textbf{The allocation headroom is 42\% of the expert gain, and the intervals do not overlap.} Per-assay weighting
+is therefore a real but secondary lever: everything a weighting rule could reach is less than half of what
+one expert change delivers. The two quantities are easy to conflate: an oracle over one pool compared against a fixed blend of a
+\emph{different}, stronger pool understates the allocation side.
+
+The gate itself behaves as intended --- its per-assay weights reproduce across independent seeds at
+r = 0.92--0.97 --- which locates the shortfall in the objective rather than the optimisation.
 
 \subsection{The headroom is real, and it is not noise}\label{the-headroom-is-real-and-it-is-not-noise}
 
-A small oracle gain invites the objection that the oracle is fitting its own noise. Variants of each
-assay are split into disjoint halves A and B; weights selected on A and evaluated on B transfer a gain of
-\textbf{+0.0041}, which is \textbf{49\%} of the +0.0083 obtainable when selection and evaluation share variants. Half
-the oracle gain survives contact with unseen variants, so the per-assay optimum is a stable property of
-the assay rather than an artefact of selection.
+A small oracle gain invites the objection that the oracle is fitting its own noise. Variants of each assay
+are split into disjoint halves A and B; weights selected on A and evaluated on B transfer a gain of
+\textbf{+0.0028 ± 0.0008} over ten independent splits, which is \textbf{44\%} of the +0.0063 ± 0.0006 obtainable when
+selection and evaluation share variants. Both halves are aggregated the same way as §3.3, so the two
+quantities are comparable.
 
-That half-surviving gain is still three times what any mechanism captures, which sharpens the diagnosis:
-the headroom exists, it is reproducible, and it is not a function of the context statistics anyone
-computes. A ridge \cite{rasmussen2006} from the same 17 statistics to the oracle weights, with leave-one-out
-protection, reaches 0.6860 --- below the constant, meaning the fitted direction is actively wrong.
+The per-assay optimum is therefore a stable property of the assay rather than an artefact of selection,
+and what survives (+0.0028) is an order of magnitude above the best of the seven mechanisms (+0.00025) ---
+the headroom exists and is partly estimable, and it is not a function of the context statistics anyone
+computes: a ridge \cite{rasmussen2006} from those statistics to the oracle weights reaches 0.6860, below the
+constant, so the fitted direction is actively wrong.
 
 \subsection{A second benchmark: the bound has two parts}\label{a-second-benchmark-the-bound-has-two-parts}
 
@@ -264,17 +267,17 @@ exact.
 \hline
  & substitution benchmark & indel benchmark \\
 \hline
-per-assay oracle minus tuned constant & +0.0027 & \textbf{+0.0084} \\
-share of that gap surviving a held-out-variant split & 49\% & \textbf{$-$19\%} \\
+per-assay oracle minus tuned constant & +0.0051 & \textbf{+0.0084} \\
+share of that gap surviving a held-out-variant split & 44\% & \textbf{$-$19\%} \\
 median variants per assay & thousands & \textbf{154} \\
 \hline
 \end{tabular}
 \end{table*}
 
-The oracle gap is three times larger on indels, which on its own would say allocation headroom is
+The oracle gap is 1.6 times larger on indels, which on its own would say allocation headroom is
 substantial here. The split test says otherwise: weights selected on half an assay's variants \textbf{lose} to
 the constant by 0.0024 on the other half --- negative in all ten random splits we drew (±0.0020) --- where the
-same procedure on substitutions transfers 49\% of the in-place gain. The difference is assay size. Across indel assay-size quartiles the transfer is −0.0053,
+same procedure on substitutions transfers 44\% of the in-place gain. The difference is assay size. Across indel assay-size quartiles the transfer is −0.0053,
 −0.0023, −0.0002 and \textbf{+0.0044}; only the largest, at a median of 490 variants, recovers part of what an
 oracle fitted in place suggests.
 
@@ -317,7 +320,7 @@ improves over the previous gate'' into ``our gate captures \emph{x} percent of t
 the only number telling a reader whether the mechanism is worth its complexity. Here \emph{x} is four percent.
 
 \textbf{When the oracle is small, the pool is the problem.} If no weighting of these experts can gain more
-than +0.0027, the next +0.01 has to come from an expert that disagrees usefully. §4 builds one.
+than +0.0051, the next +0.01 has to come from an expert that disagrees usefully. §4 builds one.
 
 The claim is bounded by the pool: the oracle is a function of how much the experts disagree, so a pool
 built to disagree might make gating worthwhile again --- a different paper, and one that would have to
@@ -406,9 +409,7 @@ against \textbf{0.657028} for Kermut \cite{kermut} --- +0.0085 over the previous
 \textbf{Co-distillation from the fusion itself} lifts the expert by +0.0136 (8/8 seeds) and leaves the fusion
 at −0.0002: teaching an expert to imitate the pool removes the residual disagreement that gave it value.
 \textbf{A residual expert} trained on the fusion's own error receives weight exactly zero in every fold --- the
-residual of a fitted ensemble is what these features cannot explain. \textbf{A larger backbone} (ESM-C 300M)
-is decorrelated but too weak: +0.0007 as a fourth expert with an interval straddling zero, and −0.011
-concatenated. Representation diversity without competence buys nothing.
+residual of a fitted ensemble is what these features cannot explain. Representation diversity without competence buys nothing.
 
 The constructive reading: an expert earns its place through disagreement in the residual, and the way to
 get that disagreement is a different \emph{view} of the same information --- reference versus mutant, local
@@ -559,7 +560,9 @@ within each fold. The one hyperparameter that materially matters, the distillati
 inside each fold and chose the same value in all five; the broader design space, however, was explored on
 this panel.
 
-\textbf{One benchmark family, no prospective validation.} All results are on ProteinGym substitution assays.
+\textbf{Coverage and shift.} The panel is skewed toward particular protein families, organisms and assay types,
+and performance is not uniform across them; applying this to a family absent from the benchmark should be
+expected to behave like the large-assay regime. There is also no prospective validation. All results are on ProteinGym substitution assays.
 There is no held-out cohort from a different source and no wet-lab experiment. Whether top-of-list lift
 becomes hit-rate lift in a real screening campaign is untested; it is the next experiment, not a claim.
 
@@ -574,11 +577,6 @@ assays only.
 \textbf{Data.} All assays are previously published deep mutational scanning datasets distributed by
 ProteinGym. No new experimental data, no human subjects, no clinical material, and no institutional
 review was required.
-
-\textbf{Bias and domain shift.} The panel is skewed toward particular protein families, organisms and assay
-types, and our per-category results show performance is not uniform across them. Applying this to a
-family absent from ProteinGym should be expected to behave like the large-assay regime --- parity, not
-improvement.
 
 \textbf{Released artifacts.} The submission includes, as anonymised supplementary material, per-mutant
 predictions for all 696,311 mutants, the code reproducing every reported number, and the recovered kernel
@@ -631,17 +629,14 @@ that characterisation without adopting our method.
 \subsubsection*{Implications, and what would falsify us}\label{implications-and-what-would-falsify-us}
 
 \textbf{If you are building a fusion.} Report the oracle. It takes an afternoon and converts an open-ended
-search for better gating into a bounded question: how much is left? When the answer is a quarter of what
-a single expert change is worth, the search is over.
+search for better gating into a bounded question: how much is left? When the answer is 42\% of what a
+single expert change is worth --- and the two intervals do not overlap --- the weighting is not where the next
+gain comes from, and the search is over.
 
 \textbf{If you are evaluating.} A ranker's aggregate correlation and its top-of-list recall can disagree, and
 the second is closer to what the downstream experiment measures. The cheapest discipline is to report the
 oracle and the tuned constant alongside any learned weighting; the second cheapest is the per-category
 breakdown instead of the mean.
-
-\textbf{What would falsify us.} A pool built to disagree --- selected for low residual correlation rather than
-high standalone score --- would have a larger oracle, and adaptive weighting might pay again. Our claim is
-about headroom under a pool built the usual way, and should be re-measured whenever the pool changes.
 
 The experiment we would run next is prospective: generate a candidate list from the ranking, assay it
 alongside a random control, and measure whether the top-of-list lift becomes a hit-rate lift at the bench.

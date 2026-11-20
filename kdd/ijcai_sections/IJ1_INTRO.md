@@ -16,9 +16,9 @@ This paper tests it, and the answer reorganises the problem.
 mechanisms — parametric and nonparametric, per-assay, per-category and per-variant, supervised and not —
 against a single constant tuned on held-out assays. One clears it, by +0.00025 with a confidence interval
 straddling zero; four land within 0.0006 below. The sharper statement is an oracle: a rule that sees the
-held-out assay's own labels can gain **+0.0027** over the fixed blend, and that is the ceiling for any
-weighting of this pool. Replacing one expert is worth **+0.0077** in the same protocol. **The entire
-allocation headroom is a quarter of the expert headroom.**
+held-out assay's own labels can gain **+0.0051** over a constant fitted on the other assays, and that is
+the ceiling for any weighting of this pool. Adding one expert to the same pool is worth **+0.0122**. **The
+entire allocation headroom is 42% of the expert gain, and the two intervals do not overlap.**
 
 **Second, the expert headroom is in how a mutation is represented.** A substitution is a difference
 between two sequences, and the useful signal is the difference — not the mutant residue in isolation, not
@@ -44,7 +44,7 @@ today; the first is what makes both measurable rather than asserted.
 
 1. **A falsification of adaptive weighting for this problem, replicated on a second benchmark.**
    Seven mechanisms under one protocol, all at or below a tuned constant, plus an oracle bounding the
-   total allocatable gain at +0.0027. On ProteinGym's indel assays the same bound is measured and shown to
+   total allocatable gain at +0.0051. On ProteinGym's indel assays the same bound is measured and shown to
    have a second part: how much of it the assay can estimate. We argue both the oracle and the tuned
    constant belong in the baseline table.
 2. **An expert built from differential representations**, with the ablation that shows where the signal

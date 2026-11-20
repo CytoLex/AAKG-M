@@ -63,9 +63,7 @@ against **0.657028** for Kermut \cite{kermut} — +0.0085 over the previous fusi
 **Co-distillation from the fusion itself** lifts the expert by +0.0136 (8/8 seeds) and leaves the fusion
 at −0.0002: teaching an expert to imitate the pool removes the residual disagreement that gave it value.
 **A residual expert** trained on the fusion's own error receives weight exactly zero in every fold — the
-residual of a fitted ensemble is what these features cannot explain. **A larger backbone** (ESM-C 300M)
-is decorrelated but too weak: +0.0007 as a fourth expert with an interval straddling zero, and −0.011
-concatenated. Representation diversity without competence buys nothing.
+residual of a fitted ensemble is what these features cannot explain. Representation diversity without competence buys nothing.
 
 The constructive reading: an expert earns its place through disagreement in the residual, and the way to
 get that disagreement is a different *view* of the same information — reference versus mutant, local

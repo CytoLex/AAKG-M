@@ -1,12 +1,10 @@
 ## 3.1 Protocol and reproducibility
 
-**Benchmark and aggregation.** ProteinGym's supervised substitution benchmark: 217 assays over 186
-UniProt identifiers, each with the three official splits, giving 651 assay-by-split units. We use the
-benchmark's own aggregation chain unmodified — per-unit Spearman, averaged over splits, grouped by
-UniProt identifier and coarse functional category, then averaged over the five categories — and run its
-published evaluation script on a score file we supply rather than reimplementing the metric. The grouping
-step is the one most often skipped: several assays share a protein, and averaging before the category step
-moves the result by about 0.005.
+**Benchmark and aggregation.** ProteinGym's supervised substitution benchmark: 217 assays over 186 UniProt
+identifiers and the three official splits. We run the benchmark's own aggregation — per-unit Spearman,
+averaged over splits, grouped by UniProt identity and coarse functional category, then averaged over the
+five categories — and its published evaluation script on a score file we supply rather than reimplementing
+the metric.
 
 **Models.** Four experts: two frozen published predictions (Kermut, an assay-adaptive mixed structure
 kernel), an additive structure kernel that receives weight 0.00 and does not affect scoring, and the
@@ -25,8 +23,3 @@ is also the published leaderboard leader.
 bootstrap resampling assays within category and seeds together, 4,000 replicates. Comparisons between two
 configurations on the same assays use paired differences, because assay-to-assay variance is an order of
 magnitude larger than the effect.
-
-**Compute and reproduction.** One H200 GPU per encoder run, a few hours for a full panel with eight seeds;
-the structural experts are frozen and cost nothing at scoring time. Two commands from two public
-repositories regenerate every number here, and the control row of §5.1 is produced by the same command as
-the headline, so a reader can check our aggregation before trusting any comparison built on it.
