@@ -14,34 +14,32 @@ plt.rcParams.update({"font.size": 8.5, "axes.linewidth": 0.6, "xtick.major.width
                      "ytick.major.width": 0.6, "font.family": "DejaVu Sans"})
 
 # ---------------------------------------------------------------- Figure 1
-const, gate, blend, oracle, final = 0.687637, 0.687888, 0.690808, 0.693544, 0.698495
-fig, ax = plt.subplots(figsize=(W, 1.75))
-ax.set_xlim(0.6868, 0.6992); ax.set_ylim(-0.7, 2.3)
+# Both quantities measured in one pipeline on the 182 assays where the distilled expert covers the panel.
+const, oracle, poolB = 0.6830, 0.6881, 0.6952
+fig, ax = plt.subplots(figsize=(W, 1.8))
+ax.set_xlim(0.6820, 0.6965); ax.set_ylim(-0.9, 2.6)
 
-ax.add_patch(plt.Rectangle((const, 0.55), oracle - const, 0.32, facecolor="#c8d8ec",
-                           edgecolor="#3a6ea5", lw=0.7, zorder=2))
-ax.annotate("", xy=(oracle, 1.06), xytext=(const, 1.06),
-            arrowprops=dict(arrowstyle="<->", lw=0.8, color="#3a6ea5"))
-ax.text((const + oracle) / 2, 1.15, "allocation headroom\n+0.0027", ha="center", va="bottom",
-        fontsize=7.5, color="#3a6ea5", linespacing=1.15)
+# both arrows start from the same constant, which is the point of the figure
+ax.annotate("", xy=(oracle, 1.55), xytext=(const, 1.55),
+            arrowprops=dict(arrowstyle="<->", lw=1.0, color="#3a6ea5"))
+ax.text((const + oracle) / 2, 1.68, "allocation headroom\n+0.0051 (95% CI 0.0038-0.0066)",
+        ha="center", va="bottom", fontsize=7.2, color="#3a6ea5", linespacing=1.2)
 
-ax.annotate("", xy=(final, -0.16), xytext=(blend, -0.16),
-            arrowprops=dict(arrowstyle="<->", lw=0.8, color="#b0552a"))
-ax.text((blend + final) / 2, -0.30, "expert swap\n+0.0077", ha="center", va="top",
-        fontsize=7.5, color="#b0552a", linespacing=1.15)
+ax.annotate("", xy=(poolB, 0.55), xytext=(const, 0.55),
+            arrowprops=dict(arrowstyle="<->", lw=1.0, color="#b0552a"))
+ax.text((const + poolB) / 2, 0.68, "one more expert\n+0.0122 (0.0099-0.0144)",
+        ha="center", va="bottom", fontsize=7.2, color="#b0552a", linespacing=1.2)
 
-for x, label, y, ha in ((const, "tuned\nconstant", 0.40, "right"),
-                        (gate, "MLP gate", 1.02, "left"),
-                        (blend, "fixed blend", 0.40, "left"),
-                        (oracle, "per-assay\noracle", 0.40, "center"),
-                        (final, "this fusion", 0.08, "center")):
-    ax.plot([x], [0.71], "o", ms=3.4, color="#222", zorder=4)
-    ax.text(x, y, label, ha=ha, va="center", fontsize=7.0, linespacing=1.1)
+for x, label, y, ha in ((const, "constant", -0.25, "center"),
+                        (oracle, "per-assay\noracle", -0.25, "center"),
+                        (poolB, "+ expert", -0.25, "center")):
+    ax.plot([x], [0.0], "o", ms=3.6, color="#222", zorder=4)
+    ax.text(x, y, label, ha=ha, va="top", fontsize=7.0, linespacing=1.15)
 
-ax.set_yticks([]); ax.set_xlabel("official aggregation, per-assay protocol", fontsize=7.8)
+ax.set_yticks([]); ax.set_xlabel("official aggregation, 182 assays", fontsize=7.6)
 for s in ("left", "right", "top"): ax.spines[s].set_visible(False)
-ax.set_xticks([0.688, 0.690, 0.692, 0.694, 0.696, 0.698])
-ax.tick_params(axis="x", labelsize=7.2)
+ax.set_xticks([0.683, 0.686, 0.689, 0.692, 0.695])
+ax.tick_params(axis="x", labelsize=7.0)
 fig.tight_layout(pad=0.15)
 fig.savefig("fig1_allocation_vs_expert_ijcai.pdf", bbox_inches="tight")
 fig.savefig("fig1_allocation_vs_expert_ijcai.png", dpi=240, bbox_inches="tight")
