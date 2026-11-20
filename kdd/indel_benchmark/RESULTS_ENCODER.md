@@ -20,23 +20,25 @@ workspace (`可上网GPU资源`, RTX 4090) as one job; the data and ESM-2 650M w
 
 ## Result
 
-**Superseded numbers first.** An earlier pass used a fresh random five-way split because the released
-fold file had not been located. ProteinGym does publish one (`cv_folds_indels.zip`, a per-variant
-`fold_random_5` column), and everything below is now computed under it, on 65 assays. The random-split run
-gave 0.8725 / 0.8813; the official-fold run gives 0.8844 / 0.8927. All figures in the paper and here come
-from the official-fold run.
+**One protocol throughout.** Earlier passes used a fresh random five-way split and, separately, a constant
+fitted on the whole panel; two figures for the same quantity appeared in the paper as a result. Everything
+below is now the single protocol: 65 assays with a complete released-fold join, ProteinGym's own
+`fold_random_5` column (`cv_folds_indels.zip`), the nested constant, five seeds per configuration, and ten
+random half-splits for the transfer estimate. `indel_unified.py` in this directory reproduces the whole
+table in one run.
 
 | expert | per-assay Spearman |
 |---|---:|
 | Embeddings-ESM1v (published) | 0.8231 |
 | Embeddings-Tranception (published) | 0.8008 |
 | Embeddings-MSA Transformer (published) | 0.7952 |
-| **our differential encoder, α = 0.9** | **0.8844** |
+| **our differential encoder, α = 0.9** | **0.8858** |
 
 | pool | nested constant | per-assay oracle | headroom |
 |---|---:|---:|---:|
 | three published experts | 0.8438 | 0.8522 | +0.0084 |
-| **+ our encoder (α = 0.9)** | **0.8927** | 0.8987 | +0.0061 |
+| + our encoder (α = 0.0) | 0.8546 | 0.8631 | +0.0085 |
+| **+ our encoder (α = 0.9)** | **0.8934** | 0.8997 | +0.0063 |
 
 ## Does the lead come from the teacher?
 
@@ -46,13 +48,18 @@ the measured fitness, α = 1 only the teacher, with no labels at all.
 
 | α | student alone | four-expert blend | headroom |
 |---|---:|---:|---:|
-| 0.0 (no distillation) | **0.8380** | **0.8536** | +0.0090 |
-| 0.9 (paper) | 0.8844 | 0.8927 | +0.0061 |
+| 0.0 (no distillation) | **0.8401** | **0.8546** | +0.0085 |
+| 0.9 (paper) | 0.8858 | 0.8934 | +0.0063 |
 
 Two readings follow. **The representation stands on its own**: at α = 0 it beats every published expert
-(0.8380 against 0.8231) and still lifts the blend by 0.010. **Distillation adds another 0.040**, taking the
-blend to 0.8927. On the earlier random split the same two settings gave 0.8371 and 0.8844, so the α = 0
-result is stable to the fold assignment and the distilled one moves with it.
+(0.8401 against 0.8231) and still lifts the blend by 0.011. **Distillation adds another 0.046**, taking the
+blend to 0.8934.
+
+**Stability.** Five seeds per configuration, and the split-half estimate repeated over ten independent
+half-splits: in-place gain +0.0129 ± 0.0012, transferred −0.0024 ± 0.0020, negative in every one of the ten.
+The encoder figures above are per-assay Spearman averaged over assays; the spread across assays is large
+(sd 0.079 at α = 0, 0.057 at α = 0.9) because indel assays range from 47 to 25k variants, which is why the
+per-assay averages are quoted with the assay count rather than as a single number.
 
 Two things follow.
 

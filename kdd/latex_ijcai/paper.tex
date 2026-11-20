@@ -264,8 +264,8 @@ exact.
 \hline
  & substitution benchmark & indel benchmark \\
 \hline
-per-assay oracle minus tuned constant & +0.0027 & \textbf{+0.0082} \\
-share of that gap surviving a held-out-variant split & 49\% & \textbf{-9\%} \\
+per-assay oracle minus tuned constant & +0.0027 & \textbf{+0.0084} \\
+share of that gap surviving a held-out-variant split & 49\% & \textbf{-19\%} \\
 median variants per assay & thousands & \textbf{154} \\
 \hline
 \end{tabular}
@@ -273,25 +273,22 @@ median variants per assay & thousands & \textbf{154} \\
 
 The oracle gap is three times larger on indels, which on its own would say allocation headroom is
 substantial here. The split test says otherwise: weights selected on half an assay's variants \textbf{lose} to
-the constant by 0.0010 on the other half, where the same procedure on substitutions transfers 49\% of the
-in-place gain. The difference is assay size. Across indel assay-size quartiles the transfer is −0.0053,
+the constant by 0.0024 on the other half --- negative in all ten random splits we drew (±0.0020) --- where the
+same procedure on substitutions transfers 49\% of the in-place gain. The difference is assay size. Across indel assay-size quartiles the transfer is −0.0053,
 −0.0023, −0.0002 and \textbf{+0.0044}; only the largest, at a median of 490 variants, recovers part of what an
 oracle fitted in place suggests.
 
-\textbf{The representation transfers, and it carries its own weight.} For the encoder half we use 65 assays ---
-the 226k-variant AAV library is excluded for runtime --- and ProteinGym's released per-variant fold
-assignment, which lets our out-of-fold predictions sit on the same split as the published models.
-Fitting the constant on the whole panel rather than nested per held-out assay moves the indel headroom from
-+0.0082 to +0.0084, so the choice of protocol does not affect anything below.
-
-We build our differential encoder for
+\textbf{The representation transfers, and it carries its own weight.} We build our differential encoder for
 indels --- the same wild-type/mutant difference and ±4 neighbourhood, with the edit site located by longest
-common prefix and suffix --- and train it under ProteinGym's released fold assignment. On measured fitness
-alone, with no distillation, it scores \textbf{0.8380} against 0.8231 for the best published model and lifts the
-three-expert blend from 0.8438 to \textbf{0.8536}. Distilling from the three published models then adds a further
-0.040, reaching \textbf{0.8844} and a four-expert blend of \textbf{0.8927}. The weighting headroom is unchanged
-throughout --- between +0.006 and +0.009 across every pool we trained, against +0.0084 for the three
-published models alone. A much stronger pool moves the level, not the allocation bound.
+common prefix and suffix --- and train it under ProteinGym's released per-variant fold assignment, so our
+out-of-fold predictions sit on the same split as the published models. The 226k-variant AAV library is
+excluded for runtime, leaving 65 assays.
+
+On measured fitness alone, with no distillation, it scores \textbf{0.8401} against 0.8231 for the best published
+model and lifts the three-expert blend from 0.8438 to \textbf{0.8546}. Distilling from the three published models
+then adds a further 0.046, reaching \textbf{0.8858} and a four-expert blend of \textbf{0.8934}. The weighting headroom
+is unchanged throughout --- between +0.006 and +0.009 across every pool we trained, against +0.0084 for the
+three published models alone. A much stronger pool moves the level, not the allocation bound.
 
 Per-assay weighting is therefore limited twice: by how much the pool disagrees, which the oracle measures,
 and by whether the assay carries enough variants to estimate the weights at all. Substitutions have a
