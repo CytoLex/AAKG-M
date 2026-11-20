@@ -1,54 +1,49 @@
 ## 1 Introduction
 
-A protein engineering campaign begins with a library of candidate mutations and a budget covering tens
-of assays, perhaps hundreds. Everything upstream of the bench is a ranking problem: which candidates are
-worth synthesising. The models that answer it have improved substantially — sequence language models
-\cite{esm2}, structure-informed kernels \cite{kermut}, supervised models trained on deep mutational
-scanning data \cite{proteinnpt} — and the practice is to combine several, because they fail on different
-assays \cite{proteingym}.
+A protein engineering campaign begins with a library of candidate mutations and a budget covering tens of
+assays. Everything upstream of the bench is a ranking problem: which candidates are worth synthesising. The
+models that answer it have improved — sequence language models \cite{esm2}, structure-informed kernels
+\cite{kermut}, supervised models trained on deep mutational scanning data \cite{proteinnpt} — and practice
+combines several, because they fail on different assays \cite{proteingym}.
 
-The combination is almost always **conditional**: a gate reads assay-level context and emits weights, a
-mixture layer routes by protein family \cite{jacobs1991,shazeer2017}, an uncertainty term reweights per
-variant \cite{deepsong}. The premise is that different assays need different mixtures, and that learning
-the mapping from context to weights is worth its parameters. It has produced a decade of architectures.
+The combination is almost always **conditional**: a gate reads assay-level context and emits per-assay
+weights, a mixture layer routes by protein family \cite{jacobs1991,shazeer2017}, an uncertainty term
+reweights per variant \cite{deepsong}. The premise is that different assays need different mixtures. This
+paper asks how much that premise is worth, and answers with a measurement rather than another architecture.
 
-This paper tests it, and the answer reorganises the problem.
+**Weighting has a ceiling, and the ceiling is reachable.** An oracle that picks the best mixture for each
+assay using that assay's own labels reaches **+0.0051** over a constant fitted on the other assays; adding
+one expert to the same pool is worth **+0.0122**. The allocation headroom is 42% of the expert gain, and the
+two intervals do not overlap. The bound is not the end of the story. Fitted on half an assay's variants and
+evaluated on the other half, per-assay weights gain **+0.0047** on substitutions but *lose* 0.0032 on indels,
+where assays are small; shrinking them toward the panel-wide constant by `λ = n/(n+k)` gains **+0.0051** and
+**+0.0021** instead. Adapting weights is worth doing, at a scale the ceiling sets, and the estimator that
+works is partial pooling.
 
-**First, the allocation headroom is small enough to bound.** We evaluate six label-free conditioning
-mechanisms — parametric and nonparametric, per-assay, per-category and per-variant, supervised and not —
-against a single constant tuned on held-out assays. One clears it, by +0.00025 with a confidence interval
-straddling zero; four land within 0.0006 below. The sharper statement is an oracle: a rule that sees the
-held-out assay's own labels can gain **+0.0051** over a constant fitted on the other assays, and that is
-the ceiling for any weighting of this pool. Adding one expert to the same pool is worth **+0.0122**. **The
-entire allocation headroom is 42% of the expert gain, and the two intervals do not overlap.**
+**The expert's headroom is in how a mutation is represented.** A substitution is a difference between two
+sequences, and the signal is the difference — not the mutant residue alone, not the site alone. We build an
+encoder over reference-minus-mutant features in a ±4-residue neighbourhood, distilled from the two strongest
+experts, with a functional-category low-rank residual and eight-seed averaging. Fused with three published
+experts at four fixed weights it reaches **0.694** on the official metric against **0.657** for Kermut, the
+leaderboard leader. We validate before reporting: recomputing Kermut through our pipeline reproduces the
+published per-assay table on 217 of 217 assays with mean absolute difference 0.0, and the same representation
+wins six of seven splits on FLIP2, an independently collected benchmark.
 
-**Second, the expert headroom is in how a mutation is represented.** A substitution is a difference
-between two sequences, and the useful signal is the difference — not the mutant residue in isolation, not
-the site in isolation. We build an encoder over reference-minus-mutant features in a ±4-residue
-neighbourhood, distilled from the agreement of the two strongest experts, with a functional-category
-low-rank residual and predictions averaged over eight seeds. Fused with three published experts at four
-fixed weights, it reaches **0.694** on the official ProteinGym metric against **0.657** for Kermut, the
-leaderboard leader. We validate the measurement before reporting it: recomputing Kermut through our
-pipeline reproduces the published per-assay table on all 217 assays with mean absolute difference 0.0.
+**An aggregate score is not a deployment specification.** The model that reaches 0.694 scores 0.851 on
+stability assays and 0.642 on activity; the top 5% of its ranking recovers 24.7% of the true top 5%, a
+**4.96x** lift over random that rises to 7.7x on stability and falls to 3.4x on activity; and on the largest
+assay quartile the advantage over the previous fusion is **+0.00003**. Those three numbers are what let a
+laboratory decide how much of the ordering to trust for its own property and its own assay size.
 
-**Third, an aggregate score is not a deployment specification, and we report the one that is.** The same
-model that reaches 0.694 overall scores 0.851 on stability assays and 0.642 on activity assays, and the
-ordering it produces is uneven in the same way: the top 5% of the ranking recovers 24.7% of the true top
-5%, a **4.96x** lift over random, which rises to 7.7x on stability and falls to 3.4x on activity. The
-advantage also has a size regime — largest on small assays, and at parity with the previous fusion
-(+0.00003) on the largest quartile of mutant counts. Those two numbers are what let a laboratory decide
-how much of the ordering to trust for its own property and its own assay size.
-
-The second claim is what changes how the field builds these models; the third is what a user can act on
-today; the first is what makes both measurable rather than asserted.
+The levers are thus ordered, and so is what to do about each: measure the ceiling before tuning weights, put
+the effort into experts, and pool when you do weight.
 
 ## Contributions
 
-1. **A falsification of adaptive weighting for this problem, replicated on a second benchmark.**
-   Seven mechanisms under one protocol, all at or below a tuned constant, plus an oracle bounding the
-   total allocatable gain at +0.0051. On ProteinGym's indel assays the same bound is measured and shown to
-   have a second part: how much of it the assay can estimate. We argue both the oracle and the tuned
-   constant belong in the baseline table.
+1. **A bounded, replicated and actionable account of weighting.** Seven mechanisms under one protocol, all
+   at or below a tuned constant; an oracle bounding the allocatable gain at +0.0051 against +0.0122 for an
+   expert change; and partial pooling, which recovers +0.0051 and +0.0021 where naive per-assay fitting
+   loses and recovers less. We argue the oracle and the tuned constant belong in every baseline table.
 2. **An expert built from differential representations**, with the ablation locating the signal: the
    wild-type-minus-mutant difference and the local neighbourhood carry +0.116; stacking layers is negative.
 3. **A utility characterisation that makes the ranking usable** — top-of-list recall by functional

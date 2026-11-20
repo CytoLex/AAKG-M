@@ -189,20 +189,19 @@ PRE = r"""\documentclass{article}
 \maketitle
 
 \begin{abstract}
-Protein engineering screens rank candidate mutations, but the field optimises the fusion of sequence and
-structure models. We test that premise on the ProteinGym substitution benchmark, 217 assays and 651
-assay-by-split units, and find that every one of seven adaptive weighting mechanisms we measured ties a
-single constant tuned on held-out assays. A per-assay oracle bounds the entire headroom any weighting
-rule could capture at +0.0051, against +0.0122 for adding a single expert. A second benchmark --
-ProteinGym's indel assays, a different mutation type and a different expert pool -- shows the bound has
-two parts: its oracle gap is larger there, yet weights fitted on half an assay's variants lose to a fixed
-blend on the other half, and assay size decides which part binds. We then show where the
-headroom is: an encoder over reference-minus-mutant representations in a local neighbourhood, distilled
-from the strongest experts, with a category-specific low-rank residual and eight-seed averaging, fused
-as four fixed weights reaches 0.694 on the official metric against 0.657 for the published leader. The
-useful result for the domain is the shape of the ranking: the top 5\% recovers 24.7\% of the true top
-5\%, a 4.96x lift, but 7.7x on stability assays against 3.4x on activity. We release per-mutant
-predictions for all 696,311 mutants.
+Protein engineering screens rank candidate mutations, and the field's models combine several predictors with
+per-assay weights. We measure what that combination is worth. A per-assay oracle bounds the entire headroom
+any weighting rule can capture at +0.0051 over a constant fitted on the other assays, against +0.0122 for
+adding a single expert: allocation is 42\% of the expert lever, the intervals do not overlap, and the bound
+replicates on ProteinGym's indel assays, where the oracle gap is larger but weights fitted on half an assay
+lose to a constant on the other half. That loss is repairable: partial pooling by $\lambda = n/(n+k)$ gains
++0.0051 and +0.0021 on the two benchmarks, turning a deficit into a gain on the small assays where per-assay
+fitting fails. The expert lever is representation. An encoder over reference-minus-mutant features in a local
+neighbourhood, distilled from the strongest experts and fused at four fixed weights, reaches 0.694 on the
+official metric against 0.657 for the published leader, and the same representation wins six of seven splits
+of FLIP2, an independently collected benchmark. For the domain we report the utility profile: the top 5\%
+recovers 24.7\% of the true top 5\%, a 4.96x lift, but 7.7x on stability assays against 3.4x on activity,
+and parity on the largest quartile. We release per-mutant predictions for all 696,311 mutants.
 \end{abstract}
 """
 
