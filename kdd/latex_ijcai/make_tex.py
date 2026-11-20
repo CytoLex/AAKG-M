@@ -78,7 +78,7 @@ def esc(t):
     for a, b in (("&", r"\&"), ("%", r"\%"), ("_", r"\_"), ("#", r"\#"), ("$", r"\$")):
         t = t.replace(a, b)
     t = re.sub(r"\*\*(.+?)\*\*", r"\\textbf{\1}", t)
-    t = t.replace("\u2212", "-").replace("\u2013", "--").replace("\u2014", "---")
+    t = t.replace("\u2212", "$-$").replace("\u2013", "--").replace("\u2014", "---")
     t = t.replace("\u0394", r"$\Delta$")          # after the $ escape, so it survives
     return t
 

@@ -151,12 +151,12 @@ its weights for assay \emph{a} come from other assays or from no labels at all.
 mechanism & official & $\Delta$ vs constant & 95\% CI & type \\
 \hline
 tuned constant (0.05, 0.45, 0.50) & \textbf{0.687637} & --- & --- & none \\
-MLP gate over 17 context statistics & 0.687888 & \textbf{+0.000251} & [-0.001924, +0.002545] & parametric, per-assay \\
-per-variant uncertainty weighting & 0.687106 & -0.000531 & [-0.001181, +0.000021] & unsupervised, per-variant \\
-k-NN over assay context & 0.687170 & -0.000467 & [-0.001329, +0.000259] & nonparametric, per-assay \\
-per-category constants & 0.687220 & -0.000417 & [-0.000784, -0.000084] & parametric, per-category \\
-ridge regression context → weights & 0.685109 & -0.002528 & [-0.007833, +0.000676] & linear, per-assay \\
-per-variant consensus (median) & 0.670492 & -0.017146 & [-0.026771, -0.011115] & unsupervised, per-variant \\
+MLP gate over 17 context statistics & 0.687888 & \textbf{+0.000251} & [$-$0.001924, +0.002545] & parametric, per-assay \\
+per-variant uncertainty weighting & 0.687106 & $-$0.000531 & [$-$0.001181, +0.000021] & unsupervised, per-variant \\
+k-NN over assay context & 0.687170 & $-$0.000467 & [$-$0.001329, +0.000259] & nonparametric, per-assay \\
+per-category constants & 0.687220 & $-$0.000417 & [$-$0.000784, $-$0.000084] & parametric, per-category \\
+ridge regression context → weights & 0.685109 & $-$0.002528 & [$-$0.007833, +0.000676] & linear, per-assay \\
+per-variant consensus (median) & 0.670492 & $-$0.017146 & [$-$0.026771, $-$0.011115] & unsupervised, per-variant \\
 \hline
 \end{tabular}
 \end{table*}
@@ -438,7 +438,7 @@ the gain is simply ``more parameters''. We ran the control.
 branch & parameters & standalone delta vs plain & seeds positive & 95\% CI \\
 \hline
 per-category, rank 8 & 5x & \textbf{+0.0214} & 4/4 & [+0.0157, +0.0274] \\
-shared, rank 8 & 1x & -0.0008 & 2/4 & [-0.0054, +0.0040] \\
+shared, rank 8 & 1x & $-$0.0008 & 2/4 & [$-$0.0054, +0.0040] \\
 \hline
 \end{tabular}
 \end{table*}
