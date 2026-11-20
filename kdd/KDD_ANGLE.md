@@ -3,7 +3,7 @@
 All three use the same evidence. They differ in what the paper asks the reader to believe, and in
 which reviewers decide its fate.
 
-## A. "Allocation was never the bottleneck" — a negative result with a constructive tail
+## A. "The Ceiling on Adaptive Weighting in Protein Fitness Prediction, and How to Reach It" — a negative result with a constructive tail
 
 **Claim.** The field spends its effort on the wrong object. We test an entire class of adaptive
 weighting mechanisms on a 217-assay protein-fitness panel and show every one of them ties a single

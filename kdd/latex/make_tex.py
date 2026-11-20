@@ -133,7 +133,7 @@ PRE = r"""\documentclass[sigconf,review,nonacm]{acmart}
 \usepackage{booktabs}
 \usepackage{graphicx}
 \begin{document}
-\title{Allocation was never the bottleneck: what actually moves a protein-fitness ranker}
+\title{The Ceiling on Adaptive Weighting in Protein Fitness Prediction, and How to Reach It}
 \author{Placeholder One}\affiliation{\institution{CytoLex}\country{China}}\email{a@b.c}
 \author{Placeholder Two}\affiliation{\institution{CytoLex}\country{China}}\email{a@b.c}
 \begin{abstract}

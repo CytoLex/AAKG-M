@@ -171,8 +171,8 @@ PRE = r"""\documentclass{article}
 \begin{document}
 
 \twocolumn[
-  \icmltitle{Allocation was never the bottleneck: \\ what actually moves a protein-fitness ranker}
-  \icmltitlerunning{Allocation was never the bottleneck}
+  \icmltitle{The Ceiling on Adaptive Weighting in Protein Fitness Prediction, and How to Reach It}
+  \icmltitlerunning{The Ceiling on Adaptive Weighting}
 
   \icmlsetsymbol{equal}{*}
   \begin{icmlauthorlist}

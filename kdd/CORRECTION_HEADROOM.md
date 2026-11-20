@@ -48,7 +48,7 @@ individually correct and the resulting number is in the right direction — only
 
 Three things follow that a reader should know:
 
-- **The title still holds.** "Allocation was never the bottleneck" says allocation is not the main lever;
+- **The title still holds.** "The Ceiling on Adaptive Weighting in Protein Fitness Prediction, and How to Reach It" says allocation is not the main lever;
   42% against an expert change, with disjoint intervals, supports that. It would not support "allocation is
   worth nothing", which the paper does not claim.
 - **§3.5's cross-benchmark comparison changed scale.** Substitutions +0.0051 against indels +0.0084 is

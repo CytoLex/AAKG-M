@@ -182,7 +182,7 @@ PRE = r"""\documentclass{article}
 \begin{document}
 \linenumbers
 
-\title{Allocation Was Never the Bottleneck: What Actually Moves a Protein-Fitness Ranker}
+\title{The Ceiling on Adaptive Weighting in Protein Fitness Prediction, and How to Reach It}
 
 % Anonymous submission: no author block.
 \author{}

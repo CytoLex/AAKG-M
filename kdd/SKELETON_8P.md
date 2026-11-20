@@ -8,7 +8,7 @@ budget and let the tables eat the rest.
 
 ## Title candidates
 
-1. **Allocation was never the bottleneck: what actually moves a protein-fitness ranker**
+1. **The Ceiling on Adaptive Weighting in Protein Fitness Prediction, and How to Reach It**
 2. *Beyond adaptive weighting: differential representations for protein fitness prediction*
 3. *What a protein engineer can act on: characterising a fitness ranker beyond aggregate Spearman*
 
