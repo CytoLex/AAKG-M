@@ -49,15 +49,13 @@ today; the first is what makes both measurable rather than asserted.
    total allocatable gain at +0.0051. On ProteinGym's indel assays the same bound is measured and shown to
    have a second part: how much of it the assay can estimate. We argue both the oracle and the tuned
    constant belong in the baseline table.
-2. **An expert built from differential representations**, with the ablation that shows where the signal
-   is: the wild-type-minus-mutant difference and the local neighbourhood carry +0.116, while stacking
-   more layers alone is negative.
+2. **An expert built from differential representations**, with the ablation locating the signal: the
+   wild-type-minus-mutant difference and the local neighbourhood carry +0.116; stacking layers is negative.
 3. **A utility characterisation that makes the ranking usable** — top-of-list recall by functional
    category, and the assay-size regime over which the advantage holds. It converts one aggregate number
    into the two facts a campaign needs: how much of the top of the list to trust, and for which property.
-4. **A reproducible artifact**: per-mutant predictions for all 696,311 mutants and the code that
-   regenerates every number in two commands from two public repositories, supplied with this submission
-   as anonymised supplementary material and released publicly on publication.
+4. **A reproducible artifact**: per-mutant predictions for all 696,311 mutants and the code regenerating
+   every number, supplied as anonymised supplementary material and released on publication.
 
 ## 2 Related work
 
@@ -95,14 +93,9 @@ averaged over splits, grouped by UniProt identity and coarse functional category
 five categories — and its published evaluation script on a score file we supply rather than reimplementing
 the metric.
 
-**Models.** Four experts: two frozen published predictions (Kermut, an assay-adaptive mixed structure
-kernel), an additive structure kernel that receives weight 0.00 and does not affect scoring, and the
-encoder of §4, refitted per assay and per split. Feature construction, the distillation loss, the
-category residual and the seed averaging are specified in §4; α and the residual rank were re-selected by
-inner selection on training assays only.
 
-**Fusion.** Four weights per fold by step-0.1 simplex search on the training assays, applied to the
-held-out ones — the same procedure the tuned-constant baseline uses, so the comparison is equal-compute.
+
+
 
 **Baselines.** Five, in increasing strength: a fixed 50/50 blend of the two strongest experts; a fixed
 D+Kermut blend; the tuned constant of §3; a nested constant with per-fold weights; and Kermut alone, which
@@ -147,12 +140,9 @@ grouped by UniProt identity then by functional category — on the 182 assays wh
 covers the panel, so that both pools are evaluated on the same units.
 
 **The allocation bound.** Inside the three-expert pool, a per-assay oracle reaches **0.6881** against
-**0.6830** for the constant fitted on the other assays: a headroom of **+0.0051** (95% CI [0.0038, 0.0066]).
-That is the entire amount any weighting rule, supervised or not, per-assay or not, could ever extract from
-this pool, and its interval is estimated by resampling assays and re-aggregating each resample.
-
-**The expert lever.** Adding the distilled encoder to the same pool raises the nested constant from 0.6830
-to **0.6952**, a gain of **+0.0122** (95% CI [0.0099, 0.0144]).
+**0.6830** for the constant fitted on the other assays: **+0.0051** (95% CI [0.0038, 0.0066]), estimated by
+resampling assays and re-aggregating each resample. **The expert lever.** Adding the distilled encoder to the
+same pool raises that constant to **0.6952**, a gain of **+0.0122** (95% CI [0.0099, 0.0144]).
 
 **The allocation headroom is 42% of the expert gain, and the intervals do not overlap.** Per-assay weighting
 is therefore a real but secondary lever: everything a weighting rule could reach is less than half of what
@@ -162,7 +152,17 @@ one expert change delivers. The two quantities are easy to conflate: an oracle o
 The gate itself behaves as intended — its per-assay weights reproduce across independent seeds at
 r = 0.92–0.97 — which locates the shortfall in the objective rather than the optimisation.
 
-## 3.4 The headroom is real, and it is not noise
+#**Having the weights and being able to estimate them are different problems, and the second is fixable.**
+In an out-of-sample protocol — weights fitted on half an assay's variants and evaluated on the other half —
+the per-assay rule gains **+0.0047** on substitutions but *loses* **0.0032** on indels, where assays are
+small. Pooling each assay's weights toward the panel-wide constant — `w(λ) = (1−λ)·w_panel + λ·w_i` with
+`λ = n_i/(n_i+k)` and k selected on the panel, never on the held-out half — gains **+0.0051** and
+**+0.0021** respectively: partial pooling matches the per-assay rule where estimation is feasible and turns
+a loss into a gain where it is not.
+Partial pooling is therefore the right way to adapt weights on this problem — not because it finds new
+headroom, but because it is the only version that survives small assays.
+
+# 3.4 The headroom is real, and it is not noise
 
 A small oracle gain invites the objection that the oracle is fitting its own noise. Variants of each assay
 are split into disjoint halves A and B; weights selected on A and evaluated on B transfer a gain of
@@ -429,13 +429,11 @@ and offers no capability beyond what public ProteinGym baselines already provide
 the step deciding which candidates a laboratory synthesises. We release predictions for existing public
 assays only.
 
-**Data.** All assays are previously published deep mutational scanning datasets distributed by
-ProteinGym. No new experimental data, no human subjects, no clinical material, and no institutional
-review was required.
 
 
 
-**Released artifacts.** The submission includes, as anonymised supplementary material, per-mutant
+
+**Data and released artifacts.** All assays are previously published deep-mutational-scanning datasets distributed by ProteinGym: no new experimental data, no human subjects, no clinical material. The submission includes, as anonymised supplementary material, per-mutant
 predictions for all 696,311 mutants, the code reproducing every reported number, and the recovered kernel
 for the structural experts; all of it is released publicly on publication. The code is under a permissive
 licence, while the expert prediction tables remain research-use only because they derive from third-party
@@ -485,15 +483,9 @@ that characterisation without adopting our method.
 
 ### Implications, and what would falsify us
 
-**If you are building a fusion.** Report the oracle. It takes an afternoon and converts an open-ended
-search for better gating into a bounded question: how much is left? When the answer is 42% of what a
-single expert change is worth — and the two intervals do not overlap — the weighting is not where the next
-gain comes from, and the search is over.
-
-**If you are evaluating.** A ranker's aggregate correlation and its top-of-list recall can disagree, and
-the second is closer to what the downstream experiment measures. The cheapest discipline is to report the
-oracle and the tuned constant alongside any learned weighting; the second cheapest is the per-category
-breakdown instead of the mean.
+**If you are evaluating.** Report the oracle and the tuned constant alongside any learned weighting, and the
+per-category breakdown instead of the mean: a ranker's aggregate correlation and its top-of-list recall can
+disagree, and the second is closer to what the downstream experiment measures.
 
 
 

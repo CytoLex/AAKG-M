@@ -104,17 +104,15 @@ today; the first is what makes both measurable rather than asserted.
   have a second part: how much of it the assay can estimate. We argue both the oracle and the tuned
   constant belong in the baseline table.
 \item
-  \textbf{An expert built from differential representations}, with the ablation that shows where the signal
-  is: the wild-type-minus-mutant difference and the local neighbourhood carry +0.116, while stacking
-  more layers alone is negative.
+  \textbf{An expert built from differential representations}, with the ablation locating the signal: the
+  wild-type-minus-mutant difference and the local neighbourhood carry +0.116; stacking layers is negative.
 \item
   \textbf{A utility characterisation that makes the ranking usable} --- top-of-list recall by functional
   category, and the assay-size regime over which the advantage holds. It converts one aggregate number
   into the two facts a campaign needs: how much of the top of the list to trust, and for which property.
 \item
-  \textbf{A reproducible artifact}: per-mutant predictions for all 696,311 mutants and the code that
-  regenerates every number in two commands from two public repositories, supplied with this submission
-  as anonymised supplementary material and released publicly on publication.
+  \textbf{A reproducible artifact}: per-mutant predictions for all 696,311 mutants and the code regenerating
+  every number, supplied as anonymised supplementary material and released on publication.
 \end{enumerate}
 
 \section{Related work}\label{related-work}
@@ -143,7 +141,7 @@ step toward reporting what a downstream experiment would experience.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.86\columnwidth]{../figures/fig1_allocation_vs_expert_ijcai.pdf}
+\includegraphics[width=0.76\columnwidth]{../figures/fig1_allocation_vs_expert_ijcai.pdf}
 \caption{Both levers measured from the same origin and in one pipeline. The upper arrow is what any
 weighting rule could gain over a constant fitted on the other assays (a per-assay oracle, +0.0051); the
 lower is what adding one expert is worth (+0.0122). The intervals do not overlap, so allocation is the
@@ -163,15 +161,6 @@ identifiers and the three official splits. We run the benchmark's own aggregatio
 averaged over splits, grouped by UniProt identity and coarse functional category, then averaged over the
 five categories --- and its published evaluation script on a score file we supply rather than reimplementing
 the metric.
-
-\textbf{Models.} Four experts: two frozen published predictions (Kermut, an assay-adaptive mixed structure
-kernel), an additive structure kernel that receives weight 0.00 and does not affect scoring, and the
-encoder of §4, refitted per assay and per split. Feature construction, the distillation loss, the
-category residual and the seed averaging are specified in §4; α and the residual rank were re-selected by
-inner selection on training assays only.
-
-\textbf{Fusion.} Four weights per fold by step-0.1 simplex search on the training assays, applied to the
-held-out ones --- the same procedure the tuned-constant baseline uses, so the comparison is equal-compute.
 
 \textbf{Baselines.} Five, in increasing strength: a fixed 50/50 blend of the two strongest experts; a fixed
 D+Kermut blend; the tuned constant of §3; a nested constant with per-fold weights; and Kermut alone, which
@@ -224,12 +213,9 @@ grouped by UniProt identity then by functional category --- on the 182 assays wh
 covers the panel, so that both pools are evaluated on the same units.
 
 \textbf{The allocation bound.} Inside the three-expert pool, a per-assay oracle reaches \textbf{0.6881} against
-\textbf{0.6830} for the constant fitted on the other assays: a headroom of \textbf{+0.0051} (95\% CI {[}0.0038, 0.0066{]}).
-That is the entire amount any weighting rule, supervised or not, per-assay or not, could ever extract from
-this pool, and its interval is estimated by resampling assays and re-aggregating each resample.
-
-\textbf{The expert lever.} Adding the distilled encoder to the same pool raises the nested constant from 0.6830
-to \textbf{0.6952}, a gain of \textbf{+0.0122} (95\% CI {[}0.0099, 0.0144{]}).
+\textbf{0.6830} for the constant fitted on the other assays: \textbf{+0.0051} (95\% CI {[}0.0038, 0.0066{]}), estimated by
+resampling assays and re-aggregating each resample. \textbf{The expert lever.} Adding the distilled encoder to the
+same pool raises that constant to \textbf{0.6952}, a gain of \textbf{+0.0122} (95\% CI {[}0.0099, 0.0144{]}).
 
 \textbf{The allocation headroom is 42\% of the expert gain, and the intervals do not overlap.} Per-assay weighting
 is therefore a real but secondary lever: everything a weighting rule could reach is less than half of what
@@ -239,7 +225,17 @@ one expert change delivers. The two quantities are easy to conflate: an oracle o
 The gate itself behaves as intended --- its per-assay weights reproduce across independent seeds at
 r = 0.92--0.97 --- which locates the shortfall in the objective rather than the optimisation.
 
-\subsection{The headroom is real, and it is not noise}\label{the-headroom-is-real-and-it-is-not-noise}
+\#\textbf{Having the weights and being able to estimate them are different problems, and the second is fixable.}
+In an out-of-sample protocol --- weights fitted on half an assay's variants and evaluated on the other half ---
+the per-assay rule gains \textbf{+0.0047} on substitutions but \emph{loses} \textbf{0.0032} on indels, where assays are
+small. Pooling each assay's weights toward the panel-wide constant --- \texttt{w(λ)\ =\ (1−λ)·w\_panel\ +\ λ·w\_i} with
+\texttt{λ\ =\ n\_i/(n\_i+k)} and k selected on the panel, never on the held-out half --- gains \textbf{+0.0051} and
+\textbf{+0.0021} respectively: partial pooling matches the per-assay rule where estimation is feasible and turns
+a loss into a gain where it is not.
+Partial pooling is therefore the right way to adapt weights on this problem --- not because it finds new
+headroom, but because it is the only version that survives small assays.
+
+\section{3.4 The headroom is real, and it is not noise}\label{the-headroom-is-real-and-it-is-not-noise}
 
 A small oracle gain invites the objection that the oracle is fitting its own noise. Variants of each assay
 are split into disjoint halves A and B; weights selected on A and evaluated on B transfer a gain of
@@ -418,7 +414,7 @@ versus global --- not a different optimiser, loss, or a bigger model.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.86\columnwidth]{../figures/fig2_topk_by_category_ijcai.pdf}
+\includegraphics[width=0.76\columnwidth]{../figures/fig2_topk_by_category_ijcai.pdf}
 \caption{Top-of-list utility by functional category: recall of the true top-$k$ variants when the top
 $k$ of our ranking is taken, for $k \in \{1\%, 5\%, 10\%\}$, with the random-ordering expectation
 marked. Stability is consistently strongest and activity weakest, a spread the aggregate Spearman does
@@ -574,11 +570,7 @@ and offers no capability beyond what public ProteinGym baselines already provide
 the step deciding which candidates a laboratory synthesises. We release predictions for existing public
 assays only.
 
-\textbf{Data.} All assays are previously published deep mutational scanning datasets distributed by
-ProteinGym. No new experimental data, no human subjects, no clinical material, and no institutional
-review was required.
-
-\textbf{Released artifacts.} The submission includes, as anonymised supplementary material, per-mutant
+\textbf{Data and released artifacts.} All assays are previously published deep-mutational-scanning datasets distributed by ProteinGym: no new experimental data, no human subjects, no clinical material. The submission includes, as anonymised supplementary material, per-mutant
 predictions for all 696,311 mutants, the code reproducing every reported number, and the recovered kernel
 for the structural experts; all of it is released publicly on publication. The code is under a permissive
 licence, while the expert prediction tables remain research-use only because they derive from third-party
@@ -628,15 +620,9 @@ that characterisation without adopting our method.
 
 \subsubsection*{Implications, and what would falsify us}\label{implications-and-what-would-falsify-us}
 
-\textbf{If you are building a fusion.} Report the oracle. It takes an afternoon and converts an open-ended
-search for better gating into a bounded question: how much is left? When the answer is 42\% of what a
-single expert change is worth --- and the two intervals do not overlap --- the weighting is not where the next
-gain comes from, and the search is over.
-
-\textbf{If you are evaluating.} A ranker's aggregate correlation and its top-of-list recall can disagree, and
-the second is closer to what the downstream experiment measures. The cheapest discipline is to report the
-oracle and the tuned constant alongside any learned weighting; the second cheapest is the per-category
-breakdown instead of the mean.
+\textbf{If you are evaluating.} Report the oracle and the tuned constant alongside any learned weighting, and the
+per-category breakdown instead of the mean: a ranker's aggregate correlation and its top-of-list recall can
+disagree, and the second is closer to what the downstream experiment measures.
 
 The experiment we would run next is prospective: generate a candidate list from the ranking, assay it
 alongside a random control, and measure whether the top-of-list lift becomes a hit-rate lift at the bench.

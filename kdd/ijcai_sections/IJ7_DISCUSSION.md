@@ -33,15 +33,9 @@ that characterisation without adopting our method.
 
 ### Implications, and what would falsify us
 
-**If you are building a fusion.** Report the oracle. It takes an afternoon and converts an open-ended
-search for better gating into a bounded question: how much is left? When the answer is 42% of what a
-single expert change is worth — and the two intervals do not overlap — the weighting is not where the next
-gain comes from, and the search is over.
-
-**If you are evaluating.** A ranker's aggregate correlation and its top-of-list recall can disagree, and
-the second is closer to what the downstream experiment measures. The cheapest discipline is to report the
-oracle and the tuned constant alongside any learned weighting; the second cheapest is the per-category
-breakdown instead of the mean.
+**If you are evaluating.** Report the oracle and the tuned constant alongside any learned weighting, and the
+per-category breakdown instead of the mean: a ranker's aggregate correlation and its top-of-list recall can
+disagree, and the second is closer to what the downstream experiment measures.
 
 
 

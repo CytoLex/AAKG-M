@@ -27,13 +27,11 @@ and offers no capability beyond what public ProteinGym baselines already provide
 the step deciding which candidates a laboratory synthesises. We release predictions for existing public
 assays only.
 
-**Data.** All assays are previously published deep mutational scanning datasets distributed by
-ProteinGym. No new experimental data, no human subjects, no clinical material, and no institutional
-review was required.
 
 
 
-**Released artifacts.** The submission includes, as anonymised supplementary material, per-mutant
+
+**Data and released artifacts.** All assays are previously published deep-mutational-scanning datasets distributed by ProteinGym: no new experimental data, no human subjects, no clinical material. The submission includes, as anonymised supplementary material, per-mutant
 predictions for all 696,311 mutants, the code reproducing every reported number, and the recovered kernel
 for the structural experts; all of it is released publicly on publication. The code is under a permissive
 licence, while the expert prediction tables remain research-use only because they derive from third-party

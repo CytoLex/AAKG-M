@@ -47,12 +47,10 @@ today; the first is what makes both measurable rather than asserted.
    total allocatable gain at +0.0051. On ProteinGym's indel assays the same bound is measured and shown to
    have a second part: how much of it the assay can estimate. We argue both the oracle and the tuned
    constant belong in the baseline table.
-2. **An expert built from differential representations**, with the ablation that shows where the signal
-   is: the wild-type-minus-mutant difference and the local neighbourhood carry +0.116, while stacking
-   more layers alone is negative.
+2. **An expert built from differential representations**, with the ablation locating the signal: the
+   wild-type-minus-mutant difference and the local neighbourhood carry +0.116; stacking layers is negative.
 3. **A utility characterisation that makes the ranking usable** — top-of-list recall by functional
    category, and the assay-size regime over which the advantage holds. It converts one aggregate number
    into the two facts a campaign needs: how much of the top of the list to trust, and for which property.
-4. **A reproducible artifact**: per-mutant predictions for all 696,311 mutants and the code that
-   regenerates every number in two commands from two public repositories, supplied with this submission
-   as anonymised supplementary material and released publicly on publication.
+4. **A reproducible artifact**: per-mutant predictions for all 696,311 mutants and the code regenerating
+   every number, supplied as anonymised supplementary material and released on publication.

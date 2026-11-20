@@ -32,12 +32,9 @@ grouped by UniProt identity then by functional category — on the 182 assays wh
 covers the panel, so that both pools are evaluated on the same units.
 
 **The allocation bound.** Inside the three-expert pool, a per-assay oracle reaches **0.6881** against
-**0.6830** for the constant fitted on the other assays: a headroom of **+0.0051** (95% CI [0.0038, 0.0066]).
-That is the entire amount any weighting rule, supervised or not, per-assay or not, could ever extract from
-this pool, and its interval is estimated by resampling assays and re-aggregating each resample.
-
-**The expert lever.** Adding the distilled encoder to the same pool raises the nested constant from 0.6830
-to **0.6952**, a gain of **+0.0122** (95% CI [0.0099, 0.0144]).
+**0.6830** for the constant fitted on the other assays: **+0.0051** (95% CI [0.0038, 0.0066]), estimated by
+resampling assays and re-aggregating each resample. **The expert lever.** Adding the distilled encoder to the
+same pool raises that constant to **0.6952**, a gain of **+0.0122** (95% CI [0.0099, 0.0144]).
 
 **The allocation headroom is 42% of the expert gain, and the intervals do not overlap.** Per-assay weighting
 is therefore a real but secondary lever: everything a weighting rule could reach is less than half of what
@@ -47,7 +44,17 @@ one expert change delivers. The two quantities are easy to conflate: an oracle o
 The gate itself behaves as intended — its per-assay weights reproduce across independent seeds at
 r = 0.92–0.97 — which locates the shortfall in the objective rather than the optimisation.
 
-## 3.4 The headroom is real, and it is not noise
+#**Having the weights and being able to estimate them are different problems, and the second is fixable.**
+In an out-of-sample protocol — weights fitted on half an assay's variants and evaluated on the other half —
+the per-assay rule gains **+0.0047** on substitutions but *loses* **0.0032** on indels, where assays are
+small. Pooling each assay's weights toward the panel-wide constant — `w(λ) = (1−λ)·w_panel + λ·w_i` with
+`λ = n_i/(n_i+k)` and k selected on the panel, never on the held-out half — gains **+0.0051** and
+**+0.0021** respectively: partial pooling matches the per-assay rule where estimation is feasible and turns
+a loss into a gain where it is not.
+Partial pooling is therefore the right way to adapt weights on this problem — not because it finds new
+headroom, but because it is the only version that survives small assays.
+
+# 3.4 The headroom is real, and it is not noise
 
 A small oracle gain invites the objection that the oracle is fitting its own noise. Variants of each assay
 are split into disjoint halves A and B; weights selected on A and evaluated on B transfer a gain of

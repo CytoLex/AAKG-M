@@ -112,7 +112,7 @@ for a in ("toprule", "midrule", "bottomrule"):
 FIG1 = r"""
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.86\columnwidth]{../figures/fig1_allocation_vs_expert_ijcai.pdf}
+\includegraphics[width=0.76\columnwidth]{../figures/fig1_allocation_vs_expert_ijcai.pdf}
 \caption{Both levers measured from the same origin and in one pipeline. The upper arrow is what any
 weighting rule could gain over a constant fitted on the other assays (a per-assay oracle, +0.0051); the
 lower is what adding one expert is worth (+0.0122). The intervals do not overlap, so allocation is the
@@ -123,7 +123,7 @@ smaller lever by a margin that is not noise.}
 FIG2 = r"""
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.86\columnwidth]{../figures/fig2_topk_by_category_ijcai.pdf}
+\includegraphics[width=0.76\columnwidth]{../figures/fig2_topk_by_category_ijcai.pdf}
 \caption{Top-of-list utility by functional category: recall of the true top-$k$ variants when the top
 $k$ of our ranking is taken, for $k \in \{1\%, 5\%, 10\%\}$, with the random-ordering expectation
 marked. Stability is consistently strongest and activity weakest, a spread the aggregate Spearman does
