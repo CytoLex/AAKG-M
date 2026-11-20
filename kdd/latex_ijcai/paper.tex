@@ -290,6 +290,15 @@ then adds a further 0.046, reaching \textbf{0.8858} and a four-expert blend of \
 is unchanged throughout --- between +0.006 and +0.009 across every pool we trained, against +0.0084 for the
 three published models alone. A much stronger pool moves the level, not the allocation bound.
 
+\textbf{A third source, outside the ProteinGym suite.} FLIP2 collects its own data and publishes sixteen
+predefined splits. Its fixed-length substitution libraries leave seven splits with enough training rows to
+fit a head --- amylase, ired and trpb --- and on those the encoder beats a ridge on mean-pooled ESM-2
+embeddings on six of the seven, at a mean test Spearman of \textbf{0.43 against 0.26}. The differential features
+are not by themselves better: a ridge on them scores 0.15, so the gain is the view combined with a
+nonlinear head, which is what the feature ablation of §4.1 shows from the other direction. FLIP2 offers
+seven splits rather than hundreds of assays, so it carries the representation claim and cannot carry the
+allocation one.
+
 Per-assay weighting is therefore limited twice: by how much the pool disagrees, which the oracle measures,
 and by whether the assay carries enough variants to estimate the weights at all. Substitutions have a
 small first bound and a partly estimable one; indels have a larger first bound that is almost entirely
