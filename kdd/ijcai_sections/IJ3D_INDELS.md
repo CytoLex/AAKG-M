@@ -25,5 +25,4 @@ features alone: a ridge on them scores 0.15, so the gain belongs to the view com
 Per-assay weighting is therefore limited twice: by how much the pool disagrees, which the oracle measures,
 and by whether the assay carries enough variants to estimate the weights at all. Substitutions have a
 small first bound and a partly estimable one; indels have a larger first bound that is almost entirely
-estimation noise. **Assay size, not only pool diversity, decides whether adapting weights is worth
-attempting** — a rule that a practitioner can apply before fitting anything.
+estimation noise. **Assay size, not only pool diversity, decides whether adapting weights is worth attempting.**

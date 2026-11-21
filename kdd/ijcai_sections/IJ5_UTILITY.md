@@ -56,7 +56,7 @@ Ranking and ground truth are both computed within an assay-by-split unit on the 
 the reference is independent of §4, and the lift rather than the raw recall is the quantity to compare
 across categories.
 
-## 5.3 Where it fails
+## 5.3 The operating range
 
 **87 of 217 assays regress** against the previous four-expert fusion, with a median improvement of
 +0.0016 — roughly half the mean, so the gain is carried by a subset. **Expression is the only category

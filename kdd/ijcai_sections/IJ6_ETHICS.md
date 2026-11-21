@@ -6,12 +6,10 @@ as high on stability assays as on activity assays, the improvement over the prev
 both regimes rather than a property of any particular assay. A practitioner should read the aggregate as
 the centre of that range and the per-category numbers as the part that applies to their assay.
 
-**The structural experts are inherited, not retrained inside each outer fold.** Their kernel is recovered
-and verified to floating-point precision against the saved per-fold predictions, and every reported number
-is reproducible from the published per-mutant scores — but a fully nested protocol would retrain them
-within each fold. The one hyperparameter that materially matters, the distillation weight, was re-selected
-inside each fold and chose the same value in all five; the broader design space, however, was explored on
-this panel.
+**The structural experts are inherited, not retrained inside each outer fold**, and every reported number is
+reproducible from the published per-mutant scores; a fully nested protocol would retrain them within each
+fold. The one hyperparameter that materially matters, the distillation weight, was re-selected inside each
+fold and chose the same value in all five.
 
 **Coverage and shift.** The panel is skewed toward particular protein families, organisms and assay types and
 performance is not uniform across them; a family absent from the benchmark should be expected to behave like

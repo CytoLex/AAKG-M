@@ -1,2 +1,4 @@
-This section establishes that the mixture has nowhere to go. We first evaluate six label-free conditioning mechanisms against a tuned constant, then bound what *any* weighting rule could extract from this expert pool, then show that the bound is reproducible rather than an artefact of fitting
-noise.
+This section asks how much of the mixture's gain is reachable, in three measurements: what a per-assay
+oracle could extract, how much of that an assay's own data can estimate, and which estimator reaches it. Six
+label-free conditioning mechanisms set the baseline for the first question, against the tuned constant they
+all have to beat.

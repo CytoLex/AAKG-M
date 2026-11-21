@@ -21,7 +21,7 @@ def body(name, end_marker="## Note"):
 sections = [
     ("## 1 Introduction", (KDD / "ijcai_sections" / "IJ1_INTRO.md").read_text().strip()),
     ("## 2 Related work", (KDD / "ijcai_sections" / "IJ2_RELATED.md").read_text().strip()),
-    ("## 3 Allocation has no headroom", (KDD / "ijcai_sections" / "IJ3_LEAD.md").read_text().strip()),
+    ("## 3 What allocation is worth", (KDD / "ijcai_sections" / "IJ3_LEAD.md").read_text().strip()),
     ("", (KDD / "ijcai_sections" / "IJ3A_PROTOCOL.md").read_text().strip()),
     ("", (KDD / "ijcai_sections" / "IJ3B_MECHANISMS.md").read_text().strip()),
     ("", (KDD / "ijcai_sections" / "IJ3D_INDELS.md").read_text().strip()),
@@ -134,8 +134,8 @@ not reveal.}
 \label{fig:topk}
 \end{figure}
 """
-tex_body = tex_body.replace("\\section{Allocation has no headroom}",
-                            FIG1 + "\n\\section{Allocation has no headroom}", 1)
+tex_body = tex_body.replace("\\section{What allocation is worth}",
+                            FIG1 + "\n\\section{What allocation is worth}", 1)
 # --- appendix: material that ICML lets us keep outside the page limit
 APPENDIX = r"""
 \newpage

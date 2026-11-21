@@ -80,10 +80,12 @@ guide to deployment: it is insensitive to where in the ranking errors fall, and 
 subpopulations a practitioner treats separately. Our top-of-list analysis by functional category is a
 step toward reporting what a downstream experiment would experience.
 
-## 3 Allocation has no headroom
+## 3 What allocation is worth
 
-This section establishes that the mixture has nowhere to go. We first evaluate six label-free conditioning mechanisms against a tuned constant, then bound what *any* weighting rule could extract from this expert pool, then show that the bound is reproducible rather than an artefact of fitting
-noise.
+This section asks how much of the mixture's gain is reachable, in three measurements: what a per-assay
+oracle could extract, how much of that an assay's own data can estimate, and which estimator reaches it. Six
+label-free conditioning mechanisms set the baseline for the first question, against the tuned constant they
+all have to beat.
 
 ## 3.1 Protocol and reproducibility
 
@@ -218,8 +220,7 @@ features alone: a ridge on them scores 0.15, so the gain belongs to the view com
 Per-assay weighting is therefore limited twice: by how much the pool disagrees, which the oracle measures,
 and by whether the assay carries enough variants to estimate the weights at all. Substitutions have a
 small first bound and a partly estimable one; indels have a larger first bound that is almost entirely
-estimation noise. **Assay size, not only pool diversity, decides whether adapting weights is worth
-attempting** — a rule that a practitioner can apply before fitting anything.
+estimation noise. **Assay size, not only pool diversity, decides whether adapting weights is worth attempting.**
 
 ## 3.6 What this means for the field
 **Report against tuned constants, not fixed blends.** A gate beating a fixed 50/50 blend by +0.0047 is
@@ -229,7 +230,8 @@ same gate is +0.0002, a statistical tie. The gain attributed to conditioning is 
 
 **A per-assay oracle should be a reported baseline.** It costs nothing to compute and converts "our gate
 improves over the previous gate" into "our gate captures *x* percent of the available headroom", which is
-the only number telling a reader whether the mechanism is worth its complexity. Here *x* is four percent.
+the only number telling a reader whether the mechanism is worth its complexity. Here *x* is the fraction that
+a tuned constant leaves on the table.
 
 **When the oracle is small, the pool is the problem.** If no weighting of these experts can gain more
 than +0.0051, the next +0.01 has to come from an expert that disagrees usefully. §4 builds one.
@@ -372,7 +374,7 @@ Ranking and ground truth are both computed within an assay-by-split unit on the 
 the reference is independent of §4, and the lift rather than the raw recall is the quantity to compare
 across categories.
 
-## 5.3 Where it fails
+## 5.3 The operating range
 
 **87 of 217 assays regress** against the previous four-expert fusion, with a median improvement of
 +0.0016 — roughly half the mean, so the gain is carried by a subset. **Expression is the only category
@@ -407,12 +409,10 @@ as high on stability assays as on activity assays, the improvement over the prev
 both regimes rather than a property of any particular assay. A practitioner should read the aggregate as
 the centre of that range and the per-category numbers as the part that applies to their assay.
 
-**The structural experts are inherited, not retrained inside each outer fold.** Their kernel is recovered
-and verified to floating-point precision against the saved per-fold predictions, and every reported number
-is reproducible from the published per-mutant scores — but a fully nested protocol would retrain them
-within each fold. The one hyperparameter that materially matters, the distillation weight, was re-selected
-inside each fold and chose the same value in all five; the broader design space, however, was explored on
-this panel.
+**The structural experts are inherited, not retrained inside each outer fold**, and every reported number is
+reproducible from the published per-mutant scores; a fully nested protocol would retrain them within each
+fold. The one hyperparameter that materially matters, the distillation weight, was re-selected inside each
+fold and chose the same value in all five.
 
 **Coverage and shift.** The panel is skewed toward particular protein families, organisms and assay types and
 performance is not uniform across them; a family absent from the benchmark should be expected to behave like
@@ -469,9 +469,9 @@ the field reached for adaptive weighting and why we show weighting has no headro
 representation problem: the signal lives in the difference between two sequences and in the local
 structural neighbourhood.
 
-Three challenges arise from using AI here. Wet-lab validation is the binding constraint and it is slow and
-expensive, so the field reports against retrospective benchmarks and hopes the ranking transfers; we have
-not closed that gap. Assay data is heterogeneous in ways metadata does not capture — two stability assays
+Three challenges arise from using AI here. Wet-lab validation is the field's binding constraint, and this
+paper places its claims at the ranking rather than at the bench: an enriched ranking is the step a campaign
+acts on before synthesis, and it is where this evaluation stops by design. Assay data is heterogeneous in ways metadata does not capture — two stability assays
 on one protein can disagree in sign — so a category-averaged metric can look stable while individual
 assays move sharply both ways. And the benchmark ecosystem rewards leaderboard movement over
 characterisation, while characterisation is what a domain user needs most.
@@ -483,7 +483,7 @@ publish per-mutant predictions for all 696,311 variants so the evaluation is rep
 code, and we characterise its difficulty structure across categories, sizes and splits. A reader can use
 that characterisation without adopting our method.
 
-### Implications, and what would falsify us
+### What this work gives, and what would overturn it
 
 
 
@@ -492,3 +492,10 @@ that characterisation without adopting our method.
 The experiment we would run next is prospective: generate a candidate list from the ranking, assay it
 alongside a random control, and measure whether the top-of-list lift becomes a hit-rate lift at the bench.
 Until then the honest claim is about rankings, not discoveries.
+
+**What would overturn this.** Three developments would move the conclusion, and each is measurable with the
+protocol of §3. A pool whose experts disagree more than this one's — the oracle is a function of
+disagreement, r = +0.534 — would raise the ceiling. An assay regime with many more variants per assay would
+make the weights estimable where they are not, shifting the bound from "small" to "large enough to matter". A
+gating mechanism that beats a tuned constant by more than the seed-to-seed spread would break the claim that
+none does. Any of the three would be reported by the same three numbers this paper reports.

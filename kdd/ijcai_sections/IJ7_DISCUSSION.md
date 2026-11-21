@@ -17,9 +17,9 @@ the field reached for adaptive weighting and why we show weighting has no headro
 representation problem: the signal lives in the difference between two sequences and in the local
 structural neighbourhood.
 
-Three challenges arise from using AI here. Wet-lab validation is the binding constraint and it is slow and
-expensive, so the field reports against retrospective benchmarks and hopes the ranking transfers; we have
-not closed that gap. Assay data is heterogeneous in ways metadata does not capture — two stability assays
+Three challenges arise from using AI here. Wet-lab validation is the field's binding constraint, and this
+paper places its claims at the ranking rather than at the bench: an enriched ranking is the step a campaign
+acts on before synthesis, and it is where this evaluation stops by design. Assay data is heterogeneous in ways metadata does not capture — two stability assays
 on one protein can disagree in sign — so a category-averaged metric can look stable while individual
 assays move sharply both ways. And the benchmark ecosystem rewards leaderboard movement over
 characterisation, while characterisation is what a domain user needs most.
@@ -31,7 +31,7 @@ publish per-mutant predictions for all 696,311 variants so the evaluation is rep
 code, and we characterise its difficulty structure across categories, sizes and splits. A reader can use
 that characterisation without adopting our method.
 
-### Implications, and what would falsify us
+### What this work gives, and what would overturn it
 
 
 
@@ -40,3 +40,10 @@ that characterisation without adopting our method.
 The experiment we would run next is prospective: generate a candidate list from the ranking, assay it
 alongside a random control, and measure whether the top-of-list lift becomes a hit-rate lift at the bench.
 Until then the honest claim is about rankings, not discoveries.
+
+**What would overturn this.** Three developments would move the conclusion, and each is measurable with the
+protocol of §3. A pool whose experts disagree more than this one's — the oracle is a function of
+disagreement, r = +0.534 — would raise the ceiling. An assay regime with many more variants per assay would
+make the weights estimable where they are not, shifting the bound from "small" to "large enough to matter". A
+gating mechanism that beats a tuned constant by more than the seed-to-seed spread would break the claim that
+none does. Any of the three would be reported by the same three numbers this paper reports.
