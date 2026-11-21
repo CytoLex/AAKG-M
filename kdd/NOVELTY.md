@@ -76,6 +76,43 @@ vector, so every gain was zero and the correlation had no variance to explain. A
 was computed inside a per-assay loop, making the job O(n^2 * grid); it did not finish in an hour on a 4090 and
 had to be rewritten around a single score matrix, after which it completes in minutes on an H100.
 
+## The architecture experiment: gating on the variance axis
+
+The idea was to gate on a different variable. Every gating layer in this literature outputs a weight vector
+over experts; the paper's own measurements say that axis is nearly exhausted and the binding constraint is
+estimation error. So the gate here outputs the **shrinkage coefficient** instead:
+
+```
+lambda_i = gate(n_i, disagreement_i, expert-score spread, their interaction)
+w(lam)   = (1 - lam) * w_panel + lam * w_i
+```
+
+The gate is fitted leave-one-assay-out to each assay's own out-of-sample optimal lambda, and every rule is
+then scored on a fresh split.
+
+| rule | substitutions | indels |
+|---|---:|---:|
+| constant | 0.6936 | 0.8413 |
+| unregularised per-assay | **0.6997** | 0.8391 |
+| tuned k = 300 | 0.6988 | 0.8431 |
+| derived empirical Bayes | 0.6986 | 0.8423 |
+| **learned gate on lambda** | 0.6989 | **0.8437** |
+
+The learned gate **beats the closed form on both benchmarks** (+0.0003 and +0.0013) and is the best rule
+overall on indels, where the unregularised per-assay rule loses. Its correlation with the oracle lambda is
+modest (+0.284 / +0.484), so it is not a sharp predictor — the loss surface is simply flat enough that a
+rough lambda is nearly as good as the optimal one.
+
+**What this establishes and what it does not.** It establishes that the variance axis is a workable target for
+a learned component: a gate that decides *how much to trust the local estimate* is competitive with every
+alternative, including the derived one. It does not establish a significant improvement — the margins are
++0.0003 and +0.0013 on single-split evaluations, and a bootstrap over assays is needed before either can be
+claimed. That is the next run, not a finished result, and this note says so rather than promoting the gate to
+a contribution.
+
+The honest position for this submission is unchanged: the architecture experiment is evidence that the
+direction is viable for a follow-up, not a component of this paper.
+
 ## What still would
 
 A genuinely new architecture was not attempted: inventing one, validating it on three benchmarks and writing
