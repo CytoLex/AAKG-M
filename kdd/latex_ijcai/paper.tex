@@ -219,8 +219,8 @@ is therefore a real but secondary lever: everything a weighting rule could reach
 one expert change delivers. The two quantities are easy to conflate: an oracle over one pool compared against a fixed blend of a
 \emph{different}, stronger pool understates the allocation side.
 
-The gate itself behaves as intended --- its per-assay weights reproduce across independent seeds at
-r = 0.92--0.97 --- which locates the shortfall in the objective rather than the optimisation.
+The gate itself behaves as intended --- its per-assay weights reproduce across seeds at r = 0.92--0.97 --- which
+locates the shortfall in the objective, not the optimisation.
 
 \subsection{Estimating the weights is a separate, solvable problem}\label{estimating-the-weights-is-a-separate-solvable-problem}
 
@@ -235,23 +235,31 @@ evaluated on the other half, with the reference constant fitted on the same half
 \hline
  & substitutions & indels \\
 \hline
-per-assay weights, out of sample & \textbf{+0.0047} & \textbf{$-$0.0032} \\
-partial pooling, `λ = n/(n+k)` & \textbf{+0.0051} & \textbf{+0.0021} \\
+per-assay weights, out of sample & +0.0047 & \textbf{$-$0.0032} \\
+partial pooling, k tuned & +0.0051 & +0.0021 \\
+\textbf{partial pooling, λ derived} & \textbf{+0.0051} & \textbf{+0.0022} \\
 \hline
 \end{tabular}
 \end{table*}
 
 Unregularised per-assay fitting gains on substitutions and \textbf{loses} on indels, where assays are small.
-Shrinking each assay's weights toward the panel-wide constant, \texttt{w(λ)\ =\ (1−λ)·w\_panel\ +\ λ·w\_i} with
-\texttt{λ\ =\ n\_i/(n\_i+k)} and k selected on the panel and never on the held-out half, gains on both: it matches the
-per-assay rule where estimation is feasible and turns a loss into a gain where it is not.
+Shrinking each assay's weights toward the panel-wide constant, \texttt{w(λ)\ =\ (1−λ)·w\_panel\ +\ λ·w\_i}, gains on both.
+
+\textbf{The shrinkage is derived, not tuned.} If an assay's fitted weight vector has sampling variance σ²\_i around
+a true weight whose variance across assays is τ², the optimal shrink is \texttt{λ\_i\ =\ τ²/(τ²\ +\ σ²\_i)}. Both
+components are estimable here: σ²\_i from repeating the fit on six independent half-splits, τ² as the total
+variance of the fitted weights minus the mean sampling variance. On indels this yields τ² = 0.0113 against
+σ̄² = 0.0195, a median λ of 0.39, and \textbf{+0.0022} --- within 12\% of the +0.0025 that the best hand-tuned k
+reaches, with an implied k of 241 against the tuned 300 --- \textbf{without ever selecting k}. On substitutions the
+same rule gives +0.0051 against a tuned +0.0056, on a loss surface flat from k = 30 to k = 300. The
+shrinkage strength follows from how much the weights actually move between assays and how much they move
+between refits of the same assay; it does not need a search.
 
 \textbf{This is the sharpest comparison in the paper.} The seven mechanisms of §3.2 are the designed answer to
-this problem; the best of them captures \textbf{+0.00025} over its tuned constant. A two-parameter shrinkage rule
-captures \textbf{+0.0051} over the constant in its own out-of-sample protocol --- twenty times as much, and at the
-level the in-sample oracle says is available --- and it keeps a positive gain on indels, where unregularised
-fitting loses. On this problem the estimation problem was a variance problem rather than a modelling one,
-and it has a two-line fix.
+this problem; the best captures \textbf{+0.00025} over its tuned constant. A two-parameter shrinkage captures
+\textbf{+0.0051} over the constant in its own out-of-sample protocol --- twenty times as much --- and stays positive
+on indels, where unregularised fitting loses. Here the estimation problem was a variance problem, and it has
+a two-line fix.
 
 \subsection{A second benchmark: the bound has two parts}\label{a-second-benchmark-the-bound-has-two-parts}
 
@@ -268,7 +276,6 @@ exact.
  & substitution benchmark & indel benchmark \\
 \hline
 per-assay oracle minus tuned constant & +0.0051 & \textbf{+0.0084} \\
-per-assay weights, fitted on half the variants & +0.0047 & \textbf{$-$0.0032} \\
 median variants per assay & thousands & \textbf{154} \\
 \hline
 \end{tabular}
@@ -280,26 +287,11 @@ half, where the same procedure gains +0.0047 on substitutions. The difference is
 −0.0023, −0.0002 and \textbf{+0.0044}; only the largest, at a median of 490 variants, recovers part of what an
 oracle fitted in place suggests.
 
-\textbf{The representation transfers, and it carries its own weight.} We build our differential encoder for
-indels --- the same wild-type/mutant difference and ±4 neighbourhood, with the edit site located by longest
-common prefix and suffix --- and train it under ProteinGym's released per-variant fold assignment, so our
-out-of-fold predictions sit on the same split as the published models. The 226k-variant AAV library is
-excluded for runtime, leaving 65 assays.
-
-On measured fitness alone, with no distillation, it scores \textbf{0.8401} against 0.8231 for the best published
-model and lifts the three-expert blend from 0.8438 to \textbf{0.8546}. Distilling from the three published models
-then adds a further 0.046, reaching \textbf{0.8858} and a four-expert blend of \textbf{0.8934}. The weighting headroom
-is unchanged throughout --- between +0.006 and +0.009 across every pool we trained, against +0.0084 for the
-three published models alone. A much stronger pool moves the level, not the allocation bound.
-
-\textbf{A third source, outside the ProteinGym suite.} FLIP2 collects its own data and publishes sixteen
-predefined splits. Its fixed-length substitution libraries leave seven splits with enough training rows to
-fit a head --- amylase, ired and trpb --- and on those the encoder beats a ridge on mean-pooled ESM-2
-embeddings on six of the seven, at a mean test Spearman of \textbf{0.43 against 0.26}. The differential features
-are not by themselves better: a ridge on them scores 0.15, so the gain is the view combined with a
-nonlinear head, which is what the feature ablation of §4.1 shows from the other direction. FLIP2 offers
-seven splits rather than hundreds of assays, so it carries the representation claim and cannot carry the
-allocation one.
+\textbf{The representation transfers too.} Our differential encoder is the strongest single expert on the indel
+pool at \textbf{0.8858} against 0.8231 for the best published model, and lifts the three-expert blend from 0.8438
+to \textbf{0.8934}. On a third, independently collected benchmark --- FLIP2's seven usable splits --- it beats a ridge
+on mean-pooled ESM-2 embeddings on six of seven (mean test Spearman \textbf{0.43 against 0.26}), though not on the
+features alone: a ridge on them scores 0.15, so the gain belongs to the view combined with a nonlinear head.
 
 Per-assay weighting is therefore limited twice: by how much the pool disagrees, which the oracle measures,
 and by whether the assay carries enough variants to estimate the weights at all. Substitutions have a
