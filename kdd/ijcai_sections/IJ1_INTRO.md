@@ -42,8 +42,11 @@ the effort into experts, and pool when you do weight.
    at or below a tuned constant; an oracle bounding the allocatable gain at +0.0051 against +0.0122 for an
    expert change; and partial pooling, which recovers +0.0051 and +0.0021 where naive per-assay fitting
    loses and recovers less. We argue the oracle and the tuned constant belong in every baseline table.
-2. **An expert built from differential representations**, with the ablation locating the signal: the
-   wild-type-minus-mutant difference and the local neighbourhood carry +0.116; stacking layers is negative.
+2. **A measurement of where a mutation's signal lives.** Ablating the representation shows that the
+   wild-type-minus-mutant difference and the local neighbourhood carry +0.116 while stacking more layers is
+   negative, and a control arm shows the category structure is what the residual needs (+0.0214 against a
+   shared branch with a fifth of the parameters). The expert is the vehicle; the finding is that the
+   representation, not the capacity, is what moves the number.
 3. **A utility characterisation that makes the ranking usable** — top-of-list recall by functional
    category, and the assay-size regime over which the advantage holds. It converts one aggregate number
    into the two facts a campaign needs: how much of the top of the list to trust, and for which property.

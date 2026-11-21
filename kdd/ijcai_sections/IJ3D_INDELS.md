@@ -8,13 +8,12 @@ exact.
 | | substitution benchmark | indel benchmark |
 |---|---:|---:|
 | per-assay oracle minus tuned constant | +0.0051 | **+0.0084** |
-| share of that gap surviving a held-out-variant split | 44% | **−19%** |
+| per-assay weights, fitted on half the variants | +0.0047 | **−0.0032** |
 | median variants per assay | thousands | **154** |
 
 The oracle gap is 1.6 times larger on indels, which on its own would say allocation headroom is
-substantial here. The split test says otherwise: weights selected on half an assay's variants **lose** to
-the constant by 0.0024 on the other half — negative in all ten random splits we drew (±0.0020) — where the
-same procedure on substitutions transfers 44% of the in-place gain. The difference is assay size. Across indel assay-size quartiles the transfer is −0.0053,
+substantial here. The split test says otherwise: weights selected on half an assay's variants **lose** 0.0032 on the other
+half, where the same procedure gains +0.0047 on substitutions. The difference is assay size. Across indel assay-size quartiles the out-of-sample gain is −0.0053,
 −0.0023, −0.0002 and **+0.0044**; only the largest, at a median of 490 variants, recovers part of what an
 oracle fitted in place suggests.
 

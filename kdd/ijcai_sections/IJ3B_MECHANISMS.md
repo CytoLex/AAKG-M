@@ -44,27 +44,26 @@ one expert change delivers. The two quantities are easy to conflate: an oracle o
 The gate itself behaves as intended — its per-assay weights reproduce across independent seeds at
 r = 0.92–0.97 — which locates the shortfall in the objective rather than the optimisation.
 
-#**Having the weights and being able to estimate them are different problems, and the second is fixable.**
-In an out-of-sample protocol — weights fitted on half an assay's variants and evaluated on the other half —
-the per-assay rule gains **+0.0047** on substitutions but *loses* **0.0032** on indels, where assays are
-small. Pooling each assay's weights toward the panel-wide constant — `w(λ) = (1−λ)·w_panel + λ·w_i` with
-`λ = n_i/(n_i+k)` and k selected on the panel, never on the held-out half — gains **+0.0051** and
-**+0.0021** respectively: partial pooling matches the per-assay rule where estimation is feasible and turns
-a loss into a gain where it is not.
-Partial pooling is therefore the right way to adapt weights on this problem — not because it finds new
-headroom, but because it is the only version that survives small assays.
+## 3.4 Estimating the weights is a separate, solvable problem
 
-# 3.4 The headroom is real, and it is not noise
+The bound says what weightings could reach. Whether an assay's own variants can *find* those weights is a
+different question, and it has to be asked out of sample: weights fitted on half an assay's variants and
+evaluated on the other half, with the reference constant fitted on the same half of the other assays.
 
-A small oracle gain invites the objection that the oracle is fitting its own noise. Variants of each assay
-are split into disjoint halves A and B; weights selected on A and evaluated on B transfer a gain of
-**+0.0028 ± 0.0008** over ten independent splits, which is **44%** of the +0.0063 ± 0.0006 obtainable when
-selection and evaluation share variants. Both halves are aggregated the same way as §3.3, so the two
-quantities are comparable.
+| | substitutions | indels |
+|---|---:|---:|
+| per-assay weights, out of sample | **+0.0047** | **−0.0032** |
+| partial pooling, `λ = n/(n+k)` | **+0.0051** | **+0.0021** |
 
-The per-assay optimum is therefore a stable property of the assay rather than an artefact of selection,
-and what survives (+0.0028) is an order of magnitude above the best of the seven mechanisms (+0.00025) —
-the headroom exists and is partly estimable, and it is not a function of the context statistics anyone
-computes: a ridge \cite{rasmussen2006} from those statistics to the oracle weights reaches 0.6860, below the
-constant, so the fitted direction is actively wrong.
+Unregularised per-assay fitting gains on substitutions and **loses** on indels, where assays are small.
+Shrinking each assay's weights toward the panel-wide constant, `w(λ) = (1−λ)·w_panel + λ·w_i` with
+`λ = n_i/(n_i+k)` and k selected on the panel and never on the held-out half, gains on both: it matches the
+per-assay rule where estimation is feasible and turns a loss into a gain where it is not.
+
+**This is the sharpest comparison in the paper.** The seven mechanisms of §3.2 are the designed answer to
+this problem; the best of them captures **+0.00025** over its tuned constant. A two-parameter shrinkage rule
+captures **+0.0051** over the constant in its own out-of-sample protocol — twenty times as much, and at the
+level the in-sample oracle says is available — and it keeps a positive gain on indels, where unregularised
+fitting loses. On this problem the estimation problem was a variance problem rather than a modelling one,
+and it has a two-line fix.
 
