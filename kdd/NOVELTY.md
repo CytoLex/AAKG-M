@@ -76,7 +76,7 @@ vector, so every gain was zero and the correlation had no variance to explain. A
 was computed inside a per-assay loop, making the job O(n^2 * grid); it did not finish in an hour on a 4090 and
 had to be rewritten around a single score matrix, after which it completes in minutes on an H100.
 
-## The architecture experiment: gating on the variance axis
+## The architecture experiment: gating on the variance axis — and why it does not hold up
 
 The idea was to gate on a different variable. Every gating layer in this literature outputs a weight vector
 over experts; the paper's own measurements say that axis is nearly exhausted and the binding constraint is
@@ -87,31 +87,33 @@ lambda_i = gate(n_i, disagreement_i, expert-score spread, their interaction)
 w(lam)   = (1 - lam) * w_panel + lam * w_i
 ```
 
-The gate is fitted leave-one-assay-out to each assay's own out-of-sample optimal lambda, and every rule is
-then scored on a fresh split.
+Fitted leave-one-assay-out to each assay's own out-of-sample optimal lambda, then scored on five fresh splits
+with a bootstrap over assays, re-aggregating inside every resample.
 
 | rule | substitutions | indels |
 |---|---:|---:|
-| constant | 0.6936 | 0.8413 |
-| unregularised per-assay | **0.6997** | 0.8391 |
-| tuned k = 300 | 0.6988 | 0.8431 |
-| derived empirical Bayes | 0.6986 | 0.8423 |
-| **learned gate on lambda** | 0.6989 | **0.8437** |
+| unregularised per-assay | **0.6993** | 0.8389 |
+| tuned k = 300 | 0.6992 | 0.8436 |
+| derived empirical Bayes | **0.6993** | 0.8427 |
+| learned gate on lambda | 0.6991 | **0.8436** |
 
-The learned gate **beats the closed form on both benchmarks** (+0.0003 and +0.0013) and is the best rule
-overall on indels, where the unregularised per-assay rule loses. Its correlation with the oracle lambda is
-modest (+0.284 / +0.484), so it is not a sharp predictor — the loss surface is simply flat enough that a
-rough lambda is nearly as good as the optimal one.
+| comparison | substitutions | indels |
+|---|---|---|
+| gate − EB | **−0.0002** [−0.0004, +0.0000] | +0.0009 [+0.0003, +0.0016] |
+| gate − tuned k=300 | −0.0001 [−0.0002, +0.0000] | +0.0001 [−0.0003, +0.0004] |
 
-**What this establishes and what it does not.** It establishes that the variance axis is a workable target for
-a learned component: a gate that decides *how much to trust the local estimate* is competitive with every
-alternative, including the derived one. It does not establish a significant improvement — the margins are
-+0.0003 and +0.0013 on single-split evaluations, and a bootstrap over assays is needed before either can be
-claimed. That is the next run, not a finished result, and this note says so rather than promoting the gate to
-a contribution.
+**The gate is not justified.** On substitutions it is *worse* than the closed form, with an interval that
+excludes zero. On indels it does beat the closed form, but it is indistinguishable from a tuned constant
+(+0.0001, P = 0.63). So the learned component adds nothing that tuning does not already capture.
 
-The honest position for this submission is unchanged: the architecture experiment is evidence that the
-direction is viable for a follow-up, not a component of this paper.
+An earlier single-split run reported +0.0003 and +0.0013 and looked like a win. Five splits and a bootstrap
+turned one of those negative and the other into a tie with tuning. That is exactly what the interval was run
+to find, and it is why the result was held back rather than written up.
+
+**What this settles.** The paper's positioning as a measurement contribution is not a fallback — it is the
+correct reading of the evidence. The variance axis is real (the closed form works, and per-assay fitting
+fails), but building a learned layer on it buys nothing over the two-parameter version. A follow-up paper
+would need a different idea, not this one.
 
 ## What still would
 
