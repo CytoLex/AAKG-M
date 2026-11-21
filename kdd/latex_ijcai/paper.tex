@@ -255,6 +255,13 @@ same rule gives +0.0051 against a tuned +0.0056, on a loss surface flat from k =
 shrinkage strength follows from how much the weights actually move between assays and how much they move
 between refits of the same assay; it does not need a search.
 
+\textbf{And it is predictable before you fit.} The oracle gain is not evenly spread across assays: it is
+explained by how much the experts disagree on that assay (r = \textbf{+0.534} on substitutions, \textbf{+0.348} on
+indels) and, negatively, by how much data the assay has (r = −0.279). A linear predictor of the gain from
+those two statistics, fitted leave-one-assay-out, reaches r = \textbf{+0.554} without ever fitting a per-assay
+weight vector. Whether adapting the weights is worth attempting is therefore a property of the assay that can
+be read off before any of it is done.
+
 \textbf{This is the sharpest comparison in the paper.} The seven mechanisms of §3.2 are the designed answer to
 this problem; the best captures \textbf{+0.00025} over its tuned constant. A two-parameter shrinkage captures
 \textbf{+0.0051} over the constant in its own out-of-sample protocol --- twenty times as much --- and stays positive

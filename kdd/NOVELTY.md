@@ -51,14 +51,33 @@ It does not buy architectural novelty, and the paper should not claim any. The h
 measurement paper with a derived estimator, which is what the title, the introduction and the contributions
 now say.
 
-## What would raise novelty further, and why it was not done
+## The predictive criterion — now done
 
-A **predictive criterion** — "apply per-assay weighting iff a computable statistic exceeds a threshold" —
-would move the paper from measurement to prediction. The attempt is in `headroom/eb.py`: it relates the
-per-assay oracle gain to expert disagreement. That run returned NaN on both benchmarks because of a
-degenerate correlation in the disagreement estimator, and the fix was not completed in this session. The
-code path is there and the numbers would be a one-job follow-up.
+The gap recorded here earlier is closed. The per-assay oracle gain is not evenly spread, and both drivers are
+measurable before any weight is fitted:
+
+| | substitutions (182) | indels (65) |
+|---|---:|---:|
+| corr(oracle gain, expert disagreement) | **+0.534** | **+0.348** |
+| corr(oracle gain, log variants) | −0.279 | −0.126 |
+| leave-one-assay-out predictor from both | **+0.554** | **+0.258** |
+
+So "how much could weighting gain here" is predictable from how much the experts disagree on an assay and how
+much data it has — two statistics computable before fitting anything. That moves the paper from measuring the
+allocation headroom to predicting *where* it is.
+
+Stated precisely: the decision rule built on the predictor matches always-weighting (0.7027 against 0.7029 on
+substitutions, 0.8534 against 0.8534 on indels) rather than beating it, which is expected since a per-assay
+oracle cannot lose to the constant by construction. The value is diagnostic, not a gain: it tells a
+practitioner whether the fitting exercise is worth starting.
+
+The earlier failure was two bugs, both worth recording. The "constant" and the "oracle" were the same weight
+vector, so every gain was zero and the correlation had no variance to explain. And the leave-one-out constant
+was computed inside a per-assay loop, making the job O(n^2 * grid); it did not finish in an hour on a 4090 and
+had to be rewritten around a single score matrix, after which it completes in minutes on an H100.
+
+## What still would
 
 A genuinely new architecture was not attempted: inventing one, validating it on three benchmarks and writing
-it up is not something that can be done honestly inside a revision pass, and a half-validated new component
-would weaken the paper rather than strengthen it.
+it up honestly does not fit inside a revision pass, and a half-validated new component would weaken the paper
+rather than strengthen it.
