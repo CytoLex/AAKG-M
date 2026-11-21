@@ -86,13 +86,16 @@ def esc(t):
 def make_table(n):
     hdr, rows = tables[n - 1]
     cols = "l" + "r" * (len(hdr) - 1)
-    o = ["\\begin{table*}[t]", "\\centering", "\\small",
+    # narrow tables go in a single column: full-width floats compete for the top of each page and a spare
+    # one is pushed to a page of its own
+    env = "table*" if len(hdr) > 3 else "table"
+    o = ["\\begin{" + env + "}[!t]", "\\centering", "\\small",
          "\\begin{tabular}{" + cols + "}", "\\hline",
          " & ".join(esc(h) for h in hdr) + r" \\", "\\hline"]
     for r in rows:
         r = r + [""] * (len(hdr) - len(r))
         o.append(" & ".join(esc(c) for c in r[:len(hdr)]) + r" \\")
-    o += ["\\hline", "\\end{tabular}", "\\end{table*}"]
+    o += ["\\hline", "\\end{tabular}", "\\end{" + env + "}"]
     return "\n".join(o)
 
 

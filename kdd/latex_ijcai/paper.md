@@ -40,10 +40,12 @@ the effort into experts, and pool when you do weight.
 
 ## Contributions
 
-1. **A bounded, replicated and actionable account of weighting.** Seven mechanisms under one protocol, all
-   at or below a tuned constant; an oracle bounding the allocatable gain at +0.0051 against +0.0122 for an
-   expert change; and partial pooling, which recovers +0.0051 and +0.0021 where naive per-assay fitting
-   loses and recovers less. We argue the oracle and the tuned constant belong in every baseline table.
+1. **A diagnostic protocol for fusion, and what it finds here.** Three numbers per pool — the oracle bound,
+   the estimability of the weights, and a variance-derived shrinkage with no free parameter. Applied to
+   seven gating mechanisms, three benchmarks and two expert pools it gives +0.0051 of allocatable headroom
+   against +0.0122 for an expert change, and a shrinkage rule that recovers +0.0051 and +0.0021 where naive
+   per-assay fitting loses. The protocol is the transferable part: the natural cross-pool comparison would
+   have reported +0.0027 for the same quantity, an 85% error.
 2. **A measurement of where a mutation's signal lives.** Ablating the representation shows that the
    wild-type-minus-mutant difference and the local neighbourhood carry +0.116 while stacking more layers is
    negative, and a control arm shows the category structure is what the residual needs (+0.0214 against a
@@ -106,6 +108,11 @@ magnitude larger than the effect.
 
 ## 3.2 Seven mechanisms, one protocol
 
+**A fusion result needs three numbers, not one**: how much any weighting of the pool could gain (an oracle),
+how much of that an assay's own data can estimate (a split-half), and which estimator reaches it. Reporting
+only the first invites a cross-pool comparison that is easy to make and wrong — that comparison reads +0.0027
+for this paper's own allocation headroom, against **+0.0051** measured inside one pool, an 85% error.
+
 We evaluate six label-free conditioning mechanisms plus the tuned constant they all must beat, on
 ProteinGym \cite{proteingym}: 217 substitution assays, 651 assay-by-split units, official
 category-balanced aggregation. Every mechanism is label-free with respect to the assay being scored —
@@ -123,12 +130,8 @@ files, verified on all three schemes for a 9,576-variant assay.
 | ridge context → weights | 0.685109 | −0.002528 | [−0.007833, +0.000676] |
 | per-variant consensus (median) | 0.670492 | −0.017146 | [−0.026771, −0.011115] |
 
-One mechanism clears the constant, by +0.00025, with a confidence interval straddling zero; four more
-land within 0.0006 below it, the same magnitude on the other side. The two that fail badly do so
-instructively — a context regressed onto weights scores below the constant, so the regression is actively
-harmful, and a per-variant median discards the magnitude that separates a strong predictor from a weak
-one. **No mechanism is separated from a tuned constant by more than the seed-to-seed spread of the models
-themselves.**
+One mechanism clears the constant by +0.00025 with an interval straddling zero; four land within 0.0006
+below. **None is separated from the constant by more than the seed-to-seed spread of the models themselves.**
 
 ## 3.3 The bound, measured against the expert lever
 
@@ -195,10 +198,10 @@ different mutation type, and a different expert pool: three published supervised
 out-of-fold predictions ship with the benchmark, so this half involves no training and the comparison is
 exact.
 
-| | substitution benchmark | indel benchmark |
+| | substitutions | indels |
 |---|---:|---:|
-| per-assay oracle minus tuned constant | +0.0051 | **+0.0084** |
-| median variants per assay | thousands | **154** |
+| oracle minus constant | +0.0051 | **+0.0084** |
+| median variants | thousands | **154** |
 
 The oracle gap is 1.6 times larger on indels, which on its own would say allocation headroom is
 substantial here. The split test says otherwise: weights selected on half an assay's variants **lose** 0.0032 on the other
@@ -240,22 +243,23 @@ report the oracle too.
 If allocation is exhausted, the headroom has to be in the experts. This section builds one from a different view of the same information, and then asks which of its design choices actually carry the
 gain — including one that looks like capacity and turns out to be structure.
 
-## 4.1 What a mutation is, as a signal
+## 4.1 A mechanism test decides the features
 
-A substitution is a difference. We extract per-residue representations from three ESM-2 650M layers
-\cite{esm2} (20, 30, 33) on both the wild-type and the mutated sequence, keep `mut`, `wt` and `mut − wt`,
-and pool a ±4-residue window by mean at layers 30 and 33. The union is 12,800 dimensions per variant. The
-ladder under the per-assay protocol says where the signal comes from:
+If a mutation's effect were a property of the mutant residue, the residue alone would predict it. We test that
+instead of assuming a representation. Three ESM-2 650M layers \cite{esm2} (20, 30, 33) are extracted on both the
+wild-type and the mutated sequence, and the question is what has to be passed to the head:
 
-| representation | score |
-|---|---:|
-| site vector only (layer 33) | 0.467 |
-| + multiple layers | 0.464 |
-| + ±4 neighbourhood | 0.480 |
-| **+ wild-type layers and difference terms** | **0.596** |
+| representation | score | increment |
+|---|---:|---:|
+| site vector of the mutant (layer 33) | 0.467 | — |
+| + three layers stacked | 0.464 | **−0.003** |
+| + ±4-residue neighbourhood | 0.480 | +0.016 |
+| **+ wild-type layers and difference terms** | **0.596** | **+0.116** |
 
-Stacking layers alone is negative; the gain is in the difference and the wild-type context, worth +0.116,
-an order of magnitude more than either other step.
+The mutant's absolute state, even given its neighbourhood, is 0.129 below the differential view, and stacking
+more layers on top of the absolute state *loses* ground. The effect is not a property of the mutant residue;
+it is a property of the change, read in context. The features follow from that: 12,800 dimensions of `mut`, `wt` and `mut − wt` with mean-pooled ±4 windows.
+**The representation is a conclusion about the problem, not a design choice asked of the reader.**
 
 ## 4.2 Distillation, and a residual per functional category
 
@@ -410,14 +414,14 @@ within each fold. The one hyperparameter that materially matters, the distillati
 inside each fold and chose the same value in all five; the broader design space, however, was explored on
 this panel.
 
-**Coverage and shift.** The panel is skewed toward particular protein families, organisms and assay types, and
-performance is not uniform across them; applying this to a family absent from the benchmark should be
-expected to behave like the large-assay regime.
+**Coverage and shift.** The panel is skewed toward particular protein families, organisms and assay types and
+performance is not uniform across them; a family absent from the benchmark should be expected to behave like
+the large-assay regime.
 
-**Scope of the evaluation.** Every result here is on ProteinGym substitutions, ProteinGym indels, or FLIP2's
+**Scope of the evaluation.** Every result is on ProteinGym substitutions, ProteinGym indels, or FLIP2's
 published splits, and the top-of-list analysis characterises a *ranking*. Turning an enriched ranking into a
-measured hit rate is a prospective study against a wet-lab readout, which is a different experiment with a
-different design; the claims in this paper stop at the ranking.
+measured hit rate is a prospective study against a wet-lab readout — a different experiment with a different
+design. The claims here stop at the ranking.
 
 ### Ethical considerations
 
@@ -481,9 +485,7 @@ that characterisation without adopting our method.
 
 ### Implications, and what would falsify us
 
-**If you are evaluating.** Report the oracle and the tuned constant alongside any learned weighting, and the
-per-category breakdown instead of the mean: a ranker's aggregate correlation and its top-of-list recall can
-disagree, and the second is closer to what the downstream experiment measures.
+
 
 
 

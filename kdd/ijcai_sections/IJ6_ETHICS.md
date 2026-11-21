@@ -13,14 +13,14 @@ within each fold. The one hyperparameter that materially matters, the distillati
 inside each fold and chose the same value in all five; the broader design space, however, was explored on
 this panel.
 
-**Coverage and shift.** The panel is skewed toward particular protein families, organisms and assay types, and
-performance is not uniform across them; applying this to a family absent from the benchmark should be
-expected to behave like the large-assay regime.
+**Coverage and shift.** The panel is skewed toward particular protein families, organisms and assay types and
+performance is not uniform across them; a family absent from the benchmark should be expected to behave like
+the large-assay regime.
 
-**Scope of the evaluation.** Every result here is on ProteinGym substitutions, ProteinGym indels, or FLIP2's
+**Scope of the evaluation.** Every result is on ProteinGym substitutions, ProteinGym indels, or FLIP2's
 published splits, and the top-of-list analysis characterises a *ranking*. Turning an enriched ranking into a
-measured hit rate is a prospective study against a wet-lab readout, which is a different experiment with a
-different design; the claims in this paper stop at the ranking.
+measured hit rate is a prospective study against a wet-lab readout — a different experiment with a different
+design. The claims here stop at the ranking.
 
 ### Ethical considerations
 

@@ -1,22 +1,23 @@
 If allocation is exhausted, the headroom has to be in the experts. This section builds one from a different view of the same information, and then asks which of its design choices actually carry the
 gain — including one that looks like capacity and turns out to be structure.
 
-## 4.1 What a mutation is, as a signal
+## 4.1 A mechanism test decides the features
 
-A substitution is a difference. We extract per-residue representations from three ESM-2 650M layers
-\cite{esm2} (20, 30, 33) on both the wild-type and the mutated sequence, keep `mut`, `wt` and `mut − wt`,
-and pool a ±4-residue window by mean at layers 30 and 33. The union is 12,800 dimensions per variant. The
-ladder under the per-assay protocol says where the signal comes from:
+If a mutation's effect were a property of the mutant residue, the residue alone would predict it. We test that
+instead of assuming a representation. Three ESM-2 650M layers \cite{esm2} (20, 30, 33) are extracted on both the
+wild-type and the mutated sequence, and the question is what has to be passed to the head:
 
-| representation | score |
-|---|---:|
-| site vector only (layer 33) | 0.467 |
-| + multiple layers | 0.464 |
-| + ±4 neighbourhood | 0.480 |
-| **+ wild-type layers and difference terms** | **0.596** |
+| representation | score | increment |
+|---|---:|---:|
+| site vector of the mutant (layer 33) | 0.467 | — |
+| + three layers stacked | 0.464 | **−0.003** |
+| + ±4-residue neighbourhood | 0.480 | +0.016 |
+| **+ wild-type layers and difference terms** | **0.596** | **+0.116** |
 
-Stacking layers alone is negative; the gain is in the difference and the wild-type context, worth +0.116,
-an order of magnitude more than either other step.
+The mutant's absolute state, even given its neighbourhood, is 0.129 below the differential view, and stacking
+more layers on top of the absolute state *loses* ground. The effect is not a property of the mutant residue;
+it is a property of the change, read in context. The features follow from that: 12,800 dimensions of `mut`, `wt` and `mut − wt` with mean-pooled ±4 windows.
+**The representation is a conclusion about the problem, not a design choice asked of the reader.**
 
 ## 4.2 Distillation, and a residual per functional category
 

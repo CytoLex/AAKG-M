@@ -33,9 +33,7 @@ that characterisation without adopting our method.
 
 ### Implications, and what would falsify us
 
-**If you are evaluating.** Report the oracle and the tuned constant alongside any learned weighting, and the
-per-category breakdown instead of the mean: a ranker's aggregate correlation and its top-of-list recall can
-disagree, and the second is closer to what the downstream experiment measures.
+
 
 
 

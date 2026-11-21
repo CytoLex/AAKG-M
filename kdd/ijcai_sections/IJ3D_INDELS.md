@@ -5,10 +5,10 @@ different mutation type, and a different expert pool: three published supervised
 out-of-fold predictions ship with the benchmark, so this half involves no training and the comparison is
 exact.
 
-| | substitution benchmark | indel benchmark |
+| | substitutions | indels |
 |---|---:|---:|
-| per-assay oracle minus tuned constant | +0.0051 | **+0.0084** |
-| median variants per assay | thousands | **154** |
+| oracle minus constant | +0.0051 | **+0.0084** |
+| median variants | thousands | **154** |
 
 The oracle gap is 1.6 times larger on indels, which on its own would say allocation headroom is
 substantial here. The split test says otherwise: weights selected on half an assay's variants **lose** 0.0032 on the other
