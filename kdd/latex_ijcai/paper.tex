@@ -39,7 +39,8 @@ directly on ProteinGym. A per-assay oracle bounds what any weighting of a fixed 
 \textbf{+0.0051} over a constant fitted on the other assays, against \textbf{+0.0122} for adding one expert:
 allocation is 42\% of the expert lever, the intervals do not overlap, and the bound replicates on the indel
 benchmark. It is a bound under Spearman: under top-of-list recall, the metric a campaign experiences, the
-transferable headroom is 2.8 times larger and standard weights capture a tenth of it. That loss is repairable —
+transferable headroom is 2.8 times larger, standard weights capture a tenth of it, and a rule that optimises that
+recall and then shrinks reaches all of it. That loss is repairable —
 shrinkage toward the panel constant recovers the headroom without per-assay tuning — and it is concentrated: the
 top ambiguity quartile holds 57\% of it. The expert lever is disagreement, not accuracy. Across thirteen
 expert-into-pool pairs, marginal value tracks disagreement at r = \textbf{+0.786} while the weakest expert alone
@@ -84,8 +85,7 @@ wins six of seven splits on FLIP2, an independently collected benchmark.
 \textbf{An aggregate score is not a deployment specification.} The model that reaches 0.694 scores 0.851 on
 stability assays and 0.642 on activity; the top 5\% of its ranking recovers 24.7\% of the true top 5\%, a
 \textbf{4.96x} lift over random that rises to 7.7x on stability and falls to 3.4x on activity; and on the largest
-assay quartile the advantage over the previous fusion is \textbf{+0.00003}. Those three numbers are what let a
-laboratory decide how much of the ordering to trust for its own property and its own assay size.
+assay quartile the advantage over the previous fusion is \textbf{+0.00003}. Those three numbers let a laboratory decide how much of the ordering to trust for its own property and assay size.
 
 The levers are thus ordered, and so is what to do about each: measure the ceiling before tuning weights, put
 the effort into experts, and pool when you do weight.
@@ -100,8 +100,9 @@ the effort into experts, and pool when you do weight.
   the estimability of the weights, and the shrinkage that reaches it. Applied to
   seven gating mechanisms, three benchmarks and two expert pools it gives +0.0051 of allocatable headroom
   against +0.0122 for an expert change, and a shrinkage rule that recovers +0.0051 and +0.0021 where naive
-  per-assay fitting loses. The protocol is the transferable part: the natural cross-pool comparison would
-  have reported +0.0027 for the same quantity, an 85\% error.
+  per-assay fitting loses. Applied to the deployment metric instead, the same protocol finds 2.8 times the
+  headroom and yields a two-line rule that reaches all of it. The natural cross-pool comparison would have
+  reported +0.0027 for the same quantity, an 85\% error.
 \item
   \textbf{A measurement of where a mutation's signal lives.} Ablating the representation shows that the
   wild-type-minus-mutant difference and the local neighbourhood carry +0.116 while stacking more layers is
@@ -286,12 +287,10 @@ the oracle to the quarter the predictor ranks highest still captures \textbf{+0.
 practitioner with a panel can therefore rank their own assays by ambiguity and know, before fitting anything,
 which ones make adaptation worth the attempt.
 
-Disagreement between the raw predictions is the weaker signal: it predicts the gain at r = +0.509, and a
-skill-weighted version of it at +0.491. Adjusting correlation for how good the experts are does not help here;
-what helps is measuring the spread of their \emph{scores} rather than the correlation of their \emph{predictions}. Consistent
-with that literature, we report these as a trade-off rather than a maximand: the gain rises with disagreement, but
-pushing disagreement further by residualising an expert against the pool collapsed its standalone accuracy to
-−0.33 and bought nothing.
+Disagreement between the raw predictions is weaker, at r = +0.509, and a skill-weighted version of it at +0.491:
+what helps is the spread of the experts' \emph{scores}, not the correlation of their \emph{predictions}. Consistent with that
+literature we report this as a trade-off rather than a maximand --- the gain rises with disagreement, but pushing it
+further by residualising an expert against the pool collapsed its standalone accuracy to −0.33 and bought nothing.
 
 \textbf{This is the sharpest comparison in the paper.} The seven mechanisms of §3.2 are the designed answer to
 this problem; the best captures \textbf{+0.00025} over its tuned constant. A two-parameter shrinkage captures
@@ -341,29 +340,26 @@ estimation noise. \textbf{Assay size, not only pool diversity, decides whether a
 This is the forecast combination puzzle \cite{claeskens2016forecast}, measured in a domain where it had not been: weight
 estimation error, not a shortage of mechanisms, is what caps the adaptation lever.
 
-\textbf{Report against tuned constants, not fixed blends.} A gate beating a fixed 50/50 blend by +0.0047 is commonly
-reported as evidence that conditioning works; against a tuned constant the same gate is +0.0002. The gain
-attributed to conditioning is mostly the gain from \emph{tuning at all}.
-
-\textbf{A per-assay oracle should be a reported baseline.} It costs nothing to compute and converts ``our gate
-improves over the previous gate'' into ``our gate captures \emph{x} percent of the available headroom'', which is
-the only number telling a reader whether the mechanism is worth its complexity. Here \emph{x} is the fraction that
-a tuned constant leaves on the table.
-
 \textbf{The bound is a function of the metric, and we should say so.} Every oracle in this paper maximises Spearman,
 including the +0.0051 that sets the headline. Recomputing the same bound under the metric §5 argues a campaign
 actually experiences --- top-of-list recall --- changes its size: out of sample, the transferable headroom is \textbf{+0.0130}
 at top-5\% recall against \textbf{+0.0046} for Spearman, a factor of 2.8, and the weights a Spearman objective selects
-capture only \textbf{10.4\%} of it. So the lever is small in the aggregate and roughly three times larger in the deployment metric, with no standard
-rule reaching the latter: +0.0051 bounds Spearman at fixed pool and per-assay weights, and is not a claim that
-weighting is worthless under a ranking objective.
+capture only \textbf{10.4\%} of it. So the lever is small in the aggregate and roughly three times larger in the
+deployment metric, with no standard rule reaching the latter: +0.0051 bounds Spearman at fixed pool and per-assay
+weights, and is not a claim that weighting is worthless under a ranking objective.
+
+\textbf{The rule that reaches it is two lines.} Fit each assay's weights to maximise top-5\% recall on half its variants,
+then shrink toward the panel constant. Unshrunk, the noisy counting statistic is worthless --- 0.2403, exactly the
+constant's own 0.2403 --- which is why the field does not do this. Shrunk, it reaches \textbf{0.2533}, the full transferable
+headroom, against \textbf{0.2427} for weights a Spearman objective selects. The shrinkage is what makes the deployment
+metric usable, exactly as it was for the aggregate in §3.4; smooth surrogates for the counting statistic did not
+help (0.2401), so the noisy objective plus shrinkage beats the smooth objective without it.
 
 \textbf{When the oracle is small, the pool is the problem.} If no weighting of these experts can gain more
 than +0.0051, the next +0.01 has to come from an expert that disagrees usefully. §4 builds one.
 
-The claim is bounded by the pool: the oracle is a function of how much the experts disagree, so a pool
-built to disagree might make gating worthwhile again --- a different paper, and one that would have to
-report the oracle too.
+The claim is bounded by the pool: the oracle is a function of how much the experts disagree, so a pool built to
+disagree could make gating worthwhile again --- a different paper that would have to report the oracle too.
 
 \section{The expert}\label{the-expert}
 
@@ -446,9 +442,8 @@ against \textbf{0.657028} for Kermut \cite{kermut} --- +0.0085 over the previous
 
 \subsection{What the ablation rules out}\label{what-the-ablation-rules-out}
 
-Two ablations agree. \textbf{Co-distillation from the fusion} lifts the expert by +0.0136 (8/8 seeds) and leaves the
-fusion at −0.0002, because teaching it to imitate the pool removes the disagreement that gave it value. \textbf{A
-residual expert} trained on the fusion's own error receives weight exactly zero in every fold.
+Two ablations agree: \textbf{co-distillation from the fusion} lifts the expert by +0.0136 but leaves the fusion at
+−0.0002, and \textbf{a residual expert} trained on the fusion's own error receives weight zero in every fold.
 
 \textbf{An expert's value is its disagreement, not its accuracy.} Measuring this directly: each of the five experts
 in the bundle is added to the pool formed by the other four, under the nested-constant protocol, and its marginal
@@ -661,12 +656,11 @@ Two things remain: what this work gives the domain it studies, and what would ov
 
 \subsubsection*{What this contributes to protein engineering}\label{what-this-contributes-to-protein-engineering}
 
-A protein engineer choosing mutations against an assay budget needs a ranking they can act on, and the
-field's papers are not organised around that. Two deliverables follow. The first is a \textbf{calibrated
-expectation}: taking the top 5\% recovers 24.7\% of the true top 5\%, but 7.7x on stability assays against
-3.4x on activity, and no advantage on the largest assays --- a laboratory can use that profile to decide
-how much of the ordering to trust for the property it cares about, a statement aggregate Spearman cannot
-express. The second is \textbf{the boundary}: 87 regressing assays, the category that regresses on average, and
+A protein engineer choosing mutations against an assay budget needs a ranking they can act on, and the field's
+papers are not organised around that. Two deliverables follow. The first is a \textbf{calibrated expectation}: the top 5\%
+recovers 24.7\% of the true top 5\%, 7.7x on stability assays against 3.4x on activity, and no advantage on the
+largest --- a profile that lets a laboratory decide how much of the ordering to trust for its own property, which
+aggregate Spearman cannot express. The second is \textbf{the boundary}: 87 regressing assays, the category that regresses on average, and
 the size regime at parity. For a practitioner the boundary is worth more than the mean, because it is the
 difference between trusting a ranking on a familiar assay family and being surprised on a new one.
 

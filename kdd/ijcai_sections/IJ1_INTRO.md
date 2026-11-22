@@ -30,8 +30,7 @@ wins six of seven splits on FLIP2, an independently collected benchmark.
 **An aggregate score is not a deployment specification.** The model that reaches 0.694 scores 0.851 on
 stability assays and 0.642 on activity; the top 5% of its ranking recovers 24.7% of the true top 5%, a
 **4.96x** lift over random that rises to 7.7x on stability and falls to 3.4x on activity; and on the largest
-assay quartile the advantage over the previous fusion is **+0.00003**. Those three numbers are what let a
-laboratory decide how much of the ordering to trust for its own property and its own assay size.
+assay quartile the advantage over the previous fusion is **+0.00003**. Those three numbers let a laboratory decide how much of the ordering to trust for its own property and assay size.
 
 The levers are thus ordered, and so is what to do about each: measure the ceiling before tuning weights, put
 the effort into experts, and pool when you do weight.
@@ -42,8 +41,9 @@ the effort into experts, and pool when you do weight.
    the estimability of the weights, and the shrinkage that reaches it. Applied to
    seven gating mechanisms, three benchmarks and two expert pools it gives +0.0051 of allocatable headroom
    against +0.0122 for an expert change, and a shrinkage rule that recovers +0.0051 and +0.0021 where naive
-   per-assay fitting loses. The protocol is the transferable part: the natural cross-pool comparison would
-   have reported +0.0027 for the same quantity, an 85% error.
+   per-assay fitting loses. Applied to the deployment metric instead, the same protocol finds 2.8 times the
+   headroom and yields a two-line rule that reaches all of it. The natural cross-pool comparison would have
+   reported +0.0027 for the same quantity, an 85% error.
 2. **A measurement of where a mutation's signal lives.** Ablating the representation shows that the
    wild-type-minus-mutant difference and the local neighbourhood carry +0.116 while stacking more layers is
    negative, and a control arm shows the category structure is what the residual needs (+0.0214 against a

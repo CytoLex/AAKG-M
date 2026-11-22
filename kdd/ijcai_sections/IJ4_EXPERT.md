@@ -61,9 +61,8 @@ against **0.657028** for Kermut \cite{kermut} — +0.0085 over the previous fusi
 
 ## 4.4 What the ablation rules out
 
-Two ablations agree. **Co-distillation from the fusion** lifts the expert by +0.0136 (8/8 seeds) and leaves the
-fusion at −0.0002, because teaching it to imitate the pool removes the disagreement that gave it value. **A
-residual expert** trained on the fusion's own error receives weight exactly zero in every fold.
+Two ablations agree: **co-distillation from the fusion** lifts the expert by +0.0136 but leaves the fusion at
+−0.0002, and **a residual expert** trained on the fusion's own error receives weight zero in every fold.
 
 **An expert's value is its disagreement, not its accuracy.** Measuring this directly: each of the five experts
 in the bundle is added to the pool formed by the other four, under the nested-constant protocol, and its marginal

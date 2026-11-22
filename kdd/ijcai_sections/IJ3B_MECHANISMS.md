@@ -83,12 +83,10 @@ the oracle to the quarter the predictor ranks highest still captures **+0.0050**
 practitioner with a panel can therefore rank their own assays by ambiguity and know, before fitting anything,
 which ones make adaptation worth the attempt.
 
-Disagreement between the raw predictions is the weaker signal: it predicts the gain at r = +0.509, and a
-skill-weighted version of it at +0.491. Adjusting correlation for how good the experts are does not help here;
-what helps is measuring the spread of their *scores* rather than the correlation of their *predictions*. Consistent
-with that literature, we report these as a trade-off rather than a maximand: the gain rises with disagreement, but
-pushing disagreement further by residualising an expert against the pool collapsed its standalone accuracy to
-−0.33 and bought nothing.
+Disagreement between the raw predictions is weaker, at r = +0.509, and a skill-weighted version of it at +0.491:
+what helps is the spread of the experts' *scores*, not the correlation of their *predictions*. Consistent with that
+literature we report this as a trade-off rather than a maximand — the gain rises with disagreement, but pushing it
+further by residualising an expert against the pool collapsed its standalone accuracy to −0.33 and bought nothing.
 
 **This is the sharpest comparison in the paper.** The seven mechanisms of §3.2 are the designed answer to
 this problem; the best captures **+0.00025** over its tuned constant. A two-parameter shrinkage captures
