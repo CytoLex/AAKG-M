@@ -185,10 +185,10 @@ with σ²_i the sampling variance of an assay's fitted weights from six half-spl
 variance — and on indels it reaches **+0.0022** against +0.0025 for a hand-tuned k with no search.
 
 The control says what does the work: **permuting those coefficients across assays** changes the gain by at most
-**+0.0005** on indels, inside the permutation's own spread, and is 0.0009 *better* on substitutions. **What matters
-is that the estimate is shrunk at all, not how finely** — on indels a flat λ of 0.60 gains +0.0062 where the
-derived median of 0.41 gains +0.0052, so the closed form is, if anything, over-shrinking. We report the per-assay
-version for needing no hand-chosen constant, not because its adaptivity earns anything.
+**+0.0005** on indels, inside the permutation's own spread, and is 0.0009 *better* on substitutions. **What matters is that the
+estimate is shrunk at all, not how finely**: on indels a flat λ of 0.60 gains +0.0062 where the derived median of
+0.41 gains +0.0052, so the closed form is, if anything, over-shrinking. We report the per-assay version for needing
+no hand-chosen constant, not because its adaptivity earns anything.
 
 **And it is predictable before you fit.** The oracle gain is not evenly spread across assays. It is explained by
 the **ambiguity** of the pool on that assay — the variance of the experts' own scores, the term the ensemble
@@ -249,15 +249,22 @@ estimation noise. **Assay size, not only pool diversity, decides whether adaptin
 This is the forecast combination puzzle \cite{claeskens2016forecast}, measured in a domain where it had not been: weight
 estimation error, not a shortage of mechanisms, is what caps the adaptation lever.
 
-**Report against tuned constants, not fixed blends.** A gate beating a fixed 50/50 blend by +0.0047 is
-commonly reported as evidence that conditioning works; against a constant tuned on held-out assays the
-same gate is +0.0002, a statistical tie. The gain attributed to conditioning is mostly the gain from
-*tuning at all*.
+**Report against tuned constants, not fixed blends.** A gate beating a fixed 50/50 blend by +0.0047 is commonly
+reported as evidence that conditioning works; against a tuned constant the same gate is +0.0002. The gain
+attributed to conditioning is mostly the gain from *tuning at all*.
 
 **A per-assay oracle should be a reported baseline.** It costs nothing to compute and converts "our gate
 improves over the previous gate" into "our gate captures *x* percent of the available headroom", which is
 the only number telling a reader whether the mechanism is worth its complexity. Here *x* is the fraction that
 a tuned constant leaves on the table.
+
+**The bound is a function of the metric, and we should say so.** Every oracle in this paper maximises Spearman,
+including the +0.0051 that sets the headline. Recomputing the same bound under the metric §5 argues a campaign
+actually experiences — top-of-list recall — changes its size: out of sample, the transferable headroom is **+0.0130**
+at top-5% recall against **+0.0046** for Spearman, a factor of 2.8, and the weights a Spearman objective selects
+capture only **10.4%** of it. So the lever is small in the aggregate and roughly three times larger in the deployment metric, with no standard
+rule reaching the latter: +0.0051 bounds Spearman at fixed pool and per-assay weights, and is not a claim that
+weighting is worthless under a ranking objective.
 
 **When the oracle is small, the pool is the problem.** If no weighting of these experts can gain more
 than +0.0051, the next +0.01 has to come from an expert that disagrees usefully. §4 builds one.
@@ -451,11 +458,9 @@ expert elsewhere moves the weights applied to them.
 
 ### Limitations
 
-**The method's operating range is specific, and §5.3 measures it**: top-of-list recall is roughly twice
-as high on stability assays as on activity assays, the improvement over the previous fusion reaches
-+0.00003 on the largest assay quartile, and the aggregate is an average over a population that contains
-both regimes rather than a property of any particular assay. A practitioner should read the aggregate as
-the centre of that range and the per-category numbers as the part that applies to their assay.
+**The operating range is specific and §5.3 measures it**: recall is twice as high on stability assays as on
+activity, and the improvement reaches +0.00003 on the largest quartile. The aggregate is the centre of that range,
+not a property of any one assay, and a practitioner should read the per-category numbers as the applicable part.
 
 **The structural experts are inherited, not retrained inside each outer fold**, and every reported number is
 reproducible from the published per-mutant scores; a fully nested protocol would retrain them within each
@@ -485,9 +490,8 @@ assays only.
 
 **Data and released artifacts.** All assays are previously published deep-mutational-scanning datasets distributed by ProteinGym: no new experimental data, no human subjects, no clinical material. The submission includes, as anonymised supplementary material, per-mutant
 predictions for all 696,311 mutants, the code reproducing every reported number, and the recovered kernel
-for the structural experts; all of it is released publicly on publication. The code is under a permissive
-licence, while the expert prediction tables remain research-use only because they derive from third-party
-methods — so a reader can re-run our evaluation but cannot redistribute those tables commercially.
+for the structural experts; all of it is released publicly on publication. The code is permissively licensed; the expert prediction tables are research-use only because they derive from
+third-party methods.
 
 **Generative AI usage.** Analysis scripts, evaluation harnesses and LaTeX assembly were written and
 revised with an AI coding assistant; the prose was drafted with the same assistant and then reviewed,
@@ -525,12 +529,10 @@ on one protein can disagree in sign — so a category-averaged metric can look s
 assays move sharply both ways. And the benchmark ecosystem rewards leaderboard movement over
 characterisation, while characterisation is what a domain user needs most.
 
-On our use of ProteinGym: the track prefers domain-specific data to existing benchmarks, so we state what
-this adds rather than only takes. We verify the benchmark end to end — reproducing its published
-per-assay values for a reference method on 217 of 217 assays, confirming its folds are bit-identical — we
-publish per-mutant predictions for all 696,311 variants so the evaluation is reproducible without our
-code, and we characterise its difficulty structure across categories, sizes and splits. A reader can use
-that characterisation without adopting our method.
+On our use of ProteinGym: the track prefers domain-specific data to existing benchmarks, so we state what this
+adds rather than only takes — the benchmark verified end to end, per-mutant predictions for all 696,311 variants so
+the evaluation is reproducible without our code, and its difficulty structure characterised across categories,
+sizes and splits. A reader can use that characterisation without adopting our method.
 
 ### What this work gives, and what would overturn it
 

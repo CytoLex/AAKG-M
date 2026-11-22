@@ -25,12 +25,10 @@ on one protein can disagree in sign — so a category-averaged metric can look s
 assays move sharply both ways. And the benchmark ecosystem rewards leaderboard movement over
 characterisation, while characterisation is what a domain user needs most.
 
-On our use of ProteinGym: the track prefers domain-specific data to existing benchmarks, so we state what
-this adds rather than only takes. We verify the benchmark end to end — reproducing its published
-per-assay values for a reference method on 217 of 217 assays, confirming its folds are bit-identical — we
-publish per-mutant predictions for all 696,311 variants so the evaluation is reproducible without our
-code, and we characterise its difficulty structure across categories, sizes and splits. A reader can use
-that characterisation without adopting our method.
+On our use of ProteinGym: the track prefers domain-specific data to existing benchmarks, so we state what this
+adds rather than only takes — the benchmark verified end to end, per-mutant predictions for all 696,311 variants so
+the evaluation is reproducible without our code, and its difficulty structure characterised across categories,
+sizes and splits. A reader can use that characterisation without adopting our method.
 
 ### What this work gives, and what would overturn it
 

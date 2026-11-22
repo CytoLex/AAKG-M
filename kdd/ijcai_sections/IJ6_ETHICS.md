@@ -1,10 +1,8 @@
 ### Limitations
 
-**The method's operating range is specific, and §5.3 measures it**: top-of-list recall is roughly twice
-as high on stability assays as on activity assays, the improvement over the previous fusion reaches
-+0.00003 on the largest assay quartile, and the aggregate is an average over a population that contains
-both regimes rather than a property of any particular assay. A practitioner should read the aggregate as
-the centre of that range and the per-category numbers as the part that applies to their assay.
+**The operating range is specific and §5.3 measures it**: recall is twice as high on stability assays as on
+activity, and the improvement reaches +0.00003 on the largest quartile. The aggregate is the centre of that range,
+not a property of any one assay, and a practitioner should read the per-category numbers as the applicable part.
 
 **The structural experts are inherited, not retrained inside each outer fold**, and every reported number is
 reproducible from the published per-mutant scores; a fully nested protocol would retrain them within each
@@ -34,9 +32,8 @@ assays only.
 
 **Data and released artifacts.** All assays are previously published deep-mutational-scanning datasets distributed by ProteinGym: no new experimental data, no human subjects, no clinical material. The submission includes, as anonymised supplementary material, per-mutant
 predictions for all 696,311 mutants, the code reproducing every reported number, and the recovered kernel
-for the structural experts; all of it is released publicly on publication. The code is under a permissive
-licence, while the expert prediction tables remain research-use only because they derive from third-party
-methods — so a reader can re-run our evaluation but cannot redistribute those tables commercially.
+for the structural experts; all of it is released publicly on publication. The code is permissively licensed; the expert prediction tables are research-use only because they derive from
+third-party methods.
 
 **Generative AI usage.** Analysis scripts, evaluation harnesses and LaTeX assembly were written and
 revised with an AI coding assistant; the prose was drafted with the same assistant and then reviewed,

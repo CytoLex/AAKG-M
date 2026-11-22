@@ -65,10 +65,10 @@ with σ²_i the sampling variance of an assay's fitted weights from six half-spl
 variance — and on indels it reaches **+0.0022** against +0.0025 for a hand-tuned k with no search.
 
 The control says what does the work: **permuting those coefficients across assays** changes the gain by at most
-**+0.0005** on indels, inside the permutation's own spread, and is 0.0009 *better* on substitutions. **What matters
-is that the estimate is shrunk at all, not how finely** — on indels a flat λ of 0.60 gains +0.0062 where the
-derived median of 0.41 gains +0.0052, so the closed form is, if anything, over-shrinking. We report the per-assay
-version for needing no hand-chosen constant, not because its adaptivity earns anything.
+**+0.0005** on indels, inside the permutation's own spread, and is 0.0009 *better* on substitutions. **What matters is that the
+estimate is shrunk at all, not how finely**: on indels a flat λ of 0.60 gains +0.0062 where the derived median of
+0.41 gains +0.0052, so the closed form is, if anything, over-shrinking. We report the per-assay version for needing
+no hand-chosen constant, not because its adaptivity earns anything.
 
 **And it is predictable before you fit.** The oracle gain is not evenly spread across assays. It is explained by
 the **ambiguity** of the pool on that assay — the variance of the experts' own scores, the term the ensemble
