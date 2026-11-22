@@ -469,9 +469,12 @@ copy and a negated copy of the expert each score \textbf{+0.0000}.
 
 That reframes what building an expert means: useful disagreement comes from a different \emph{view} of the same
 information --- reference versus mutant, local versus global --- not from a different optimiser, loss or bigger model.
-The objective is to maximise residual disagreement subject to a competence floor, and the floor is real: pushing
-disagreement further by residualising an expert against the pool drove its standalone score to −0.33 and bought
-nothing. \textbf{The principle is not specific to proteins} --- for any pool, an expert's contribution is set by what it
+The objective is to maximise residual disagreement subject to a competence floor, and \textbf{the floor is measurable}.
+Degrading the expert's predictions with noise traces a clean frontier: marginal value peaks at a small degradation
+(ε = 0.25 gains \textbf{+0.0086} against +0.0077 untouched) and then falls monotonically to +0.0063 at ε = 2. \textbf{The
+expert sits within 0.0009 of the frontier} --- a slightly less accurate version would contribute slightly more, and
+the curve falls away steeply from there. The same sweep along a residualisation axis is not a frontier: its
+isolated second peak comes from re-importing per-assay structure, the artefact §3.4 identifies. \textbf{The principle is not specific to proteins} --- for any pool, an expert's contribution is set by what it
 adds that the pool cannot already explain, and its accuracy alone is a poor guide.
 
 
