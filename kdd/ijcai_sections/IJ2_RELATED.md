@@ -10,7 +10,8 @@ reporting any comparison on it.
 **Adaptive weighting, and the combination puzzle.** Mixture-of-experts layers and context-conditioned gates are
 standard across machine learning \cite{jacobs1991,shazeer2017}. Forecast combination has studied their limits for
 longer: combining several forecasts by estimating weights is routinely no better than averaging them, a result
-known as the forecast combination puzzle, and the standard explanation is weight-estimation error \cite{qian2015forecast}.
+known as the forecast combination puzzle \cite{timmermann2006forecast}, with a theoretical explanation in which
+weight-estimation error outweighs the benefit of weighting \cite{claeskens2016forecast}.
 The puzzle has been argued to be partly an artefact of low-power tests \cite{frazier2023solving}, which is why we
 report assay-level intervals and a permutation null rather than a point comparison. \cite{qian2015forecast} also
 separates combining *for improvement* from combining *for adaptation*; that is precisely this paper's split between

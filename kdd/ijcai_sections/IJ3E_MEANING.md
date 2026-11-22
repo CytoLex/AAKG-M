@@ -1,5 +1,5 @@
 ## 3.6 What this means for the field
-This is the forecast combination puzzle \cite{qian2015forecast}, measured in a domain where it had not been: weight
+This is the forecast combination puzzle \cite{claeskens2016forecast}, measured in a domain where it had not been: weight
 estimation error, not a shortage of mechanisms, is what caps the adaptation lever.
 
 **Report against tuned constants, not fixed blends.** A gate beating a fixed 50/50 blend by +0.0047 is
