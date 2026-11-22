@@ -1,4 +1,5 @@
 """Assemble the markdown sections into paper.tex. Deterministic; run before build.sh."""
+import re
 import json, pathlib, re, subprocess, sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
@@ -83,12 +84,15 @@ def esc(t):
     return t
 
 
+WIDE_TABLES = {1}   # the seven-mechanism comparison needs the full width
+
+
 def make_table(n):
     hdr, rows = tables[n - 1]
     cols = "l" + "r" * (len(hdr) - 1)
     # narrow tables go in a single column: full-width floats compete for the top of each page and a spare
     # one is pushed to a page of its own
-    env = "table*" if len(hdr) > 3 else "table"
+    env = "table*" if (n in WIDE_TABLES or len(hdr) > 4) else "table"
     o = ["\\begin{" + env + "}[!t]", "\\centering", "\\small",
          "\\begin{tabular}{" + cols + "}", "\\hline",
          " & ".join(esc(h) for h in hdr) + r" \\", "\\hline"]
@@ -107,7 +111,9 @@ for n in range(1, len(tables) + 1):
         _moved.append(make_table(n))
         tex_body = tex_body.replace(f"TABLEPLACEHOLDER{n}", "")
     else:
-        tex_body = tex_body.replace(f"TABLEPLACEHOLDER{n}", make_table(n))
+        # the lookahead matters: without it "TABLEPLACEHOLDER1" also matches the prefix of
+        # "TABLEPLACEHOLDER10", so the tenth table silently receives the first table's content
+        tex_body = re.sub(rf"TABLEPLACEHOLDER{n}(?!\d)", lambda _m: make_table(n), tex_body)
 for a in ("toprule", "midrule", "bottomrule"):
     tex_body = tex_body.replace("\\" + a, "\\hline")
 (LATEX / "_body.tex").unlink()

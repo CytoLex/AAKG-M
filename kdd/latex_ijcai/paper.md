@@ -73,21 +73,17 @@ standard across machine learning \cite{jacobs1991,shazeer2017}. Forecast combina
 longer: combining several forecasts by estimating weights is routinely no better than averaging them, a result
 known as the forecast combination puzzle \cite{timmermann2006forecast}, with a theoretical explanation in which
 weight-estimation error outweighs the benefit of weighting \cite{claeskens2016forecast}.
-The puzzle has been argued to be partly an artefact of low-power tests \cite{frazier2023solving}, which is why we
-report assay-level intervals and a permutation null rather than a point comparison. \cite{qian2015forecast} also
-separates combining *for improvement* from combining *for adaptation*; that is precisely this paper's split between
-the expert lever and the allocation lever, and our contribution is to measure both in one domain and bound the
-adaptation side.
+It has been argued partly an artefact of low-power tests \cite{frazier2023solving}, which is why we report
+assay-level intervals and a permutation null. \cite{qian2015forecast} separates combining *for improvement* from
+combining *for adaptation* — this paper's expert and allocation levers — and our contribution is to measure both in
+one domain and bound the adaptation side.
 
 **Diversity and ensemble value.** Ensemble error decomposes into average member error minus an ambiguity term, first
 for squared loss and then for any twice-differentiable loss \cite{audhkhasi2013generalized}, and diversity has since
 been shown to be a hidden dimension of the bias-variance decomposition \cite{wood2023unified}. That literature is
-explicit that diversity should be traded off against bias and variance rather than maximised, which is the position
-this paper reaches from the other direction: the disagreement between our experts predicts their marginal value
-(r = +0.63), but pushing it further costs competence faster than it buys disagreement. Our negative result about
-gating does not contradict the gating literature; it locates a regime where the justification fails, because the
-mixture components are correlated at 0.78 to 0.96 within a unit and the conditioning variable is not the one the
-optimal weights depend on.
+explicit that diversity should be traded off against bias and variance rather than maximised, which is where this
+paper arrives from the other direction: disagreement predicts an expert's marginal value (r = +0.63), but pushing
+it further costs competence faster than it buys disagreement.
 
 **Evaluation practice in AI for science.** Aggregate correlation is the standard reporting unit and a poor
 guide to deployment: it is insensitive to where in the ranking errors fall, and it averages over
@@ -184,20 +180,15 @@ evaluated on the other half, with the reference constant fitted on the same half
 Unregularised per-assay fitting gains on substitutions and **loses** on indels, where assays are small.
 Shrinking each assay's weights toward the panel-wide constant, `w(λ) = (1−λ)·w_panel + λ·w_i`, gains on both.
 
-**Shrinkage is the fix, and a single level is enough.** The strength has a closed form: if an assay's fitted
-weight vector has sampling variance σ²_i around a true weight whose variance across assays is τ², the optimal
-shrink is `λ_i = τ²/(τ² + σ²_i)`, with σ²_i from repeating the fit on six independent half-splits and τ² as the
-total variance minus the mean sampling variance. On indels this gives τ² = 0.0113 against σ̄² = 0.0195 and a
-median λ of 0.39, reaching **+0.0022** against +0.0025 for a hand-tuned k — with no search at all.
+**Shrinkage is the fix, and a single level is enough.** The strength has a closed form — `λ_i = τ²/(τ² + σ²_i)`,
+with σ²_i the sampling variance of an assay's fitted weights from six half-splits and τ² the between-assay
+variance — and on indels it reaches **+0.0022** against +0.0025 for a hand-tuned k with no search.
 
-The control says what is doing the work. **Permuting those per-assay coefficients across assays**, which
-preserves their distribution and destroys their alignment with each assay's size, changes the gain by at most
-**+0.0005** on indels — inside the permutation's own spread — and on substitutions the permutation is 0.0009
-*better* than the per-assay rule. A single global level drawn from that distribution matches or beats the assay-specific formula on
-both benchmarks. **What matters is that the estimate is shrunk at all, not how finely**: on indels a flat λ of
-0.60 gains +0.0062 where the derived rule's median of 0.41 gains +0.0052, so the closed form is, if anything,
-over-shrinking. We report the per-assay version because it needs no hand-chosen constant, not because its
-adaptivity earns anything.
+The control says what does the work: **permuting those coefficients across assays** changes the gain by at most
+**+0.0005** on indels, inside the permutation's own spread, and is 0.0009 *better* on substitutions. **What matters
+is that the estimate is shrunk at all, not how finely** — on indels a flat λ of 0.60 gains +0.0062 where the
+derived median of 0.41 gains +0.0052, so the closed form is, if anything, over-shrinking. We report the per-assay
+version for needing no hand-chosen constant, not because its adaptivity earns anything.
 
 **And it is predictable before you fit.** The oracle gain is not evenly spread across assays. It is explained by
 the **ambiguity** of the pool on that assay — the variance of the experts' own scores, the term the ensemble
@@ -205,6 +196,12 @@ decomposition turns on \cite{audhkhasi2013generalized,wood2023unified} — and, 
 assay has (r = −0.279). A leave-one-assay-out linear predictor of the gain from those two statistics reaches
 r = **+0.628** without ever fitting a per-assay weight vector. Whether adapting the weights is worth attempting
 is therefore a property of the assay that can be read off before any of it is done.
+
+**And it is not spread evenly.** Ranking assays by pool ambiguity, the top quartile holds **57%** of the total
+allocation headroom with a median gain of **+0.0117**; the bottom quartile is flat, at +0.0009 and 5%. Restricting
+the oracle to the quarter the predictor ranks highest still captures **+0.0050** of the +0.0077 available. A
+practitioner with a panel can therefore rank their own assays by ambiguity and know, before fitting anything,
+which ones make adaptation worth the attempt.
 
 Disagreement between the raw predictions is the weaker signal: it predicts the gain at r = +0.509, and a
 skill-weighted version of it at +0.491. Adjusting correlation for how good the experts are does not help here;
@@ -334,14 +331,33 @@ against **0.657028** for Kermut \cite{kermut} — +0.0085 over the previous fusi
 
 ## 4.4 What the ablation rules out
 
-**Co-distillation from the fusion itself** lifts the expert by +0.0136 (8/8 seeds) and leaves the fusion
-at −0.0002: teaching an expert to imitate the pool removes the residual disagreement that gave it value.
-**A residual expert** trained on the fusion's own error receives weight exactly zero in every fold — the
-residual of a fitted ensemble is what these features cannot explain. Representation diversity without competence buys nothing.
+Two ablations agree. **Co-distillation from the fusion** lifts the expert by +0.0136 (8/8 seeds) and leaves the
+fusion at −0.0002, because teaching it to imitate the pool removes the disagreement that gave it value. **A
+residual expert** trained on the fusion's own error receives weight exactly zero in every fold.
 
-The constructive reading: an expert earns its place through disagreement in the residual, and the way to
-get that disagreement is a different *view* of the same information — reference versus mutant, local
-versus global — not a different optimiser, loss, or a bigger model.
+**An expert's value is its disagreement, not its accuracy.** Measuring this directly: each of the five experts
+in the bundle is added to the pool formed by the other four, under the nested-constant protocol, and its marginal
+value compared with its standalone score and with its disagreement from that pool.
+
+| expert | solo | marginal | disagr. |
+|---|---:|---:|---:|
+| encoder §4.1 | 0.6449 | **+0.0118** | **0.194** |
+| Kermut | 0.6551 | +0.0062 | 0.143 |
+| Kseq | 0.6364 | +0.0004 | 0.104 |
+| D | 0.6561 | +0.0000 | 0.064 |
+| AMK | **0.6651** | +0.0028 | 0.060 |
+
+Marginal value tracks disagreement at r = **+0.786** across the thirteen expert-into-pool pairs we can form, and
+not accuracy: **the weakest expert alone contributes the most, and the strongest contributes almost nothing.** The
+control confirms the measurement is not an artefact of enlarging the weight search — a noise column, a shuffled
+copy and a negated copy of the expert each score **+0.0000**.
+
+That reframes what building an expert means: useful disagreement comes from a different *view* of the same
+information — reference versus mutant, local versus global — not from a different optimiser, loss or bigger model.
+The objective is to maximise residual disagreement subject to a competence floor, and the floor is real: pushing
+disagreement further by residualising an expert against the pool drove its standalone score to −0.33 and bought
+nothing. **The principle is not specific to proteins** — for any pool, an expert's contribution is set by what it
+adds that the pool cannot already explain, and its accuracy alone is a poor guide.
 
 ## 5 What the ranker is worth
 

@@ -61,11 +61,30 @@ against **0.657028** for Kermut \cite{kermut} — +0.0085 over the previous fusi
 
 ## 4.4 What the ablation rules out
 
-**Co-distillation from the fusion itself** lifts the expert by +0.0136 (8/8 seeds) and leaves the fusion
-at −0.0002: teaching an expert to imitate the pool removes the residual disagreement that gave it value.
-**A residual expert** trained on the fusion's own error receives weight exactly zero in every fold — the
-residual of a fitted ensemble is what these features cannot explain. Representation diversity without competence buys nothing.
+Two ablations agree. **Co-distillation from the fusion** lifts the expert by +0.0136 (8/8 seeds) and leaves the
+fusion at −0.0002, because teaching it to imitate the pool removes the disagreement that gave it value. **A
+residual expert** trained on the fusion's own error receives weight exactly zero in every fold.
 
-The constructive reading: an expert earns its place through disagreement in the residual, and the way to
-get that disagreement is a different *view* of the same information — reference versus mutant, local
-versus global — not a different optimiser, loss, or a bigger model.
+**An expert's value is its disagreement, not its accuracy.** Measuring this directly: each of the five experts
+in the bundle is added to the pool formed by the other four, under the nested-constant protocol, and its marginal
+value compared with its standalone score and with its disagreement from that pool.
+
+| expert | solo | marginal | disagr. |
+|---|---:|---:|---:|
+| encoder §4.1 | 0.6449 | **+0.0118** | **0.194** |
+| Kermut | 0.6551 | +0.0062 | 0.143 |
+| Kseq | 0.6364 | +0.0004 | 0.104 |
+| D | 0.6561 | +0.0000 | 0.064 |
+| AMK | **0.6651** | +0.0028 | 0.060 |
+
+Marginal value tracks disagreement at r = **+0.786** across the thirteen expert-into-pool pairs we can form, and
+not accuracy: **the weakest expert alone contributes the most, and the strongest contributes almost nothing.** The
+control confirms the measurement is not an artefact of enlarging the weight search — a noise column, a shuffled
+copy and a negated copy of the expert each score **+0.0000**.
+
+That reframes what building an expert means: useful disagreement comes from a different *view* of the same
+information — reference versus mutant, local versus global — not from a different optimiser, loss or bigger model.
+The objective is to maximise residual disagreement subject to a competence floor, and the floor is real: pushing
+disagreement further by residualising an expert against the pool drove its standalone score to −0.33 and bought
+nothing. **The principle is not specific to proteins** — for any pool, an expert's contribution is set by what it
+adds that the pool cannot already explain, and its accuracy alone is a poor guide.

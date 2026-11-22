@@ -12,21 +12,17 @@ standard across machine learning \cite{jacobs1991,shazeer2017}. Forecast combina
 longer: combining several forecasts by estimating weights is routinely no better than averaging them, a result
 known as the forecast combination puzzle \cite{timmermann2006forecast}, with a theoretical explanation in which
 weight-estimation error outweighs the benefit of weighting \cite{claeskens2016forecast}.
-The puzzle has been argued to be partly an artefact of low-power tests \cite{frazier2023solving}, which is why we
-report assay-level intervals and a permutation null rather than a point comparison. \cite{qian2015forecast} also
-separates combining *for improvement* from combining *for adaptation*; that is precisely this paper's split between
-the expert lever and the allocation lever, and our contribution is to measure both in one domain and bound the
-adaptation side.
+It has been argued partly an artefact of low-power tests \cite{frazier2023solving}, which is why we report
+assay-level intervals and a permutation null. \cite{qian2015forecast} separates combining *for improvement* from
+combining *for adaptation* — this paper's expert and allocation levers — and our contribution is to measure both in
+one domain and bound the adaptation side.
 
 **Diversity and ensemble value.** Ensemble error decomposes into average member error minus an ambiguity term, first
 for squared loss and then for any twice-differentiable loss \cite{audhkhasi2013generalized}, and diversity has since
 been shown to be a hidden dimension of the bias-variance decomposition \cite{wood2023unified}. That literature is
-explicit that diversity should be traded off against bias and variance rather than maximised, which is the position
-this paper reaches from the other direction: the disagreement between our experts predicts their marginal value
-(r = +0.63), but pushing it further costs competence faster than it buys disagreement. Our negative result about
-gating does not contradict the gating literature; it locates a regime where the justification fails, because the
-mixture components are correlated at 0.78 to 0.96 within a unit and the conditioning variable is not the one the
-optimal weights depend on.
+explicit that diversity should be traded off against bias and variance rather than maximised, which is where this
+paper arrives from the other direction: disagreement predicts an expert's marginal value (r = +0.63), but pushing
+it further costs competence faster than it buys disagreement.
 
 **Evaluation practice in AI for science.** Aggregate correlation is the standard reporting unit and a poor
 guide to deployment: it is insensitive to where in the ranking errors fall, and it averages over

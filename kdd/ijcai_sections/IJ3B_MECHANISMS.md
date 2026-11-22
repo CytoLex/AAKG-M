@@ -60,20 +60,15 @@ evaluated on the other half, with the reference constant fitted on the same half
 Unregularised per-assay fitting gains on substitutions and **loses** on indels, where assays are small.
 Shrinking each assay's weights toward the panel-wide constant, `w(λ) = (1−λ)·w_panel + λ·w_i`, gains on both.
 
-**Shrinkage is the fix, and a single level is enough.** The strength has a closed form: if an assay's fitted
-weight vector has sampling variance σ²_i around a true weight whose variance across assays is τ², the optimal
-shrink is `λ_i = τ²/(τ² + σ²_i)`, with σ²_i from repeating the fit on six independent half-splits and τ² as the
-total variance minus the mean sampling variance. On indels this gives τ² = 0.0113 against σ̄² = 0.0195 and a
-median λ of 0.39, reaching **+0.0022** against +0.0025 for a hand-tuned k — with no search at all.
+**Shrinkage is the fix, and a single level is enough.** The strength has a closed form — `λ_i = τ²/(τ² + σ²_i)`,
+with σ²_i the sampling variance of an assay's fitted weights from six half-splits and τ² the between-assay
+variance — and on indels it reaches **+0.0022** against +0.0025 for a hand-tuned k with no search.
 
-The control says what is doing the work. **Permuting those per-assay coefficients across assays**, which
-preserves their distribution and destroys their alignment with each assay's size, changes the gain by at most
-**+0.0005** on indels — inside the permutation's own spread — and on substitutions the permutation is 0.0009
-*better* than the per-assay rule. A single global level drawn from that distribution matches or beats the assay-specific formula on
-both benchmarks. **What matters is that the estimate is shrunk at all, not how finely**: on indels a flat λ of
-0.60 gains +0.0062 where the derived rule's median of 0.41 gains +0.0052, so the closed form is, if anything,
-over-shrinking. We report the per-assay version because it needs no hand-chosen constant, not because its
-adaptivity earns anything.
+The control says what does the work: **permuting those coefficients across assays** changes the gain by at most
+**+0.0005** on indels, inside the permutation's own spread, and is 0.0009 *better* on substitutions. **What matters
+is that the estimate is shrunk at all, not how finely** — on indels a flat λ of 0.60 gains +0.0062 where the
+derived median of 0.41 gains +0.0052, so the closed form is, if anything, over-shrinking. We report the per-assay
+version for needing no hand-chosen constant, not because its adaptivity earns anything.
 
 **And it is predictable before you fit.** The oracle gain is not evenly spread across assays. It is explained by
 the **ambiguity** of the pool on that assay — the variance of the experts' own scores, the term the ensemble
@@ -81,6 +76,12 @@ decomposition turns on \cite{audhkhasi2013generalized,wood2023unified} — and, 
 assay has (r = −0.279). A leave-one-assay-out linear predictor of the gain from those two statistics reaches
 r = **+0.628** without ever fitting a per-assay weight vector. Whether adapting the weights is worth attempting
 is therefore a property of the assay that can be read off before any of it is done.
+
+**And it is not spread evenly.** Ranking assays by pool ambiguity, the top quartile holds **57%** of the total
+allocation headroom with a median gain of **+0.0117**; the bottom quartile is flat, at +0.0009 and 5%. Restricting
+the oracle to the quarter the predictor ranks highest still captures **+0.0050** of the +0.0077 available. A
+practitioner with a panel can therefore rank their own assays by ambiguity and know, before fitting anything,
+which ones make adaptation worth the attempt.
 
 Disagreement between the raw predictions is the weaker signal: it predicts the gain at r = +0.509, and a
 skill-weighted version of it at +0.491. Adjusting correlation for how good the experts are does not help here;
