@@ -120,3 +120,45 @@ would need a different idea, not this one.
 A genuinely new architecture was not attempted: inventing one, validating it on three benchmarks and writing
 it up honestly does not fit inside a revision pass, and a half-validated new component would weaken the paper
 rather than strengthen it.
+
+## The disagreement pilots: what holds and what does not
+
+Four experiments followed the question of whether the view itself can be learned. All were run on the dry-wet
+project's H100 partition.
+
+**The protocol is sound, three ways.** Before trusting any of it, the nested weight search was given columns
+that carry no signal: a noise column, a shuffled copy of the expert, and the negated expert. Apparent marginal
+gains were +0.0000, +0.0000 and +0.0000. The search does not manufacture value out of extra dimensions, so the
+disagreement effects below are not grid expansion.
+
+**Marginal value tracks disagreement, not accuracy** (13 real expert-into-pool points, r = **+0.786**):
+
+| expert | solo | marginal value | disagreement |
+|---|---:|---:|---:|
+| encoder (ours) | 0.6449 | **+0.0118** | **0.194** |
+| Kermut | 0.6551 | +0.0062 | 0.143 |
+| Kseq | 0.6364 | +0.0004 | 0.104 |
+| D | 0.6561 | +0.0000 | 0.064 |
+| AMK | 0.6651 | +0.0028 | 0.060 |
+
+The expert with the *lowest* standalone score contributes the most; the highest-scoring one almost nothing.
+That quantifies the mechanism section 4.4 only asserted.
+
+**Our hand-designed view is already at the optimum of its family.** Interpolating the expert toward the pool
+(alpha 0 to 1) drives the fusion gain monotonically from +0.0122 to +0.0000, with the best value at alpha = 0 —
+the boundary. There is no interior optimum to find.
+
+**Two tempting extensions were tested and refuted.** Residualising the expert against the pool (subtracting its
+component) appeared to gain +0.0013. That survived a finer grid, so it is not discretisation, but it is also not
+a signed-weight effect: an unconstrained fit finds weights [0.018, 0.272, 0.412, 0.308] — all positive, summing
+to 1.01 — and scores 0.6953 against the simplex's 0.6952, so the convexity constraint is not binding. What the
+residualised column actually re-imports is per-assay structure, because the pool blend it subtracts uses
+assay-specific leave-one-out weights. It is the allocation headroom arriving through a back door, not a new
+lever.
+
+**Consequence for the innovation question.** The one principle the evidence supports is: build an expert to
+maximise residual disagreement with the pool subject to a competence floor, and do not optimise standalone
+accuracy. That is the correct objective, it is measured, and the current view already sits near its frontier.
+A new architecture would have to find views *outside* this family; these pilots show there is no cheap headroom
+inside it, which is worth knowing before anyone spends a paper on it.
+
