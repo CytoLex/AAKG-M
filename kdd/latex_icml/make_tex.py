@@ -171,8 +171,8 @@ PRE = r"""\documentclass{article}
 \begin{document}
 
 \twocolumn[
-  \icmltitle{The Ceiling on Adaptive Weighting in Protein Fitness Prediction, and How to Reach It}
-  \icmltitlerunning{The Ceiling on Adaptive Weighting}
+  \icmltitle{What Moves a Protein-Fitness Predictor: Disagreement, Not Accuracy}
+  \icmltitlerunning{Disagreement, Not Accuracy}
 
   \icmlsetsymbol{equal}{*}
   \begin{icmlauthorlist}

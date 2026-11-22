@@ -191,26 +191,28 @@ PRE = r"""\documentclass{article}
 \begin{document}
 \linenumbers
 
-\title{The Ceiling on Adaptive Weighting in Protein Fitness Prediction, and How to Reach It}
+\title{What Moves a Protein-Fitness Predictor: Disagreement, Not Accuracy}
 
 % Anonymous submission: no author block.
 \author{}
 \maketitle
 
 \begin{abstract}
-Protein engineering screens rank candidate mutations, and the field's models combine several predictors with
-per-assay weights. We measure what that combination is worth. A per-assay oracle bounds the entire headroom
-any weighting rule can capture at +0.0051 over a constant fitted on the other assays, against +0.0122 for
-adding a single expert: allocation is 42\% of the expert lever, the intervals do not overlap, and the bound
-replicates on ProteinGym's indel assays, where the oracle gap is larger but weights fitted on half an assay
-lose to a constant on the other half. That loss is repairable: partial pooling by $\lambda = n/(n+k)$ gains
-+0.0051 and +0.0021 on the two benchmarks, turning a deficit into a gain on the small assays where per-assay
-fitting fails. The expert lever is representation. An encoder over reference-minus-mutant features in a local
-neighbourhood, distilled from the strongest experts and fused at four fixed weights, reaches 0.694 on the
-official metric against 0.657 for the published leader, and the same representation wins six of seven splits
-of FLIP2, an independently collected benchmark. For the domain we report the utility profile: the top 5\%
-recovers 24.7\% of the true top 5\%, a 4.96x lift, but 7.7x on stability assays against 3.4x on activity,
-and parity on the largest quartile. We release per-mutant predictions for all 696,311 mutants.
+Protein engineering screens rank candidate mutations, and the field's models combine several predictors, each new
+one added because it scores well on its own. Both habits are worth less than they look. We measure the two levers
+directly on ProteinGym. A per-assay oracle bounds what any weighting of a fixed expert pool can capture at
+\textbf{+0.0051} over a constant fitted on the other assays, against \textbf{+0.0122} for adding one expert:
+allocation is 42\% of the expert lever, the intervals do not overlap, and the bound replicates on the indel
+benchmark, where weights fitted on half an assay lose to a constant on the other half. That loss is repairable —
+shrinkage toward the panel constant recovers the headroom without per-assay tuning — and it is concentrated: the
+top ambiguity quartile holds 57\% of it. The expert lever is disagreement, not accuracy. Across thirteen
+expert-into-pool pairs, marginal value tracks disagreement at r = \textbf{+0.786} while the weakest expert alone
+contributes the most and the strongest almost nothing, a measurement whose noise and shuffle controls each score
+zero. An encoder built on that principle — reference-minus-mutant features in a local neighbourhood,
+distilled and fused at four fixed weights — reaches \textbf{0.694} on the official metric against 0.657 for the
+published leader. For the domain we report where the ranking can be trusted: the top 5\% recovers 24.7\% of the
+true top 5\%, 7.7x on stability against 3.4x on activity, and parity on the largest quartile. We release
+per-mutant predictions for all 696,311 mutants.
 \end{abstract}
 """
 

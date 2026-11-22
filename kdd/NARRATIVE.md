@@ -51,21 +51,22 @@ constraint ("pool when you do weight") is still a limitation; one stated as an a
 Also kept: the exact scope conditions. "On substitutions / on indels / on the largest quartile" is the
 comparison frame the numbers need, and dropping it would be overclaiming rather than streamlining.
 
-## The title, and why it changed
+## The title, and why it changed — twice
 
-The old title, "Allocation was never the bottleneck", was written when the ratio was believed to be a
-quarter. At 42% with disjoint intervals it is still defensible, but it names only the negative half — a
-paper titled after what does not matter is a paper that has buried its own constructive result.
+The original, "Allocation was never the bottleneck", was written when the ratio was believed to be a quarter. At
+42% with disjoint intervals it was defensible but named only the negative half.
 
-The new title names both halves of the loop:
+The second title, "The Ceiling on Adaptive Weighting in Protein Fitness Prediction, and How to Reach It", fixed
+that by naming both halves of the loop — the bound and the shrinkage that reaches it. It was accurate.
 
-> **The Ceiling on Adaptive Weighting in Protein Fitness Prediction, and How to Reach It**
+It was not the paper's best line. The measurement of section 4.4 turned out to be the most counterintuitive result
+in the work: across thirteen expert-into-pool pairs, marginal value tracks disagreement at r = +0.786 and the
+weakest expert alone contributes the most while the strongest contributes almost nothing. That is a claim someone
+can disagree with, remember, and reuse outside this domain — none of which is true of a title about a ceiling.
 
-"There is a ceiling" is the bound; "and how to reach it" is partial pooling. It leads with the measurement
-the paper is about rather than with a verdict, it keeps the domain in the title where the track needs it,
-and it survives being read as a claim — both halves are backed by numbers, one by an oracle and one by two
-benchmarks of out-of-sample gains.
+So the title is now:
 
-Applied to all three builds (ACM, ICML, IJCAI). The ICML running header needed a short form and got
-"The Ceiling on Adaptive Weighting". Page budgets re-verified after the change: ACM 8 content pages, ICML
-8-page body, IJCAI 7-page body, all unchanged.
+> **What Moves a Protein-Fitness Predictor: Disagreement, Not Accuracy**
+
+Domain first, punchline second. The ceiling work is still the first half of the paper and the abstract leads with
+it, but a reader who remembers one sentence about this paper should remember the surprising one.
