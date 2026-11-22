@@ -60,15 +60,20 @@ evaluated on the other half, with the reference constant fitted on the same half
 Unregularised per-assay fitting gains on substitutions and **loses** on indels, where assays are small.
 Shrinking each assay's weights toward the panel-wide constant, `w(λ) = (1−λ)·w_panel + λ·w_i`, gains on both.
 
-**The shrinkage is derived, not tuned.** If an assay's fitted weight vector has sampling variance σ²_i around
-a true weight whose variance across assays is τ², the optimal shrink is `λ_i = τ²/(τ² + σ²_i)`. Both
-components are estimable here: σ²_i from repeating the fit on six independent half-splits, τ² as the total
-variance of the fitted weights minus the mean sampling variance. On indels this yields τ² = 0.0113 against
-σ̄² = 0.0195, a median λ of 0.39, and **+0.0022** — within 12% of the +0.0025 that the best hand-tuned k
-reaches, with an implied k of 241 against the tuned 300 — **without ever selecting k**. On substitutions the
-same rule gives +0.0051 against a tuned +0.0056, on a loss surface flat from k = 30 to k = 300. The
-shrinkage strength follows from how much the weights actually move between assays and how much they move
-between refits of the same assay; it does not need a search.
+**Shrinkage is the fix, and a single level is enough.** The strength has a closed form: if an assay's fitted
+weight vector has sampling variance σ²_i around a true weight whose variance across assays is τ², the optimal
+shrink is `λ_i = τ²/(τ² + σ²_i)`, with σ²_i from repeating the fit on six independent half-splits and τ² as the
+total variance minus the mean sampling variance. On indels this gives τ² = 0.0113 against σ̄² = 0.0195 and a
+median λ of 0.39, reaching **+0.0022** against +0.0025 for a hand-tuned k — with no search at all.
+
+The control says what is doing the work. **Permuting those per-assay coefficients across assays**, which
+preserves their distribution and destroys their alignment with each assay's size, changes the gain by at most
+**+0.0005** on indels — inside the permutation's own spread — and on substitutions the permutation is 0.0009
+*better* than the per-assay rule. A single global level drawn from that distribution matches or beats the assay-specific formula on
+both benchmarks. **What matters is that the estimate is shrunk at all, not how finely**: on indels a flat λ of
+0.60 gains +0.0062 where the derived rule's median of 0.41 gains +0.0052, so the closed form is, if anything,
+over-shrinking. We report the per-assay version because it needs no hand-chosen constant, not because its
+adaptivity earns anything.
 
 **And it is predictable before you fit.** The oracle gain is not evenly spread across assays: it is
 explained by how much the experts disagree on that assay (r = **+0.534** on substitutions, **+0.348** on
@@ -79,7 +84,7 @@ be read off before any of it is done.
 
 **This is the sharpest comparison in the paper.** The seven mechanisms of §3.2 are the designed answer to
 this problem; the best captures **+0.00025** over its tuned constant. A two-parameter shrinkage captures
-**+0.0051** over the constant in its own out-of-sample protocol — twenty times as much — and stays positive
-on indels, where unregularised fitting loses. Here the estimation problem was a variance problem, and it has
-a two-line fix.
+**+0.0051** over the constant in its own out-of-sample protocol — twenty times as much — and stays positive on
+indels, where unregularised fitting loses. Here the estimation problem was a variance problem, and its fix does
+not need to know the variance: shrinking toward the pool by any reasonable amount recovers most of it.
 

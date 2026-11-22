@@ -39,7 +39,7 @@ the effort into experts, and pool when you do weight.
 ## Contributions
 
 1. **A diagnostic protocol for fusion, and what it finds here.** Three numbers per pool — the oracle bound,
-   the estimability of the weights, and a variance-derived shrinkage with no free parameter. Applied to
+   the estimability of the weights, and the shrinkage that reaches it. Applied to
    seven gating mechanisms, three benchmarks and two expert pools it gives +0.0051 of allocatable headroom
    against +0.0122 for an expert change, and a shrinkage rule that recovers +0.0051 and +0.0021 where naive
    per-assay fitting loses. The protocol is the transferable part: the natural cross-pool comparison would

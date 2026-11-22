@@ -164,6 +164,11 @@ not a refutation of shrinkage — it is a refutation of the story that the *assa
 it only shows up when the control is run. Check the median lambda first: if it sits near 1 there is no room for
 alignment to matter, and the claim has to be restricted to the regime where shrinkage is heavy.
 
+The heavy-shrinkage regime was then checked too, and the alignment still did not earn anything. On indels, median
+lambda 0.41, the derived rule gains +0.0052 against a permuted null of +0.0047 [0.0042, 0.0054] -- a difference of
++0.0005 inside the null's own spread -- and a flat lambda of 0.60 gains +0.0062, beating the derived rule
+outright. So the finding is not regime-specific: **the level is what works.**
+
 **Cost of a leave-one-out constant.** Computing it inside a per-assay loop is O(n² × grid) and did not finish
 in an hour on a 4090. Build the score matrix S[grid, assay] once, then derive both the oracle and the
 leave-one-out constant from it: O(grid × n), minutes on one GPU.
