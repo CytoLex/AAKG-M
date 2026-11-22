@@ -45,6 +45,14 @@ marginal gain, feed the search columns that carry **no signal** and confirm they
 | shuffle | a permutation of the real expert's scores | marginal gain 0 |
 | negate | −(real expert) | marginal gain 0 |
 
+And each headline number needs its own null, not just the marginal-value one:
+
+| claim | null control | what passing looks like |
+|---|---|---|
+| oracle headroom | give each assay the oracle weights of a **random other assay** | null ≈ 0 or below; measured here **−0.0064 [−0.0083, −0.0043]** against a real +0.0077 |
+| predictability | permute the predictor across assays | null r ≈ 0; measured **+0.002 [−0.119, +0.144]** against a real +0.534 |
+| any shrinkage | permute the shrinkage coefficients across assays | see the entry below — **a claim can pass on level and fail on alignment** |
+
 **Measured here, and this is what a clean protocol looks like:**
 
 ```
@@ -148,6 +156,13 @@ a 6× finer grid. Testing cost one job and removed a wrong explanation.
 constraint bound the fusion. An unconstrained fit returned all-positive weights summing to 1.01 and scored
 0.6953 against the simplex's 0.6952. The convexity constraint was not the issue; the residualised column was
 re-importing per-assay structure through the assay-specific weights it subtracted.
+
+**A shrinkage claim can pass on level and fail on alignment.** The derived per-assay shrinkage gained +0.0064
+over the constant, while the *same coefficients permuted across assays* gained +0.0073 [+0.0070, +0.0076]. The
+formula's per-assay alignment contributed nothing; the fact that lambda < 1 somewhere did all the work. That is
+not a refutation of shrinkage — it is a refutation of the story that the *assay-specific* strength matters, and
+it only shows up when the control is run. Check the median lambda first: if it sits near 1 there is no room for
+alignment to matter, and the claim has to be restricted to the regime where shrinkage is heavy.
 
 **Cost of a leave-one-out constant.** Computing it inside a per-assay loop is O(n² × grid) and did not finish
 in an hour on a 4090. Build the score matrix S[grid, assay] once, then derive both the oracle and the
