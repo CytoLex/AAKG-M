@@ -75,12 +75,19 @@ both benchmarks. **What matters is that the estimate is shrunk at all, not how f
 over-shrinking. We report the per-assay version because it needs no hand-chosen constant, not because its
 adaptivity earns anything.
 
-**And it is predictable before you fit.** The oracle gain is not evenly spread across assays: it is
-explained by how much the experts disagree on that assay (r = **+0.534** on substitutions, **+0.348** on
-indels) and, negatively, by how much data the assay has (r = −0.279). A linear predictor of the gain from
-those two statistics, fitted leave-one-assay-out, reaches r = **+0.554** without ever fitting a per-assay
-weight vector. Whether adapting the weights is worth attempting is therefore a property of the assay that can
-be read off before any of it is done.
+**And it is predictable before you fit.** The oracle gain is not evenly spread across assays. It is explained by
+the **ambiguity** of the pool on that assay — the variance of the experts' own scores, the term the ensemble
+decomposition turns on \cite{audhkhasi2013generalized,wood2023unified} — and, negatively, by how much data the
+assay has (r = −0.279). A leave-one-assay-out linear predictor of the gain from those two statistics reaches
+r = **+0.628** without ever fitting a per-assay weight vector. Whether adapting the weights is worth attempting
+is therefore a property of the assay that can be read off before any of it is done.
+
+Disagreement between the raw predictions is the weaker signal: it predicts the gain at r = +0.509, and a
+skill-weighted version of it at +0.491. Adjusting correlation for how good the experts are does not help here;
+what helps is measuring the spread of their *scores* rather than the correlation of their *predictions*. Consistent
+with that literature, we report these as a trade-off rather than a maximand: the gain rises with disagreement, but
+pushing disagreement further by residualising an expert against the pool collapsed its standalone accuracy to
+−0.33 and bought nothing.
 
 **This is the sharpest comparison in the paper.** The seven mechanisms of §3.2 are the designed answer to
 this problem; the best captures **+0.00025** over its tuned constant. A two-parameter shrinkage captures

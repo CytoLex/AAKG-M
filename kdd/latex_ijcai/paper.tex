@@ -125,12 +125,25 @@ fail differently, and the combination is usually weighted per assay. Benchmarks 
 themselves a design choice \cite{flip}, and §5.1 therefore verifies the one we use end to end before
 reporting any comparison on it.
 
-\textbf{Adaptive weighting and gating.} Mixture-of-experts layers and context-conditioned gates are standard
-across machine learning, usually justified by heterogeneity of the input distribution. Our negative
-result does not contradict that literature; it identifies a regime where the justification fails --- the
-mixture components are correlated at 0.78 to 0.96 within a unit, and the conditioning variable is not the
-one the optimal weights depend on. Reported gains for gating in such regimes should be read against a
-tuned constant rather than a fixed prior, and against an oracle.
+\textbf{Adaptive weighting, and the combination puzzle.} Mixture-of-experts layers and context-conditioned gates are
+standard across machine learning \cite{jacobs1991,shazeer2017}. Forecast combination has studied their limits for
+longer: combining several forecasts by estimating weights is routinely no better than averaging them, a result
+known as the forecast combination puzzle, and the standard explanation is weight-estimation error \cite{qian2015forecast}.
+The puzzle has been argued to be partly an artefact of low-power tests \cite{frazier2023solving}, which is why we
+report assay-level intervals and a permutation null rather than a point comparison. \cite{qian2015forecast} also
+separates combining \emph{for improvement} from combining \emph{for adaptation}; that is precisely this paper's split between
+the expert lever and the allocation lever, and our contribution is to measure both in one domain and bound the
+adaptation side.
+
+\textbf{Diversity and ensemble value.} Ensemble error decomposes into average member error minus an ambiguity term, first
+for squared loss and then for any twice-differentiable loss \cite{audhkhasi2013generalized}, and diversity has since
+been shown to be a hidden dimension of the bias-variance decomposition \cite{wood2023unified}. That literature is
+explicit that diversity should be traded off against bias and variance rather than maximised, which is the position
+this paper reaches from the other direction: the disagreement between our experts predicts their marginal value
+(r = +0.63), but pushing it further costs competence faster than it buys disagreement. Our negative result about
+gating does not contradict the gating literature; it locates a regime where the justification fails, because the
+mixture components are correlated at 0.78 to 0.96 within a unit and the conditioning variable is not the one the
+optimal weights depend on.
 
 \textbf{Evaluation practice in AI for science.} Aggregate correlation is the standard reporting unit and a poor
 guide to deployment: it is insensitive to where in the ranking errors fall, and it averages over
@@ -265,12 +278,19 @@ both benchmarks. \textbf{What matters is that the estimate is shrunk at all, not
 over-shrinking. We report the per-assay version because it needs no hand-chosen constant, not because its
 adaptivity earns anything.
 
-\textbf{And it is predictable before you fit.} The oracle gain is not evenly spread across assays: it is
-explained by how much the experts disagree on that assay (r = \textbf{+0.534} on substitutions, \textbf{+0.348} on
-indels) and, negatively, by how much data the assay has (r = −0.279). A linear predictor of the gain from
-those two statistics, fitted leave-one-assay-out, reaches r = \textbf{+0.554} without ever fitting a per-assay
-weight vector. Whether adapting the weights is worth attempting is therefore a property of the assay that can
-be read off before any of it is done.
+\textbf{And it is predictable before you fit.} The oracle gain is not evenly spread across assays. It is explained by
+the \textbf{ambiguity} of the pool on that assay --- the variance of the experts' own scores, the term the ensemble
+decomposition turns on \cite{audhkhasi2013generalized,wood2023unified} --- and, negatively, by how much data the
+assay has (r = −0.279). A leave-one-assay-out linear predictor of the gain from those two statistics reaches
+r = \textbf{+0.628} without ever fitting a per-assay weight vector. Whether adapting the weights is worth attempting
+is therefore a property of the assay that can be read off before any of it is done.
+
+Disagreement between the raw predictions is the weaker signal: it predicts the gain at r = +0.509, and a
+skill-weighted version of it at +0.491. Adjusting correlation for how good the experts are does not help here;
+what helps is measuring the spread of their \emph{scores} rather than the correlation of their \emph{predictions}. Consistent
+with that literature, we report these as a trade-off rather than a maximand: the gain rises with disagreement, but
+pushing disagreement further by residualising an expert against the pool collapsed its standalone accuracy to
+−0.33 and bought nothing.
 
 \textbf{This is the sharpest comparison in the paper.} The seven mechanisms of §3.2 are the designed answer to
 this problem; the best captures \textbf{+0.00025} over its tuned constant. A two-parameter shrinkage captures
@@ -316,6 +336,9 @@ small first bound and a partly estimable one; indels have a larger first bound t
 estimation noise. \textbf{Assay size, not only pool diversity, decides whether adapting weights is worth attempting.}
 
 \subsection{What this means for the field}\label{what-this-means-for-the-field}
+
+This is the forecast combination puzzle \cite{qian2015forecast}, measured in a domain where it had not been: weight
+estimation error, not a shortage of mechanisms, is what caps the adaptation lever.
 
 \textbf{Report against tuned constants, not fixed blends.} A gate beating a fixed 50/50 blend by +0.0047 is
 commonly reported as evidence that conditioning works; against a constant tuned on held-out assays the

@@ -1,4 +1,7 @@
 ## 3.6 What this means for the field
+This is the forecast combination puzzle \cite{qian2015forecast}, measured in a domain where it had not been: weight
+estimation error, not a shortage of mechanisms, is what caps the adaptation lever.
+
 **Report against tuned constants, not fixed blends.** A gate beating a fixed 50/50 blend by +0.0047 is
 commonly reported as evidence that conditioning works; against a constant tuned on held-out assays the
 same gate is +0.0002, a statistical tie. The gain attributed to conditioning is mostly the gain from
