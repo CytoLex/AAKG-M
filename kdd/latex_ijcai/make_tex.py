@@ -204,8 +204,8 @@ directly on ProteinGym. A per-assay oracle bounds what any weighting of a fixed 
 \textbf{+0.0051} over a constant fitted on the other assays, against \textbf{+0.0122} for adding one expert:
 allocation is 42\% of the expert lever, the intervals do not overlap, and the bound replicates on the indel
 benchmark. It is a bound under Spearman: under top-of-list recall, the metric a campaign experiences, the
-transferable headroom is 2.8 times larger, standard weights capture a tenth of it, and a rule that optimises that
-recall and then shrinks reaches all of it. That loss is repairable —
+transferable headroom is 2.8 times larger and standard weights capture a tenth of it; at top-1\%, a threshold a
+campaign actually operates at, a rule that optimises that recall and then shrinks beats them by +0.0093. That loss is repairable —
 shrinkage toward the panel constant recovers the headroom without per-assay tuning — and it is concentrated: the
 top ambiguity quartile holds 57\% of it. The expert lever is disagreement, not accuracy. Across thirteen
 expert-into-pool pairs, marginal value tracks disagreement at r = \textbf{+0.786} while the weakest expert alone

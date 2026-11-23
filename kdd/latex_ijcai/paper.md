@@ -203,10 +203,10 @@ the oracle to the quarter the predictor ranks highest still captures **+0.0050**
 practitioner with a panel can therefore rank their own assays by ambiguity and know, before fitting anything,
 which ones make adaptation worth the attempt.
 
-Disagreement between the raw predictions is weaker, at r = +0.509, and a skill-weighted version of it at +0.491:
-what helps is the spread of the experts' *scores*, not the correlation of their *predictions*. Consistent with that
-literature we report this as a trade-off rather than a maximand — the gain rises with disagreement, but pushing it
-further by residualising an expert against the pool collapsed its standalone accuracy to −0.33 and bought nothing.
+Disagreement between the raw predictions is weaker, at r = +0.509, and skill-weighting it makes it weaker still
+(+0.491): what helps is the spread of the experts' *scores*, not the correlation of their *predictions*. Consistent
+with that literature we report this as a trade-off, not a maximand — pushing disagreement further by residualising
+an expert against the pool collapsed its accuracy to −0.33 and bought nothing.
 
 **This is the sharpest comparison in the paper.** The seven mechanisms of §3.2 are the designed answer to
 this problem; the best captures **+0.00025** over its tuned constant. A two-parameter shrinkage captures
@@ -251,16 +251,18 @@ estimation error, not a shortage of mechanisms, is what caps the adaptation leve
 including the +0.0051 that sets the headline. Recomputing the same bound under the metric §5 argues a campaign
 actually experiences — top-of-list recall — changes its size: out of sample, the transferable headroom is **+0.0130**
 at top-5% recall against **+0.0046** for Spearman, a factor of 2.8, and the weights a Spearman objective selects
-capture only **10.4%** of it. So the lever is small in the aggregate and roughly three times larger in the
-deployment metric, with no standard rule reaching the latter: +0.0051 bounds Spearman at fixed pool and per-assay
-weights, and is not a claim that weighting is worthless under a ranking objective.
+capture only **10.4%** of it. So +0.0051 bounds Spearman at fixed pool and per-assay weights; it is not a claim that weighting is
+worthless under a ranking objective, where the lever is three times larger.
 
-**The rule that reaches it is two lines.** Fit each assay's weights to maximise top-5% recall on half its variants,
-then shrink toward the panel constant. Unshrunk, the noisy counting statistic is worthless — 0.2403, exactly the
-constant's own 0.2403 — which is why the field does not do this. Shrunk, it reaches **0.2533**, the full transferable
-headroom, against **0.2427** for weights a Spearman objective selects. The shrinkage is what makes the deployment
-metric usable, exactly as it was for the aggregate in §3.4; smooth surrogates for the counting statistic did not
-help (0.2401), so the noisy objective plus shrinkage beats the smooth objective without it.
+**The rule that reaches it works at the threshold a campaign operates at.** Fit each assay's weights to maximise
+top-of-list recall on half its variants, then shrink toward the panel constant — the shrinkage the unshrunk
+counting statistic needs, since it otherwise lands on the constant to four decimals. At top-1%, the tightest and
+operationally closest threshold, this reaches **0.1239** against **0.1146** for weights a Spearman objective
+selects: **+0.0093**, 95% CI [+0.0014, +0.0171], and +0.0143 over the constant. **The advantage is not detectable
+at 5%** (+0.0029, CI [−0.0028, +0.0085]) **or 10%** (+0.0014), and on the indel benchmark the same rule is the
+*worst* of the four candidates. Both failures have the same cause: 5% of a 154-variant assay is eight variants, so
+the counting statistic is not estimable there. The rule is real where a campaign operates and where the assay is large enough to
+estimate it — the estimability story of §3.4 applied to a noisier statistic.
 
 **When the oracle is small, the pool is the problem.** If no weighting of these experts can gain more
 than +0.0051, the next +0.01 has to come from an expert that disagrees usefully. §4 builds one.
