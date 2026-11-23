@@ -1,5 +1,5 @@
-The preceding sections argue about where gain comes from. This one asks what the resulting ranker is worth: first on the benchmark's own terms, then on the terms a laboratory actually uses, and finally where it does
-not help — which is the part most papers leave out.
+The preceding sections argue about where gain comes from. This one asks what the ranker is worth — on the
+benchmark's own terms, on the terms a laboratory uses, and where it does not help.
 
 ## 5.1 Measuring it the way the leaderboard measures it
 

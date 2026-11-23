@@ -6,16 +6,14 @@ A protein engineer choosing mutations against an assay budget needs a ranking th
 papers are not organised around that. Two deliverables follow. The first is a **calibrated expectation**: the top 5%
 recovers 24.7% of the true top 5%, 7.7x on stability assays against 3.4x on activity, and no advantage on the
 largest — a profile that lets a laboratory decide how much of the ordering to trust for its own property, which
-aggregate Spearman cannot express. The second is **the boundary**: 87 regressing assays, the category that regresses on average, and
-the size regime at parity. For a practitioner the boundary is worth more than the mean, because it is the
-difference between trusting a ranking on a familiar assay family and being surprised on a new one.
+aggregate Spearman cannot express. The second is **the boundary** — the regressing assays, the category that regresses on average, and the size
+regime at parity. For a practitioner the boundary is worth more than the mean: it is the difference between
+trusting a ranking on a familiar assay family and being surprised on a new one.
 
 Three AI challenges are tackled. The ranking problem is small-data-per-task learning, so the question is
-regularisation and transfer rather than capacity. It is a distribution-shift problem, which is exactly why
-the field reached for adaptive weighting, and why the reachable part of that lever is 42% of what an
-expert change is worth. And it is a
-representation problem: the signal lives in the difference between two sequences and in the local
-structural neighbourhood.
+regularisation rather than capacity. It is a distribution-shift problem, which is why the field reached for
+adaptive weighting and why the reachable part of that lever is 42% of an expert change. And it is a representation
+problem: the signal lives in the difference between two sequences, read in its local context.
 
 Three challenges arise from using AI here. Wet-lab validation is the field's binding constraint, and this
 paper places its claims at the ranking rather than at the bench: an enriched ranking is the step a campaign
@@ -24,10 +22,10 @@ on one protein can disagree in sign — so a category-averaged metric can look s
 assays move sharply both ways. And the benchmark ecosystem rewards leaderboard movement over
 characterisation, while characterisation is what a domain user needs most.
 
-On our use of ProteinGym: the track prefers domain-specific data to existing benchmarks, so we state what this
-adds rather than only takes — the benchmark verified end to end, per-mutant predictions for all 696,311 variants so
-the evaluation is reproducible without our code, and its difficulty structure characterised across categories,
-sizes and splits. A reader can use that characterisation without adopting our method.
+On our use of ProteinGym: rather than only taking from a public benchmark we verify it end to end, publish
+per-mutant predictions for all 696,311 variants so the evaluation stands without our code, and characterise its
+difficulty structure across categories, sizes and splits. A reader can use that characterisation without adopting
+our method.
 
 ### What this work gives, and what would overturn it
 

@@ -1,5 +1,6 @@
-If allocation is exhausted, the headroom has to be in the experts. This section builds one from a different view of the same information, and then asks which of its design choices actually carry the
-gain — including one that looks like capacity and turns out to be structure.
+Allocation is bounded in the aggregate and larger under the deployment metric, but on neither measure is it the
+lever: an expert change is worth more than twice as much. This section builds one from a different view of the
+same information, then measures which of its design choices carry the gain and which are capacity in disguise.
 
 ## 4.1 A mechanism test decides the features
 
@@ -76,10 +77,9 @@ value compared with its standalone score and with its disagreement from that poo
 | D | 0.6561 | +0.0000 | 0.064 |
 | AMK | **0.6651** | +0.0028 | 0.060 |
 
-Marginal value tracks disagreement at r = **+0.786** across the thirteen expert-into-pool pairs we can form, and
-not accuracy: **the weakest expert alone contributes the most, and the strongest contributes almost nothing.** The
-control confirms the measurement is not an artefact of enlarging the weight search — a noise column, a shuffled
-copy and a negated copy of the expert each score **+0.0000**.
+Marginal value tracks disagreement at r = **+0.786** across the thirteen pairs, and not accuracy: **the weakest
+expert alone contributes the most, and the strongest almost nothing.** A noise column, a shuffled copy and a negated
+copy each score **+0.0000**, so the measurement is not an artefact of enlarging the weight search.
 
 That reframes what building an expert means: useful disagreement comes from a different *view* of the same
 information — reference versus mutant, local versus global — not from a different optimiser, loss or bigger model.
@@ -88,5 +88,5 @@ Degrading the expert's predictions with noise traces a clean frontier: marginal 
 (ε = 0.25 gains **+0.0086** against +0.0077 untouched) and then falls monotonically to +0.0063 at ε = 2. **The
 expert sits within 0.0009 of the frontier** — a slightly less accurate version would contribute slightly more, and
 the curve falls away steeply from there. The same sweep along a residualisation axis is not a frontier: its
-isolated second peak comes from re-importing per-assay structure, the artefact §3.4 identifies. **The principle is not specific to proteins** — for any pool, an expert's contribution is set by what it
-adds that the pool cannot already explain, and its accuracy alone is a poor guide.
+isolated second peak comes from re-importing per-assay structure, the artefact §3.4 identifies. **The principle is not specific to proteins**: for any pool, an expert contributes what the pool cannot already
+explain, and its accuracy alone is a poor guide.

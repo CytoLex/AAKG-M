@@ -73,9 +73,8 @@ no hand-chosen constant, not because its adaptivity earns anything.
 **And it is predictable before you fit.** The oracle gain is not evenly spread across assays. It is explained by
 the **ambiguity** of the pool on that assay — the variance of the experts' own scores, the term the ensemble
 decomposition turns on \cite{audhkhasi2013generalized,wood2023unified} — and, negatively, by how much data the
-assay has (r = −0.279). A leave-one-assay-out linear predictor of the gain from those two statistics reaches
-r = **+0.628** without ever fitting a per-assay weight vector. Whether adapting the weights is worth attempting
-is therefore a property of the assay that can be read off before any of it is done.
+assay has (r = −0.279). A leave-one-assay-out predictor from those two statistics reaches r = **+0.628** without fitting a per-assay
+weight vector, so whether adapting the weights is worth attempting can be read off before any of it is done.
 
 **And it is not spread evenly.** Ranking assays by pool ambiguity, the top quartile holds **57%** of the total
 allocation headroom with a median gain of **+0.0117**; the bottom quartile is flat, at +0.0009 and 5%. Restricting

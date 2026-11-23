@@ -9,9 +9,8 @@ reproducible from the published per-mutant scores; a fully nested protocol would
 fold. The one hyperparameter that materially matters, the distillation weight, was re-selected inside each
 fold and chose the same value in all five.
 
-**Coverage and shift.** The panel is skewed toward particular protein families, organisms and assay types and
-performance is not uniform across them; a family absent from the benchmark should be expected to behave like
-the large-assay regime.
+**Coverage and shift.** The panel is skewed toward particular families, organisms and assay types and performance
+is not uniform across them; a family absent from it should be expected to behave like the large-assay regime.
 
 **Scope of the evaluation.** Every result is on ProteinGym substitutions, ProteinGym indels, or FLIP2's
 published splits, and the top-of-list analysis characterises a *ranking*. Turning an enriched ranking into a
