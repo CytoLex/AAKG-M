@@ -12,8 +12,8 @@ standard across machine learning \cite{jacobs1991,shazeer2017}. Forecast combina
 longer: combining several forecasts by estimating weights is routinely no better than averaging them, a result
 known as the forecast combination puzzle \cite{timmermann2006forecast}, with a theoretical explanation in which
 weight-estimation error outweighs the benefit of weighting \cite{claeskens2016forecast}.
-It has been argued partly an artefact of low-power tests \cite{frazier2023solving}, which is why we report
-assay-level intervals and a permutation null. \cite{qian2015forecast} separates combining *for improvement* from
+It has been argued partly an artefact of low-power tests \cite{frazier2023solving}, which is why our comparisons
+carry assay-level intervals and a permutation null. \cite{qian2015forecast} separates combining *for improvement* from
 combining *for adaptation* — this paper's expert and allocation levers — and our contribution is to measure both in
 one domain and bound the adaptation side.
 

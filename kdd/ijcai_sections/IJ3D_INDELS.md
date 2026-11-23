@@ -10,11 +10,10 @@ exact.
 | oracle minus constant | +0.0051 | **+0.0084** |
 | median variants | thousands | **154** |
 
-The oracle gap is 1.6 times larger on indels, which on its own would say allocation headroom is
-substantial here. The split test says otherwise: weights selected on half an assay's variants **lose** 0.0032 on the other
-half, where the same procedure gains +0.0047 on substitutions. The difference is assay size. Across indel assay-size quartiles the out-of-sample gain is −0.0053,
-−0.0023, −0.0002 and **+0.0044**; only the largest, at a median of 490 variants, recovers part of what an
-oracle fitted in place suggests.
+The oracle gap is 1.6 times larger on indels, which on its own would say the headroom is substantial here. The
+split test says otherwise: weights fitted on half an assay's variants **lose** 0.0032, where the same procedure
+gains +0.0047 on substitutions. The difference is assay size — across indel quartiles the out-of-sample gain runs
+−0.0053, −0.0023, −0.0002 and **+0.0044**, so only the largest, at a median of 490 variants, recovers any of it.
 
 **The representation transfers too.** Our differential encoder is the strongest single expert on the indel
 pool at **0.8858** against 0.8231 for the best published model, and lifts the three-expert blend from 0.8438

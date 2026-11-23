@@ -77,8 +77,8 @@ standard across machine learning \cite{jacobs1991,shazeer2017}. Forecast combina
 longer: combining several forecasts by estimating weights is routinely no better than averaging them, a result
 known as the forecast combination puzzle \cite{timmermann2006forecast}, with a theoretical explanation in which
 weight-estimation error outweighs the benefit of weighting \cite{claeskens2016forecast}.
-It has been argued partly an artefact of low-power tests \cite{frazier2023solving}, which is why we report
-assay-level intervals and a permutation null. \cite{qian2015forecast} separates combining *for improvement* from
+It has been argued partly an artefact of low-power tests \cite{frazier2023solving}, which is why our comparisons
+carry assay-level intervals and a permutation null. \cite{qian2015forecast} separates combining *for improvement* from
 combining *for adaptation* — this paper's expert and allocation levers — and our contribution is to measure both in
 one domain and bound the adaptation side.
 
@@ -149,6 +149,12 @@ files, verified on all three schemes for a 9,576-variant assay.
 One mechanism clears the constant by +0.00025 with an interval straddling zero; four land within 0.0006
 below. **None is separated from the constant by more than the seed-to-seed spread of the models themselves.**
 
+**And the constant is not separated from a parameter-free average either.** Averaging the experts' within-assay
+ranks — no labels, no parameters — reaches **0.6942** against the tuned constant's **0.6952**, a paired difference of
+**−0.0010** with a 95% CI of [−0.0031, +0.0011]. So nothing in this section separates from simple rank averaging,
+tuned or learned: the comparison the mechanisms had to survive was itself only tied with a rule that requires no
+fitting at all.
+
 ## 3.3 The bound, measured against the expert lever
 
 Two quantities decide where the effort belongs, and they have to be measured in one pipeline or the
@@ -181,8 +187,9 @@ evaluated on the other half, with the reference constant fitted on the same half
 | partial pooling, k tuned | +0.0051 | +0.0021 |
 | **partial pooling, λ derived** | **+0.0051** | **+0.0022** |
 
-Unregularised per-assay fitting gains on substitutions and **loses** on indels, where assays are small.
-Shrinking each assay's weights toward the panel-wide constant, `w(λ) = (1−λ)·w_panel + λ·w_i`, gains on both.
+Unregularised per-assay fitting gains on substitutions and **loses** on indels, where assays are small. Shrinking
+each assay's weights toward the panel-wide constant, `w(λ) = (1−λ)·w_panel + λ·w_i`, gains on both — the figures
+below are over the constant fitted in this out-of-sample protocol, not the §3.3 one.
 
 **Shrinkage is the fix, and a single level is enough.** The strength has a closed form — `λ_i = τ²/(τ² + σ²_i)`,
 with σ²_i the sampling variance of an assay's fitted weights from six half-splits and τ² the between-assay
@@ -211,11 +218,10 @@ Disagreement between the raw predictions is weaker, at r = +0.509, and skill-wei
 with that literature we report this as a trade-off, not a maximand — pushing disagreement further by residualising
 an expert against the pool collapsed its accuracy to −0.33 and bought nothing.
 
-**This is the sharpest comparison in the paper.** The seven mechanisms of §3.2 are the designed answer to
-this problem; the best captures **+0.00025** over its tuned constant. A two-parameter shrinkage captures
-**+0.0051** over the constant in its own out-of-sample protocol — twenty times as much — and stays positive on
-indels, where unregularised fitting loses. Here the estimation problem was a variance problem, and its fix does
-not need to know the variance: shrinking toward the pool by any reasonable amount recovers most of it.
+**This is the sharpest comparison in the paper.** The best of the seven designed mechanisms captures +0.00025 over
+its tuned constant; a two-parameter shrinkage captures **+0.0051** in its own protocol — twenty times as much — and
+stays positive where unregularised fitting loses. The estimation problem was a variance problem, and its fix need
+not know the variance.
 
 ## 3.5 A second benchmark: the bound has two parts
 
@@ -229,11 +235,10 @@ exact.
 | oracle minus constant | +0.0051 | **+0.0084** |
 | median variants | thousands | **154** |
 
-The oracle gap is 1.6 times larger on indels, which on its own would say allocation headroom is
-substantial here. The split test says otherwise: weights selected on half an assay's variants **lose** 0.0032 on the other
-half, where the same procedure gains +0.0047 on substitutions. The difference is assay size. Across indel assay-size quartiles the out-of-sample gain is −0.0053,
-−0.0023, −0.0002 and **+0.0044**; only the largest, at a median of 490 variants, recovers part of what an
-oracle fitted in place suggests.
+The oracle gap is 1.6 times larger on indels, which on its own would say the headroom is substantial here. The
+split test says otherwise: weights fitted on half an assay's variants **lose** 0.0032, where the same procedure
+gains +0.0047 on substitutions. The difference is assay size — across indel quartiles the out-of-sample gain runs
+−0.0053, −0.0023, −0.0002 and **+0.0044**, so only the largest, at a median of 490 variants, recovers any of it.
 
 **The representation transfers too.** Our differential encoder is the strongest single expert on the indel
 pool at **0.8858** against 0.8231 for the best published model, and lifts the three-expert blend from 0.8438
@@ -270,8 +275,7 @@ estimate it — the estimability story of §3.4 applied to a noisier statistic.
 **When the oracle is small, the pool is the problem.** If no weighting of these experts can gain more
 than +0.0051, the next +0.01 has to come from an expert that disagrees usefully. §4 builds one.
 
-The claim is bounded by the pool: the oracle is a function of how much the experts disagree, so a pool built to
-disagree could make gating worthwhile again — a different paper that would have to report the oracle too.
+The claim is bounded by the pool: a pool built to disagree more could make gating worthwhile again.
 
 ## 4 The expert
 
@@ -299,12 +303,10 @@ it is a property of the change, read in context. The features follow from that: 
 
 ## 4.2 Distillation, and a residual per functional category
 
-A 12,800-dimensional head trained on a few thousand variants per assay overfits before it learns. We
-regularise it with the two strongest experts: their per-assay z-scores give a teacher
-`t = 0.4·Kermut_z + 0.5·AMK_z`, and the loss is `(1 − α)·MSE(student, target) + α·MSE(student, teacher)`
-with α = 0.9. Re-selecting α inside each of the five folds, using only training assays, picks 0.9 in all
-five. Distillation is worth +0.114 on the union representation — the largest single step in the encoder's
-development, larger than the feature union itself.
+A 12,800-dimensional head trained on a few thousand variants per assay overfits before it learns, so we regularise
+it with the two strongest experts: their per-assay z-scores give a teacher `t = 0.4·Kermut_z + 0.5·AMK_z`, and the
+loss mixes the target with it at α = 0.9, re-selected inside each fold on training assays and chosen 0.9 in all
+five. Distillation is worth +0.114 — the largest single step in the encoder's development.
 
 Assays fall into five categories that behave differently, so we add a low-rank correction to the head:
 `y = MLP(x) + U_c V_cᵀ x`, with `U_c` zero-initialised and rank 8, `c` the assay's category. The branch is
@@ -424,9 +426,8 @@ OrganismalFitness, 4.2x Expression, and **3.4x on Activity** — and activity is
 campaigns care about. **The ranker is roughly twice as good at prioritising stability mutants as
 activity mutants.**
 
-Ranking and ground truth are both computed within an assay-by-split unit on the released DMS files, so
-the reference is independent of §4, and the lift rather than the raw recall is the quantity to compare
-across categories.
+Ranking and ground truth are computed within an assay-by-split unit on the released files, so the reference is
+independent of §4; the lift, not the raw recall, is what compares across categories.
 
 ## 5.3 The operating range
 
@@ -517,12 +518,11 @@ regularisation rather than capacity. It is a distribution-shift problem, which i
 adaptive weighting and why the reachable part of that lever is 42% of an expert change. And it is a representation
 problem: the signal lives in the difference between two sequences, read in its local context.
 
-Three challenges arise from using AI here. Wet-lab validation is the field's binding constraint, and this
-paper places its claims at the ranking rather than at the bench: an enriched ranking is the step a campaign
-acts on before synthesis, and it is where this evaluation stops by design. Assay data is heterogeneous in ways metadata does not capture — two stability assays
-on one protein can disagree in sign — so a category-averaged metric can look stable while individual
-assays move sharply both ways. And the benchmark ecosystem rewards leaderboard movement over
-characterisation, while characterisation is what a domain user needs most.
+Three challenges arise from using AI here. Wet-lab validation is the field's binding constraint, and this paper
+places its claims at the ranking rather than the bench. Assay data is heterogeneous in ways metadata does not
+capture — two stability assays on one protein can disagree in sign — so a category-averaged metric can look stable
+while individual assays move sharply both ways. And the ecosystem rewards leaderboard movement over
+characterisation, which is what a domain user needs most.
 
 On our use of ProteinGym: rather than only taking from a public benchmark we verify it end to end, publish
 per-mutant predictions for all 696,311 variants so the evaluation stands without our code, and characterise its

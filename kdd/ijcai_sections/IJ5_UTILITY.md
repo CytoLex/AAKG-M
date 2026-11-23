@@ -52,9 +52,8 @@ OrganismalFitness, 4.2x Expression, and **3.4x on Activity** — and activity is
 campaigns care about. **The ranker is roughly twice as good at prioritising stability mutants as
 activity mutants.**
 
-Ranking and ground truth are both computed within an assay-by-split unit on the released DMS files, so
-the reference is independent of §4, and the lift rather than the raw recall is the quantity to compare
-across categories.
+Ranking and ground truth are computed within an assay-by-split unit on the released files, so the reference is
+independent of §4; the lift, not the raw recall, is what compares across categories.
 
 ## 5.3 The operating range
 

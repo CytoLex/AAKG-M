@@ -22,12 +22,10 @@ it is a property of the change, read in context. The features follow from that: 
 
 ## 4.2 Distillation, and a residual per functional category
 
-A 12,800-dimensional head trained on a few thousand variants per assay overfits before it learns. We
-regularise it with the two strongest experts: their per-assay z-scores give a teacher
-`t = 0.4·Kermut_z + 0.5·AMK_z`, and the loss is `(1 − α)·MSE(student, target) + α·MSE(student, teacher)`
-with α = 0.9. Re-selecting α inside each of the five folds, using only training assays, picks 0.9 in all
-five. Distillation is worth +0.114 on the union representation — the largest single step in the encoder's
-development, larger than the feature union itself.
+A 12,800-dimensional head trained on a few thousand variants per assay overfits before it learns, so we regularise
+it with the two strongest experts: their per-assay z-scores give a teacher `t = 0.4·Kermut_z + 0.5·AMK_z`, and the
+loss mixes the target with it at α = 0.9, re-selected inside each fold on training assays and chosen 0.9 in all
+five. Distillation is worth +0.114 — the largest single step in the encoder's development.
 
 Assays fall into five categories that behave differently, so we add a low-rank correction to the head:
 `y = MLP(x) + U_c V_cᵀ x`, with `U_c` zero-initialised and rank 8, `c` the assay's category. The branch is

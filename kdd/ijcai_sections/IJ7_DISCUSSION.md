@@ -15,12 +15,11 @@ regularisation rather than capacity. It is a distribution-shift problem, which i
 adaptive weighting and why the reachable part of that lever is 42% of an expert change. And it is a representation
 problem: the signal lives in the difference between two sequences, read in its local context.
 
-Three challenges arise from using AI here. Wet-lab validation is the field's binding constraint, and this
-paper places its claims at the ranking rather than at the bench: an enriched ranking is the step a campaign
-acts on before synthesis, and it is where this evaluation stops by design. Assay data is heterogeneous in ways metadata does not capture — two stability assays
-on one protein can disagree in sign — so a category-averaged metric can look stable while individual
-assays move sharply both ways. And the benchmark ecosystem rewards leaderboard movement over
-characterisation, while characterisation is what a domain user needs most.
+Three challenges arise from using AI here. Wet-lab validation is the field's binding constraint, and this paper
+places its claims at the ranking rather than the bench. Assay data is heterogeneous in ways metadata does not
+capture — two stability assays on one protein can disagree in sign — so a category-averaged metric can look stable
+while individual assays move sharply both ways. And the ecosystem rewards leaderboard movement over
+characterisation, which is what a domain user needs most.
 
 On our use of ProteinGym: rather than only taking from a public benchmark we verify it end to end, publish
 per-mutant predictions for all 696,311 variants so the evaluation stands without our code, and characterise its

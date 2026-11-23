@@ -25,6 +25,12 @@ files, verified on all three schemes for a 9,576-variant assay.
 One mechanism clears the constant by +0.00025 with an interval straddling zero; four land within 0.0006
 below. **None is separated from the constant by more than the seed-to-seed spread of the models themselves.**
 
+**And the constant is not separated from a parameter-free average either.** Averaging the experts' within-assay
+ranks — no labels, no parameters — reaches **0.6942** against the tuned constant's **0.6952**, a paired difference of
+**−0.0010** with a 95% CI of [−0.0031, +0.0011]. So nothing in this section separates from simple rank averaging,
+tuned or learned: the comparison the mechanisms had to survive was itself only tied with a rule that requires no
+fitting at all.
+
 ## 3.3 The bound, measured against the expert lever
 
 Two quantities decide where the effort belongs, and they have to be measured in one pipeline or the
@@ -57,8 +63,9 @@ evaluated on the other half, with the reference constant fitted on the same half
 | partial pooling, k tuned | +0.0051 | +0.0021 |
 | **partial pooling, λ derived** | **+0.0051** | **+0.0022** |
 
-Unregularised per-assay fitting gains on substitutions and **loses** on indels, where assays are small.
-Shrinking each assay's weights toward the panel-wide constant, `w(λ) = (1−λ)·w_panel + λ·w_i`, gains on both.
+Unregularised per-assay fitting gains on substitutions and **loses** on indels, where assays are small. Shrinking
+each assay's weights toward the panel-wide constant, `w(λ) = (1−λ)·w_panel + λ·w_i`, gains on both — the figures
+below are over the constant fitted in this out-of-sample protocol, not the §3.3 one.
 
 **Shrinkage is the fix, and a single level is enough.** The strength has a closed form — `λ_i = τ²/(τ² + σ²_i)`,
 with σ²_i the sampling variance of an assay's fitted weights from six half-splits and τ² the between-assay
@@ -87,9 +94,8 @@ Disagreement between the raw predictions is weaker, at r = +0.509, and skill-wei
 with that literature we report this as a trade-off, not a maximand — pushing disagreement further by residualising
 an expert against the pool collapsed its accuracy to −0.33 and bought nothing.
 
-**This is the sharpest comparison in the paper.** The seven mechanisms of §3.2 are the designed answer to
-this problem; the best captures **+0.00025** over its tuned constant. A two-parameter shrinkage captures
-**+0.0051** over the constant in its own out-of-sample protocol — twenty times as much — and stays positive on
-indels, where unregularised fitting loses. Here the estimation problem was a variance problem, and its fix does
-not need to know the variance: shrinking toward the pool by any reasonable amount recovers most of it.
+**This is the sharpest comparison in the paper.** The best of the seven designed mechanisms captures +0.00025 over
+its tuned constant; a two-parameter shrinkage captures **+0.0051** in its own protocol — twenty times as much — and
+stays positive where unregularised fitting loses. The estimation problem was a variance problem, and its fix need
+not know the variance.
 

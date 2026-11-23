@@ -22,5 +22,4 @@ estimate it — the estimability story of §3.4 applied to a noisier statistic.
 **When the oracle is small, the pool is the problem.** If no weighting of these experts can gain more
 than +0.0051, the next +0.01 has to come from an expert that disagrees usefully. §4 builds one.
 
-The claim is bounded by the pool: the oracle is a function of how much the experts disagree, so a pool built to
-disagree could make gating worthwhile again — a different paper that would have to report the oracle too.
+The claim is bounded by the pool: a pool built to disagree more could make gating worthwhile again.
