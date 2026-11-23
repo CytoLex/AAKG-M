@@ -9,14 +9,14 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-W = 2.57                      # matches 0.76 * IJCAI column width (3.375 in)
+W = 2.30                      # matches 0.68 * IJCAI column width (3.375 in)
 plt.rcParams.update({"font.size": 8.5, "axes.linewidth": 0.6, "xtick.major.width": 0.6,
                      "ytick.major.width": 0.6, "font.family": "DejaVu Sans"})
 
 # ---------------------------------------------------------------- Figure 1
 # Both quantities measured in one pipeline on the 182 assays where the distilled expert covers the panel.
 const, oracle, poolB = 0.6830, 0.6881, 0.6952
-fig, ax = plt.subplots(figsize=(W, 1.65))
+fig, ax = plt.subplots(figsize=(W, 1.55))
 ax.set_xlim(0.6820, 0.6965); ax.set_ylim(-0.9, 2.6)
 
 # both arrows start from the same constant, which is the point of the figure
@@ -52,7 +52,7 @@ top10 = [0.2714, 0.3198, 0.3316, 0.3466, 0.4825]
 rand = [0.0101, 0.0100, 0.0101, 0.0104, 0.0100]
 
 x = np.arange(len(cats)); w = 0.26
-fig, ax = plt.subplots(figsize=(W, 1.7))
+fig, ax = plt.subplots(figsize=(W, 1.6))
 ax.bar(x - w, top1, w, label="top 1%", color="#1f4e79")
 ax.bar(x, top5, w, label="top 5%", color="#3a7ca5")
 ax.bar(x + w, top10, w, label="top 10%", color="#90b8d4")

@@ -24,7 +24,6 @@ explicit that diversity should be traded off against bias and variance rather th
 paper arrives from the other direction: disagreement predicts an expert's marginal value (r = +0.63), but pushing
 it further costs competence faster than it buys disagreement.
 
-**Evaluation practice in AI for science.** Aggregate correlation is the standard reporting unit and a poor
-guide to deployment: it is insensitive to where in the ranking errors fall, and it averages over
-subpopulations a practitioner treats separately. Our top-of-list analysis by functional category is a
-step toward reporting what a downstream experiment would experience.
+**Evaluation practice in AI for science.** Aggregate correlation is the standard reporting unit and a poor guide to
+deployment: it ignores where in the ranking errors fall and averages over subpopulations a practitioner treats
+separately. Our top-of-list analysis by category reports what a downstream experiment would experience.

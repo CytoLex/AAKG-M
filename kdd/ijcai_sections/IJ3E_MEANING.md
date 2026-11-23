@@ -19,7 +19,7 @@ at 5%** (+0.0029, CI [−0.0028, +0.0085]) **or 10%** (+0.0014), and on the inde
 the counting statistic is not estimable there. The rule is real where a campaign operates and where the assay is large enough to
 estimate it — the estimability story of §3.4 applied to a noisier statistic.
 
-**When the oracle is small, the pool is the problem.** If no weighting of these experts can gain more
-than +0.0051, the next +0.01 has to come from an expert that disagrees usefully. §4 builds one.
+**When the oracle is small, the pool is the problem**: the next +0.01 has to come from an expert that disagrees
+usefully, which §4 builds.
 
 The claim is bounded by the pool: a pool built to disagree more could make gating worthwhile again.

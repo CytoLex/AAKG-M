@@ -89,10 +89,9 @@ explicit that diversity should be traded off against bias and variance rather th
 paper arrives from the other direction: disagreement predicts an expert's marginal value (r = +0.63), but pushing
 it further costs competence faster than it buys disagreement.
 
-**Evaluation practice in AI for science.** Aggregate correlation is the standard reporting unit and a poor
-guide to deployment: it is insensitive to where in the ranking errors fall, and it averages over
-subpopulations a practitioner treats separately. Our top-of-list analysis by functional category is a
-step toward reporting what a downstream experiment would experience.
+**Evaluation practice in AI for science.** Aggregate correlation is the standard reporting unit and a poor guide to
+deployment: it ignores where in the ranking errors fall and averages over subpopulations a practitioner treats
+separately. Our top-of-list analysis by category reports what a downstream experiment would experience.
 
 ## 3 What allocation is worth
 
@@ -272,8 +271,8 @@ at 5%** (+0.0029, CI [−0.0028, +0.0085]) **or 10%** (+0.0014), and on the inde
 the counting statistic is not estimable there. The rule is real where a campaign operates and where the assay is large enough to
 estimate it — the estimability story of §3.4 applied to a noisier statistic.
 
-**When the oracle is small, the pool is the problem.** If no weighting of these experts can gain more
-than +0.0051, the next +0.01 has to come from an expert that disagrees usefully. §4 builds one.
+**When the oracle is small, the pool is the problem**: the next +0.01 has to come from an expert that disagrees
+usefully, which §4 builds.
 
 The claim is bounded by the pool: a pool built to disagree more could make gating worthwhile again.
 
@@ -322,14 +321,12 @@ saturated far below what memorising a category would require.
 
 ## 4.3 Variance, and four fixed weights
 
-Eight independent runs of the same architecture differ by about 0.004 in the official metric. We average
-the predictions per variant rather than the scores: +0.023 standalone, +0.0022 in the fusion, the
-asymmetry being that the fusion already averages four experts.
+Eight runs of the same architecture differ by about 0.004 in the official metric, so we average predictions per
+variant rather than scores: +0.023 standalone but only +0.0022 in the fusion, which already averages four experts.
 
 The fusion is four numbers, `0.00·D + 0.40·Kermut + 0.40·AMK + 0.20·X`, selected on the training assays
-of each fold and applied to the held-out ones — exactly the protocol the tuned constant uses. The search
-drives the additive-structure weight to 0.00 in 14 of 15 seed-by-fold cells and sets the new expert to
-0.20 in all 15. Under the official metric:
+of each fold and applied to the held-out ones — exactly the protocol the tuned constant uses. The search drives the additive-structure weight to 0.00 in 14 of 15 seed-by-fold cells and the new expert to 0.20
+in all 15. Under the official metric:
 
 | configuration | official |
 |---|---:|
@@ -389,10 +386,9 @@ our folds are bit-identical to the released distribution.
 | our fusion, single model | **0.691** | 0.782 | 0.671 | 0.624 |
 | our fusion, seed-averaged | **0.694** | 0.784 | 0.674 | 0.625 |
 
-Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.037 is what
-adding two complementary experts to the strongest published single model is worth. The equal-compute
-comparison is the single-model rung above — one trained expert instead of eight averaged ones — which
-still leads Kermut by 0.034.
+Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.037 is what adding two
+complementary experts to the strongest published single model is worth. The equal-compute comparison is the
+single-model rung, one trained expert rather than eight averaged, which still leads Kermut by 0.034.
 
 ## 5.2 The aggregate hides the category, and the top of the list
 
@@ -414,17 +410,21 @@ question is whether the top of our ranking contains the top of the true ranking.
 we take the top *k* ∈ {1%, 5%, 10%} and measure how many land in the true top *k*, aggregating the
 official way:
 
-| top of the list | recall of the true top | random | lift |
-|---|---:|---:|---:|
-| 1% | **0.119** | 0.010 | **11.8x** |
-| 5% | **0.247** | 0.050 | **4.96x** |
-| 10% | **0.350** | 0.100 | **3.50x** |
+| top of the list | recall of the true top | lift over random |
+|---|---:|---:|
+| 1% | **0.112** [0.099, 0.125] | **11.2x** [9.9x, 12.5x] |
+| 5% | **0.239** [0.223, 0.255] | **4.78x** [4.46x, 5.10x] |
+| 10% | **0.343** [0.329, 0.357] | **3.43x** [3.29x, 3.57x] |
+
+Intervals are bootstrap over assays. These are the values the released scores regenerate under the fixed fusion of
+§4.3; the per-fold weight search used for the headline score is not in the release, and reproduces them to within
+0.01 rather than exactly.
 
 Ordering the top 5% recovers about a quarter of the true top 5%, roughly five times random. It is also
-category-dependent, in the direction the category table above predicts: 7.7x on Stability, 4.9x Binding, 4.6x
-OrganismalFitness, 4.2x Expression, and **3.4x on Activity** — and activity is what function-oriented
-campaigns care about. **The ranker is roughly twice as good at prioritising stability mutants as
-activity mutants.**
+category-dependent in the direction the table above predicts: **7.8x on Stability** [7.4, 8.1], 4.2x Binding
+[3.1, 5.3], 4.1x Expression [3.4, 4.7], and **3.5x on Activity** [3.0, 3.9] — and activity is what
+function-oriented campaigns care about. **The ranker is roughly twice as good at prioritising stability mutants as
+activity mutants**, and the intervals separate.
 
 Ranking and ground truth are computed within an assay-by-split unit on the released files, so the reference is
 independent of §4; the lift, not the raw recall, is what compares across categories.
@@ -458,13 +458,14 @@ expert elsewhere moves the weights applied to them.
 
 ### Limitations
 
-**The operating range is specific and §5.3 measures it**: recall is twice as high on stability assays as on
-activity, and the improvement reaches +0.00003 on the largest quartile. The aggregate is the centre of that range,
-not a property of any one assay, and a practitioner should read the per-category numbers as the applicable part.
+**The operating range is specific and §5.3 measures it**: recall is twice as high on stability as on activity, and
+the improvement reaches +0.00003 on the largest quartile. The aggregate is the centre of that range, not a property
+of any one assay.
 
 **The structural experts are inherited, not retrained inside each outer fold**, and every reported number is
-reproducible from the published per-mutant scores; a fully nested protocol would retrain them within each
-fold. The one hyperparameter that materially matters, the distillation weight, was re-selected inside each
+reproducible from the published per-mutant scores except the per-fold fusion weights, which are summarised rather
+than released — the utility figures in §5.2 therefore regenerate to within 0.01 under the fixed fusion rather than
+exactly. A fully nested protocol would retrain the structural experts within each fold. The one hyperparameter that materially matters, the distillation weight, was re-selected inside each
 fold and chose the same value in all five.
 
 **Coverage and shift.** The panel is skewed toward particular families, organisms and assay types and performance
@@ -487,9 +488,10 @@ assays only.
 
 
 
-**Data and released artifacts.** All assays are previously published deep-mutational-scanning datasets distributed by ProteinGym: no new experimental data, no human subjects, no clinical material. The submission includes, as anonymised supplementary material, per-mutant
-predictions for all 696,311 mutants, the code reproducing every reported number, and the recovered kernel
-for the structural experts; all of it is released publicly on publication. The code is permissively licensed; the expert prediction tables are research-use only because they derive from
+**Data and released artifacts.** All assays are previously published deep-mutational-scanning datasets distributed
+by ProteinGym: no new experimental data, no human subjects, no clinical material. The submission includes, as
+anonymised supplementary material, per-mutant predictions for all 696,311 mutants, the code behind every reported
+number, and the recovered kernel for the structural experts. The code is permissively licensed; the expert prediction tables are research-use only because they derive from
 third-party methods.
 
 **Generative AI usage.** Analysis scripts, evaluation harnesses and LaTeX assembly were written and

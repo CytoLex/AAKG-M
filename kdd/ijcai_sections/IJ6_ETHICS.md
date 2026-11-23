@@ -1,12 +1,13 @@
 ### Limitations
 
-**The operating range is specific and §5.3 measures it**: recall is twice as high on stability assays as on
-activity, and the improvement reaches +0.00003 on the largest quartile. The aggregate is the centre of that range,
-not a property of any one assay, and a practitioner should read the per-category numbers as the applicable part.
+**The operating range is specific and §5.3 measures it**: recall is twice as high on stability as on activity, and
+the improvement reaches +0.00003 on the largest quartile. The aggregate is the centre of that range, not a property
+of any one assay.
 
 **The structural experts are inherited, not retrained inside each outer fold**, and every reported number is
-reproducible from the published per-mutant scores; a fully nested protocol would retrain them within each
-fold. The one hyperparameter that materially matters, the distillation weight, was re-selected inside each
+reproducible from the published per-mutant scores except the per-fold fusion weights, which are summarised rather
+than released — the utility figures in §5.2 therefore regenerate to within 0.01 under the fixed fusion rather than
+exactly. A fully nested protocol would retrain the structural experts within each fold. The one hyperparameter that materially matters, the distillation weight, was re-selected inside each
 fold and chose the same value in all five.
 
 **Coverage and shift.** The panel is skewed toward particular families, organisms and assay types and performance
@@ -29,9 +30,10 @@ assays only.
 
 
 
-**Data and released artifacts.** All assays are previously published deep-mutational-scanning datasets distributed by ProteinGym: no new experimental data, no human subjects, no clinical material. The submission includes, as anonymised supplementary material, per-mutant
-predictions for all 696,311 mutants, the code reproducing every reported number, and the recovered kernel
-for the structural experts; all of it is released publicly on publication. The code is permissively licensed; the expert prediction tables are research-use only because they derive from
+**Data and released artifacts.** All assays are previously published deep-mutational-scanning datasets distributed
+by ProteinGym: no new experimental data, no human subjects, no clinical material. The submission includes, as
+anonymised supplementary material, per-mutant predictions for all 696,311 mutants, the code behind every reported
+number, and the recovered kernel for the structural experts. The code is permissively licensed; the expert prediction tables are research-use only because they derive from
 third-party methods.
 
 **Generative AI usage.** Analysis scripts, evaluation harnesses and LaTeX assembly were written and

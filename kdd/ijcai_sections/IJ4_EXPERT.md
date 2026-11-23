@@ -41,14 +41,12 @@ saturated far below what memorising a category would require.
 
 ## 4.3 Variance, and four fixed weights
 
-Eight independent runs of the same architecture differ by about 0.004 in the official metric. We average
-the predictions per variant rather than the scores: +0.023 standalone, +0.0022 in the fusion, the
-asymmetry being that the fusion already averages four experts.
+Eight runs of the same architecture differ by about 0.004 in the official metric, so we average predictions per
+variant rather than scores: +0.023 standalone but only +0.0022 in the fusion, which already averages four experts.
 
 The fusion is four numbers, `0.00·D + 0.40·Kermut + 0.40·AMK + 0.20·X`, selected on the training assays
-of each fold and applied to the held-out ones — exactly the protocol the tuned constant uses. The search
-drives the additive-structure weight to 0.00 in 14 of 15 seed-by-fold cells and sets the new expert to
-0.20 in all 15. Under the official metric:
+of each fold and applied to the held-out ones — exactly the protocol the tuned constant uses. The search drives the additive-structure weight to 0.00 in 14 of 15 seed-by-fold cells and the new expert to 0.20
+in all 15. Under the official metric:
 
 | configuration | official |
 |---|---:|

@@ -15,10 +15,9 @@ our folds are bit-identical to the released distribution.
 | our fusion, single model | **0.691** | 0.782 | 0.671 | 0.624 |
 | our fusion, seed-averaged | **0.694** | 0.784 | 0.674 | 0.625 |
 
-Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.037 is what
-adding two complementary experts to the strongest published single model is worth. The equal-compute
-comparison is the single-model rung above — one trained expert instead of eight averaged ones — which
-still leads Kermut by 0.034.
+Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.037 is what adding two
+complementary experts to the strongest published single model is worth. The equal-compute comparison is the
+single-model rung, one trained expert rather than eight averaged, which still leads Kermut by 0.034.
 
 ## 5.2 The aggregate hides the category, and the top of the list
 
@@ -40,17 +39,21 @@ question is whether the top of our ranking contains the top of the true ranking.
 we take the top *k* ∈ {1%, 5%, 10%} and measure how many land in the true top *k*, aggregating the
 official way:
 
-| top of the list | recall of the true top | random | lift |
-|---|---:|---:|---:|
-| 1% | **0.119** | 0.010 | **11.8x** |
-| 5% | **0.247** | 0.050 | **4.96x** |
-| 10% | **0.350** | 0.100 | **3.50x** |
+| top of the list | recall of the true top | lift over random |
+|---|---:|---:|
+| 1% | **0.112** [0.099, 0.125] | **11.2x** [9.9x, 12.5x] |
+| 5% | **0.239** [0.223, 0.255] | **4.78x** [4.46x, 5.10x] |
+| 10% | **0.343** [0.329, 0.357] | **3.43x** [3.29x, 3.57x] |
+
+Intervals are bootstrap over assays. These are the values the released scores regenerate under the fixed fusion of
+§4.3; the per-fold weight search used for the headline score is not in the release, and reproduces them to within
+0.01 rather than exactly.
 
 Ordering the top 5% recovers about a quarter of the true top 5%, roughly five times random. It is also
-category-dependent, in the direction the category table above predicts: 7.7x on Stability, 4.9x Binding, 4.6x
-OrganismalFitness, 4.2x Expression, and **3.4x on Activity** — and activity is what function-oriented
-campaigns care about. **The ranker is roughly twice as good at prioritising stability mutants as
-activity mutants.**
+category-dependent in the direction the table above predicts: **7.8x on Stability** [7.4, 8.1], 4.2x Binding
+[3.1, 5.3], 4.1x Expression [3.4, 4.7], and **3.5x on Activity** [3.0, 3.9] — and activity is what
+function-oriented campaigns care about. **The ranker is roughly twice as good at prioritising stability mutants as
+activity mutants**, and the intervals separate.
 
 Ranking and ground truth are computed within an assay-by-split unit on the released files, so the reference is
 independent of §4; the lift, not the raw recall, is what compares across categories.
