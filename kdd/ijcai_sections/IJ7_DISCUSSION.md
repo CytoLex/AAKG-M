@@ -3,9 +3,8 @@ Two things remain: what this work gives the domain it studies, and what would ov
 ### What this contributes to protein engineering
 
 A protein engineer choosing mutations against an assay budget needs a ranking they can act on, and the field's
-papers are not organised around that. Two deliverables follow. The first is a **calibrated expectation**: the top 5%
-recovers 24.7% of the true top 5%, 7.7x on stability assays against 3.4x on activity, and no advantage on the
-largest — a profile that lets a laboratory decide how much of the ordering to trust for its own property, which
+papers are not organised around that. Two deliverables follow. The first is a **calibrated expectation**: the top 5% recovers
+23.9% of the true top 5%, 7.8x on stability assays against 3.5x on activity, and no advantage on the largest — a profile that lets a laboratory decide how much of the ordering to trust for its own property, which
 aggregate Spearman cannot express. The second is **the boundary** — the regressing assays, the category that regresses on average, and the size
 regime at parity. For a practitioner the boundary is worth more than the mean: it is the difference between
 trusting a ranking on a familiar assay family and being surprised on a new one.

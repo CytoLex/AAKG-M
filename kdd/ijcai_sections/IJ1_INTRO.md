@@ -30,9 +30,9 @@ neighbourhood, distilled, with a functional-category residual. Fused at four fix
 against **0.657** for Kermut, having first reproduced Kermut's published per-assay table on 217 of 217 assays to
 mean absolute difference 0.0; the same representation wins six of seven FLIP2 splits.
 
-**An aggregate score is not a deployment specification.** The model that reaches 0.694 scores 0.851 on stability
-assays and 0.642 on activity, and the top 5% of its ranking recovers 24.7% of the true top 5% — a **4.96x** lift
-that is 7.7x on stability and 3.4x on activity. Those numbers let a laboratory decide how much of the ordering to
+**An aggregate score is not a deployment specification.** The model that reaches 0.694 scores 0.851 on stability assays and
+0.642 on activity, and the top 5% of its ranking recovers 23.9% of the true top 5% — a **4.8x** lift that is 7.8x
+on stability and 3.5x on activity. Those numbers let a laboratory decide how much of the ordering to
 trust for its own property and assay size.
 
 The levers are ordered, and so is what to do about each: measure the ceiling before tuning weights, spend on
