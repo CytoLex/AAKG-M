@@ -61,17 +61,10 @@ Two ablations agree: **co-distillation from the fusion** lifts the expert by +0.
 in the bundle is added to the pool formed by the other four, under the nested-constant protocol, and its marginal
 value compared with its standalone score and with its disagreement from that pool.
 
-| expert | solo | marginal | disagr. |
-|---|---:|---:|---:|
-| encoder §4.1 | 0.6449 | **+0.0118** | **0.194** |
-| Kermut | 0.6551 | +0.0062 | 0.143 |
-| Kseq | 0.6364 | +0.0004 | 0.104 |
-| D | 0.6561 | +0.0000 | 0.064 |
-| AMK | **0.6651** | +0.0028 | 0.060 |
-
-Marginal value tracks disagreement at r = **+0.786** across the thirteen pairs, and not accuracy: **the weakest
-expert alone contributes the most, and the strongest almost nothing.** A noise column, a shuffled copy and a negated
-copy each score **+0.0000**, so the measurement is not an artefact of enlarging the weight search.
+Figure 1 (right) shows all thirteen. Marginal value tracks disagreement at r = **+0.786** and not accuracy: **the
+weakest expert alone contributes the most — the encoder at 0.6449, adding +0.0118 — and the strongest contributes
+almost nothing, AMK at 0.6651 adding +0.0028.** A noise column, a shuffled copy and a negated copy each score
+**+0.0000**, so the measurement is not an artefact of enlarging the weight search.
 
 That reframes what building an expert means: useful disagreement comes from a different *view* of the same
 information — reference versus mutant, local versus global — not from a different optimiser, loss or bigger model.

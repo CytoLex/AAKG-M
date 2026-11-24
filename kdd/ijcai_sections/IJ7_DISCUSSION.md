@@ -1,5 +1,3 @@
-Two things remain: what this work gives the domain it studies, and what would overturn it.
-
 ### What this contributes to protein engineering
 
 A protein engineer choosing mutations against an assay budget needs a ranking they can act on, and the field's

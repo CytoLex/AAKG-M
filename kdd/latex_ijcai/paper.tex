@@ -156,15 +156,16 @@ deployment: it ignores where in the ranking errors fall and averages over subpop
 separately. Our top-of-list analysis by category reports what a downstream experiment would experience.
 
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=0.68\columnwidth]{../figures/fig1_allocation_vs_expert_ijcai.pdf}
-\caption{Both levers measured from the same origin and in one pipeline. The upper arrow is what any
-weighting rule could gain over a constant fitted on the other assays (a per-assay oracle, +0.0051); the
-lower is what adding one expert is worth (+0.0122). The intervals do not overlap, so allocation is the
-smaller lever by a margin that is not noise.}
+\includegraphics[width=0.92\textwidth]{../figures/fig1_allocation_vs_expert_ijcai.pdf}
+\caption{Left: both levers measured from one origin in one pipeline, the upper arrow being what any weighting of
+the pool could gain (a per-assay oracle, +0.0051) and the lower what adding one expert is worth (+0.0122). Right:
+the thirteen expert-into-pool pairs, marginal value against disagreement with the pool. The expert with the
+\emph{lowest} standalone score (X, 0.6449) contributes the most, and the highest (AMK, 0.6651) almost nothing,
+which is the claim the title makes; the noise, shuffle and negate controls each score zero.}
 \label{fig:allocation}
-\end{figure}
+\end{figure*}
 
 \section{What allocation is worth}\label{what-allocation-is-worth}
 
@@ -284,10 +285,9 @@ with σ²\_i the sampling variance of an assay's fitted weights from six half-sp
 variance --- and on indels it reaches \textbf{+0.0022} against +0.0025 for a hand-tuned k with no search.
 
 The control says what does the work: \textbf{permuting those coefficients across assays} changes the gain by at most
-\textbf{+0.0005} on indels, inside its own spread, and is 0.0009 \emph{better} on substitutions. \textbf{What matters is that the
-estimate is shrunk at all, not how finely}: on indels a flat λ of 0.60 gains +0.0062 where the derived median of
-0.41 gains +0.0052, so the closed form is, if anything, over-shrinking. We report the per-assay version for needing
-no hand-chosen constant, not because its adaptivity earns anything.
+\textbf{+0.0005} on indels, inside its own spread, and is 0.0009 \emph{better} on substitutions. \textbf{What matters is that the estimate is shrunk at all, not how finely}: on indels a flat λ of 0.60 gains +0.0062
+where the derived median of 0.41 gains +0.0052, so the closed form is, if anything, over-shrinking --- we report the
+per-assay version for needing no hand-chosen constant, not because its adaptivity earns anything.
 
 \textbf{And it is predictable before you fit.} The oracle gain is not evenly spread across assays. It is explained by
 the \textbf{ambiguity} of the pool on that assay --- the variance of the experts' own scores, the term the ensemble
@@ -306,10 +306,6 @@ Disagreement between the raw predictions is weaker, at r = +0.509, and skill-wei
 (+0.491): what helps is the spread of the experts' \emph{scores}, not the correlation of their \emph{predictions}. Consistent
 with that literature we report this as a trade-off, not a maximand --- pushing disagreement further by residualising
 an expert against the pool collapsed its accuracy to −0.33 and bought nothing.
-
-\textbf{This is the sharpest comparison in the paper.} The best designed mechanism captures +0.00025 over its tuned
-constant; a two-parameter shrinkage captures \textbf{+0.0051} in its own protocol --- twenty times as much --- and stays
-positive where unregularised fitting loses.
 
 \subsection{A second benchmark: the bound has two parts}\label{a-second-benchmark-the-bound-has-two-parts}
 
@@ -446,25 +442,10 @@ Two ablations agree: \textbf{co-distillation from the fusion} lifts the expert b
 in the bundle is added to the pool formed by the other four, under the nested-constant protocol, and its marginal
 value compared with its standalone score and with its disagreement from that pool.
 
-\begin{table}[!t]
-\centering
-\small
-\begin{tabular}{lrrr}
-\hline
-expert & solo & marginal & disagr. \\
-\hline
-encoder §4.1 & 0.6449 & \textbf{+0.0118} & \textbf{0.194} \\
-Kermut & 0.6551 & +0.0062 & 0.143 \\
-Kseq & 0.6364 & +0.0004 & 0.104 \\
-D & 0.6561 & +0.0000 & 0.064 \\
-AMK & \textbf{0.6651} & +0.0028 & 0.060 \\
-\hline
-\end{tabular}
-\end{table}
-
-Marginal value tracks disagreement at r = \textbf{+0.786} across the thirteen pairs, and not accuracy: \textbf{the weakest
-expert alone contributes the most, and the strongest almost nothing.} A noise column, a shuffled copy and a negated
-copy each score \textbf{+0.0000}, so the measurement is not an artefact of enlarging the weight search.
+Figure 1 (right) shows all thirteen. Marginal value tracks disagreement at r = \textbf{+0.786} and not accuracy: \textbf{the
+weakest expert alone contributes the most --- the encoder at 0.6449, adding +0.0118 --- and the strongest contributes
+almost nothing, AMK at 0.6651 adding +0.0028.} A noise column, a shuffled copy and a negated copy each score
+\textbf{+0.0000}, so the measurement is not an artefact of enlarging the weight search.
 
 That reframes what building an expert means: useful disagreement comes from a different \emph{view} of the same
 information --- reference versus mutant, local versus global --- not from a different optimiser, loss or bigger model.
@@ -648,8 +629,6 @@ caught a wrong paper title and a DOI belonging to a different article. No result
 generated by a model, no AI system is listed as an author, and the authors take full responsibility.
 
 \section{Discussion}\label{discussion}
-
-Two things remain: what this work gives the domain it studies, and what would overturn it.
 
 \subsubsection*{What this contributes to protein engineering}\label{what-this-contributes-to-protein-engineering}
 

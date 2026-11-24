@@ -119,15 +119,16 @@ for a in ("toprule", "midrule", "bottomrule"):
 (LATEX / "_body.tex").unlink()
 
 FIG1 = r"""
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=0.68\columnwidth]{../figures/fig1_allocation_vs_expert_ijcai.pdf}
-\caption{Both levers measured from the same origin and in one pipeline. The upper arrow is what any
-weighting rule could gain over a constant fitted on the other assays (a per-assay oracle, +0.0051); the
-lower is what adding one expert is worth (+0.0122). The intervals do not overlap, so allocation is the
-smaller lever by a margin that is not noise.}
+\includegraphics[width=0.92\textwidth]{../figures/fig1_allocation_vs_expert_ijcai.pdf}
+\caption{Left: both levers measured from one origin in one pipeline, the upper arrow being what any weighting of
+the pool could gain (a per-assay oracle, +0.0051) and the lower what adding one expert is worth (+0.0122). Right:
+the thirteen expert-into-pool pairs, marginal value against disagreement with the pool. The expert with the
+\emph{lowest} standalone score (X, 0.6449) contributes the most, and the highest (AMK, 0.6651) almost nothing,
+which is the claim the title makes; the noise, shuffle and negate controls each score zero.}
 \label{fig:allocation}
-\end{figure}
+\end{figure*}
 """
 FIG2 = r"""
 \begin{figure}[t]
