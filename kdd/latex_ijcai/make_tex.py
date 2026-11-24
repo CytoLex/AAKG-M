@@ -121,7 +121,7 @@ for a in ("toprule", "midrule", "bottomrule"):
 FIG1 = r"""
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.92\textwidth]{../figures/fig1_allocation_vs_expert_ijcai.pdf}
+\includegraphics[width=0.88\textwidth]{../figures/fig1_allocation_vs_expert_ijcai.pdf}
 \caption{Left: both levers measured from one origin in one pipeline, the upper arrow being what any weighting of
 the pool could gain (a per-assay oracle, +0.0051) and the lower what adding one expert is worth (+0.0122). Right:
 the thirteen expert-into-pool pairs, marginal value against disagreement with the pool; colour is the expert and
@@ -135,7 +135,7 @@ shuffle and negate controls each score zero.}
 FIG2 = r"""
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.68\columnwidth]{../figures/fig2_topk_by_category_ijcai.pdf}
+\includegraphics[width=0.64\columnwidth]{../figures/fig2_topk_by_category_ijcai.pdf}
 \caption{Top-of-list utility by functional category: recall of the true top-$k$ variants when the top
 $k$ of our ranking is taken, for $k \in \{1\%, 5\%, 10\%\}$, with the random-ordering expectation
 marked. Stability is consistently strongest and activity weakest, a spread the aggregate Spearman does

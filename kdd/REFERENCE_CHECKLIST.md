@@ -71,3 +71,31 @@ Re-run the check after any edit to the bibliography:
 python3 /tmp/xref.py      # DOI and venue verification via Crossref
 python3 /tmp/axmeta.py <arxiv-id> ...   # author lists and journal refs via arXiv
 ```
+
+## Entries added in the reference survey
+
+Nine were added, each verified before it entered the file, and each cited where the paper actually relies on the idea
+rather than only in related work.
+
+| key | venue | how verified | cited at |
+|---|---|---|---|
+| `rives2021esm1b` | PNAS 118(15):e2016239118, 2021 | Crossref by DOI 10.1073/pnas.2016239118 | §2 zero-shot line |
+| `fedus2022switch` | arXiv:2101.03961 | arXiv API, author list and year | §2 gating line |
+| `wolpert1992stacked` | Neural Networks 5(2):241–259, 1992 | Crossref 10.1016/S0893-6080(05)80023-1 | §3.2 baselines |
+| `caruana2004ensemble` | ICML 2004, p. 18 | Crossref 10.1145/1015330.1015432 | §3.2 baselines |
+| `james1961stein` | Proc. 4th Berkeley Symposium 1:361–379, 1961 | **not DOI-verified** | §3.4 shrinkage |
+| `efron1993bootstrap` | Chapman & Hall/CRC, 1993 | **not DOI-verified** | §3.3 intervals |
+| `hinton2015distilling` | arXiv:1503.02531 | arXiv API | §4.2 distillation |
+| `hu2022lora` | arXiv:2106.09685 | arXiv API | §4.2 low-rank branch |
+| `lakshminarayanan2017deep` | arXiv:1612.01474 | arXiv API | §4.3 seed averaging |
+
+**Two are cited without DOI verification** — James–Stein and Efron–Tibshirani are standard enough that the citation
+is safe, but both should be checked against a library copy before camera-ready, since the bibliography's provenance
+note claims every entry was verified against a primary source.
+
+Two lookups were abandoned rather than guessed: ProGen2 and SaProt returned rate limits from both APIs, and a
+domain reference that cannot be verified is worse than one fewer reference.
+
+Seven tables remain (the mechanism comparison, the shrinkage gains, the representation ladder, the headline, the
+category table, the top-k table and the quartile table); three that carried four numbers each became prose so the
+added references would not push the body past its page.

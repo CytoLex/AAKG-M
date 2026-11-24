@@ -22,13 +22,13 @@ it is a property of the change, read in context. The features follow from that: 
 
 ## 4.2 Distillation, and a residual per functional category
 
-A 12,800-dimensional head trained on a few thousand variants per assay overfits before it learns, so we regularise
-it with the two strongest experts: their per-assay z-scores give a teacher `t = 0.4·Kermut_z + 0.5·AMK_z`, and the
+A 12,800-dimensional head trained on a few thousand variants per assay overfits before it learns, so we regularise it by distillation \cite{hinton2015distilling} from the two strongest experts: their per-assay z-scores give a teacher `t = 0.4·Kermut_z + 0.5·AMK_z`, and the
 loss mixes the target with it at α = 0.9, re-selected inside each fold on training assays and chosen 0.9 in all
 five. Distillation is worth +0.114 — the largest single step in the encoder's development.
 
 Assays fall into five categories that behave differently, so we add a low-rank correction to the head:
-`y = MLP(x) + U_c V_cᵀ x`, with `U_c` zero-initialised and rank 8, `c` the assay's category. The branch is
+`y = MLP(x) + U_c V_cᵀ x`, with `U_c` zero-initialised and rank 8, `c` the assay's category — a low-rank
+adaptation in the sense of \cite{hu2022lora}. The branch is
 worth **+0.024** standalone and **+0.0014** in the fusion — the gap is the decorrelation argument in
 miniature, since a residual that makes an expert better can make it less useful to a pool already holding
 what it learned.
@@ -42,7 +42,7 @@ saturated far below what memorising a category would require.
 ## 4.3 Variance, and four fixed weights
 
 Eight runs of the same architecture differ by about 0.004 in the official metric, so we average predictions per
-variant rather than scores: +0.023 standalone but only +0.0022 in the fusion, which already averages four experts.
+variant rather than scores — the deep-ensemble recipe \cite{lakshminarayanan2017deep}: +0.023 standalone but only +0.0022 in the fusion, which already averages four experts.
 
 The fusion is four numbers, `0.00·D + 0.40·Kermut + 0.40·AMK + 0.20·X`, selected on the training assays
 of each fold and applied to the held-out ones — exactly the protocol the tuned constant uses. The search drives the additive-structure weight to 0.00 in 14 of 15 seed-by-fold cells and the new expert to 0.20

@@ -10,12 +10,10 @@ per-fold fusion weights, which are summarised rather than released, so §5.2 reg
 fixed fusion. The one hyperparameter that matters, the distillation weight, was re-selected inside each fold and
 chose the same value in all five.
 
-**Coverage and shift.** The panel is skewed toward particular families, organisms and assay types and performance
-is not uniform across them; a family absent from it should be expected to behave like the large-assay regime.
-
 **Scope of the evaluation.** Every result is on ProteinGym substitutions, ProteinGym indels, or FLIP2's published
-splits, and the top-of-list analysis characterises a *ranking*; turning one into a measured hit rate is a
-prospective study against a wet-lab readout. The claims stop at the ranking.
+splits, the panel is skewed toward particular families and assay types, and the top-of-list analysis characterises a
+*ranking*; turning one into a measured hit rate is a prospective study against a wet-lab readout. The claims stop at
+the ranking.
 
 ### Ethical considerations
 
@@ -30,9 +28,8 @@ assays only.
 
 
 **Data and released artifacts.** All assays are previously published deep-mutational-scanning datasets distributed
-by ProteinGym: no new experimental data, no human subjects, no clinical material. The submission includes, as
-anonymised supplementary material, per-mutant predictions for all 696,311 mutants, the code behind every reported
-number, and the recovered kernel for the structural experts. The code is permissively licensed; the expert prediction tables are research-use only because they derive from
+by ProteinGym: no new experimental data, no human subjects, no clinical material. The supplementary material adds
+per-mutant predictions, the code behind every reported number, and the recovered kernel for the structural experts. The code is permissively licensed; the expert prediction tables are research-use only because they derive from
 third-party methods.
 
 **Generative AI usage.** Analysis scripts, evaluation harnesses and LaTeX assembly were written and

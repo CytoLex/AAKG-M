@@ -16,8 +16,7 @@ our folds are bit-identical to the released distribution.
 | our fusion, seed-averaged | **0.694** | 0.784 | 0.674 | 0.625 |
 
 Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.037 is what adding two
-complementary experts to the strongest published single model is worth. The equal-compute comparison is the
-single-model rung, one trained expert rather than eight averaged, which still leads Kermut by 0.034.
+complementary experts to the strongest published single model is worth. The equal-compute comparison is the single-model rung, which still leads Kermut by 0.034.
 
 ## 5.2 The aggregate hides the category, and the top of the list
 
@@ -77,7 +76,7 @@ The size regime is part of the method's specification, not a footnote: the gain 
 fewer measurements and vanishes on the largest quartile. It is a property of the correlation estimate rather than
 of the feature budget, since the baseline has more data there too.
 
-**Coverage is partial and coupled.** The encoder needs a wild-type sequence and covers 182 of 217 assays;
-the other 35 fall back to an older expert, and still show +0.0029 — but not because of their own
-predictions: the nested weight search fits one vector per fold over all training assays, so replacing the
-expert elsewhere moves the weights applied to them.
+**Coverage is partial and coupled.** The encoder needs a wild-type sequence and covers 182 of 217 assays; the other
+35 fall back to an older expert and still show +0.0029, though not from their own predictions — the nested weight
+search fits one vector per fold over all training assays, so replacing the expert elsewhere moves the weights
+applied to them.

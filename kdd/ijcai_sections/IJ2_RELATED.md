@@ -1,6 +1,6 @@
 **Protein fitness prediction.** Three lines converge here. Zero-shot predictors score variants from a
 sequence model's likelihood or from multiple-sequence-alignment statistics, without touching assay labels
-\cite{esm1v,tranception,msatransformer}. Supervised approaches train on deep mutational scanning data
+\cite{esm1v,rives2021esm1b,tranception,msatransformer}. Supervised approaches train on deep mutational scanning data
 \cite{fowler2014,yang2019}, either per assay or across a panel; the leaderboard leader is a composite
 kernel regression of this kind. The fusion line, which this paper belongs to, combines predictors that
 fail differently, and the combination is usually weighted per assay. Benchmarks for this comparison are
@@ -8,7 +8,7 @@ themselves a design choice \cite{flip}, and §5.1 therefore verifies the one we 
 reporting any comparison on it.
 
 **Adaptive weighting, and the combination puzzle.** Mixture-of-experts layers and context-conditioned gates are
-standard across machine learning \cite{jacobs1991,shazeer2017}. Forecast combination has studied their limits for
+standard across machine learning \cite{jacobs1991,shazeer2017,fedus2022switch}. Forecast combination has studied their limits for
 longer: combining several forecasts by estimating weights is routinely no better than averaging them, a result
 known as the forecast combination puzzle \cite{timmermann2006forecast}, with a theoretical explanation in which
 weight-estimation error outweighs the benefit of weighting \cite{claeskens2016forecast}.

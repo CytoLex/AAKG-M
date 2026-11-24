@@ -66,7 +66,7 @@ will be judged by rather than the one that is convenient.
 
 **Protein fitness prediction.** Three lines converge here. Zero-shot predictors score variants from a
 sequence model's likelihood or from multiple-sequence-alignment statistics, without touching assay labels
-\cite{esm1v,tranception,msatransformer}. Supervised approaches train on deep mutational scanning data
+\cite{esm1v,rives2021esm1b,tranception,msatransformer}. Supervised approaches train on deep mutational scanning data
 \cite{fowler2014,yang2019}, either per assay or across a panel; the leaderboard leader is a composite
 kernel regression of this kind. The fusion line, which this paper belongs to, combines predictors that
 fail differently, and the combination is usually weighted per assay. Benchmarks for this comparison are
@@ -74,7 +74,7 @@ themselves a design choice \cite{flip}, and §5.1 therefore verifies the one we 
 reporting any comparison on it.
 
 **Adaptive weighting, and the combination puzzle.** Mixture-of-experts layers and context-conditioned gates are
-standard across machine learning \cite{jacobs1991,shazeer2017}. Forecast combination has studied their limits for
+standard across machine learning \cite{jacobs1991,shazeer2017,fedus2022switch}. Forecast combination has studied their limits for
 longer: combining several forecasts by estimating weights is routinely no better than averaging them, a result
 known as the forecast combination puzzle \cite{timmermann2006forecast}, with a theoretical explanation in which
 weight-estimation error outweighs the benefit of weighting \cite{claeskens2016forecast}.
@@ -149,6 +149,10 @@ files, verified on all three schemes for a 9,576-variant assay.
 One mechanism clears the constant by +0.00025 with an interval straddling zero; four land within 0.0006
 below. **None is separated from the constant by more than the seed-to-seed spread of the models themselves.**
 
+Stacking \cite{wolpert1992stacked} and ensemble selection \cite{caruana2004ensemble} are the standard answers to
+this; the mechanisms below are their conditional variants, and the tuned constant is what unconditional combination
+amounts to.
+
 **And the constant is not separated from a parameter-free average either.** Averaging the experts' within-assay
 ranks — no labels, no parameters — reaches **0.6942** against the tuned constant's **0.6952**, a paired difference of
 **−0.0010** with a 95% CI of [−0.0031, +0.0011]. So nothing in this section separates from simple rank averaging,
@@ -164,7 +168,7 @@ covers the panel, so that both pools are evaluated on the same units.
 
 **The allocation bound.** Inside the three-expert pool, a per-assay oracle reaches **0.6881** against
 **0.6830** for the constant fitted on the other assays: **+0.0051** (95% CI [0.0038, 0.0066]), estimated by
-resampling assays and re-aggregating each resample. **The expert lever.** Adding the distilled encoder to the
+resampling assays and re-aggregating each resample \cite{efron1993bootstrap}. **The expert lever.** Adding the distilled encoder to the
 same pool raises that constant to **0.6952**, a gain of **+0.0122** (95% CI [0.0099, 0.0144]).
 
 **The headroom is not selection noise.** Replacing each assay's oracle weights with those of a *random other* assay
@@ -195,14 +199,15 @@ Unregularised per-assay fitting gains on substitutions and **loses** on indels, 
 each assay's weights toward the panel-wide constant, `w(λ) = (1−λ)·w_panel + λ·w_i`, gains on both — the figures
 below are over the constant fitted in this out-of-sample protocol, not the §3.3 one.
 
-**Shrinkage is the fix, and a single level is enough.** The strength has a closed form — `λ_i = τ²/(τ² + σ²_i)`,
+**Shrinkage is the fix, and a single level is enough.** This is the classical variance-reduction argument: shrink toward a pooled
+value by the ratio of between- to within-group variance \cite{james1961stein}. The strength has a closed form — `λ_i = τ²/(τ² + σ²_i)`,
 with σ²_i the sampling variance of an assay's fitted weights from six half-splits and τ² the between-assay
 variance — and on indels it reaches **+0.0022** against +0.0025 for a hand-tuned k with no search.
 
 The control says what does the work: **permuting those coefficients across assays** changes the gain by at most
-**+0.0005** on indels, inside its own spread, and is 0.0009 *better* on substitutions. **What matters is that the estimate is shrunk at all, not how finely**: on indels a flat λ of 0.60 gains +0.0062
-where the derived median of 0.41 gains +0.0052, so the closed form is, if anything, over-shrinking — we report the
-per-assay version for needing no hand-chosen constant, not because its adaptivity earns anything.
+**+0.0005** on indels, inside its own spread, and is 0.0009 *better* on substitutions. **What matters is that the estimate is shrunk, not how finely**: on indels a flat λ of 0.60 gains +0.0062 where the
+derived median of 0.41 gains +0.0052, so the closed form is if anything over-shrinking. We report the per-assay form
+because it needs no hand-chosen constant, not because its adaptivity earns anything.
 
 **And it is predictable before you fit.** The oracle gain is not evenly spread across assays. It is explained by
 the **ambiguity** of the pool on that assay — the variance of the experts' own scores, the term the ensemble
@@ -217,8 +222,8 @@ the oracle to the quarter the predictor ranks highest still captures **+0.0050**
 practitioner with a panel can therefore rank their own assays by ambiguity and know, before fitting anything,
 which ones make adaptation worth the attempt.
 
-Disagreement between the raw predictions is weaker, at r = +0.509, and skill-weighting it makes it weaker still
-(+0.491): what helps is the spread of the experts' *scores*, not the correlation of their *predictions*. Consistent
+Disagreement between the raw predictions is weaker, at r = +0.509, and skill-weighting it weaker still: what helps
+is the spread of the experts' *scores*, not the correlation of their *predictions*. Consistent
 with that literature we report this as a trade-off, not a maximand — pushing disagreement further by residualising
 an expert against the pool collapsed its accuracy to −0.33 and bought nothing.
 
@@ -229,10 +234,8 @@ different mutation type, and a different expert pool: three published supervised
 out-of-fold predictions ship with the benchmark, so this half involves no training and the comparison is
 exact.
 
-| | substitutions | indels |
-|---|---:|---:|
-| oracle minus constant | +0.0051 | **+0.0084** |
-| median variants | thousands | **154** |
+Measured the same way, the oracle gap is **+0.0084** on indels against +0.0051 on substitutions, on assays whose
+median variant count is **154** rather than thousands.
 
 The oracle gap is 1.6 times larger on indels, which on its own would say the headroom is substantial here. The
 split test says otherwise: weights fitted on half an assay's variants **lose** 0.0032, where the same procedure
@@ -240,9 +243,9 @@ gains +0.0047 on substitutions. The difference is assay size — across indel qu
 −0.0053, −0.0023, −0.0002 and **+0.0044**, so only the largest, at a median of 490 variants, recovers any of it.
 
 **The representation transfers too.** Our differential encoder is the strongest single expert on the indel pool at
-**0.8858** against 0.8231 for the best published model, lifting the three-expert blend from 0.8438 to **0.8934**. On a third, independently collected benchmark — FLIP2's seven usable splits — it beats a ridge
-on mean-pooled ESM-2 embeddings on six of seven (mean test Spearman **0.43 against 0.26**), though not on the
-features alone: a ridge on them scores 0.15, so the gain belongs to the view combined with a nonlinear head.
+**0.8858** against 0.8231 for the best published model, lifting the three-expert blend from 0.8438 to **0.8934**. On FLIP2's seven usable splits it beats a ridge on mean-pooled ESM-2 embeddings on six of seven (**0.43 against
+0.26**), though not on the features alone — a ridge on them scores 0.15, so the gain is the view with a nonlinear
+head.
 
 Per-assay weighting is therefore limited twice: by how much the pool disagrees, which the oracle measures,
 and by whether the assay carries enough variants to estimate the weights at all. Substitutions have a
@@ -301,13 +304,13 @@ it is a property of the change, read in context. The features follow from that: 
 
 ## 4.2 Distillation, and a residual per functional category
 
-A 12,800-dimensional head trained on a few thousand variants per assay overfits before it learns, so we regularise
-it with the two strongest experts: their per-assay z-scores give a teacher `t = 0.4·Kermut_z + 0.5·AMK_z`, and the
+A 12,800-dimensional head trained on a few thousand variants per assay overfits before it learns, so we regularise it by distillation \cite{hinton2015distilling} from the two strongest experts: their per-assay z-scores give a teacher `t = 0.4·Kermut_z + 0.5·AMK_z`, and the
 loss mixes the target with it at α = 0.9, re-selected inside each fold on training assays and chosen 0.9 in all
 five. Distillation is worth +0.114 — the largest single step in the encoder's development.
 
 Assays fall into five categories that behave differently, so we add a low-rank correction to the head:
-`y = MLP(x) + U_c V_cᵀ x`, with `U_c` zero-initialised and rank 8, `c` the assay's category. The branch is
+`y = MLP(x) + U_c V_cᵀ x`, with `U_c` zero-initialised and rank 8, `c` the assay's category — a low-rank
+adaptation in the sense of \cite{hu2022lora}. The branch is
 worth **+0.024** standalone and **+0.0014** in the fusion — the gap is the decorrelation argument in
 miniature, since a residual that makes an expert better can make it less useful to a pool already holding
 what it learned.
@@ -321,7 +324,7 @@ saturated far below what memorising a category would require.
 ## 4.3 Variance, and four fixed weights
 
 Eight runs of the same architecture differ by about 0.004 in the official metric, so we average predictions per
-variant rather than scores: +0.023 standalone but only +0.0022 in the fusion, which already averages four experts.
+variant rather than scores — the deep-ensemble recipe \cite{lakshminarayanan2017deep}: +0.023 standalone but only +0.0022 in the fusion, which already averages four experts.
 
 The fusion is four numbers, `0.00·D + 0.40·Kermut + 0.40·AMK + 0.20·X`, selected on the training assays
 of each fold and applied to the held-out ones — exactly the protocol the tuned constant uses. The search drives the additive-structure weight to 0.00 in 14 of 15 seed-by-fold cells and the new expert to 0.20
@@ -375,8 +378,7 @@ our folds are bit-identical to the released distribution.
 | our fusion, seed-averaged | **0.694** | 0.784 | 0.674 | 0.625 |
 
 Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.037 is what adding two
-complementary experts to the strongest published single model is worth. The equal-compute comparison is the
-single-model rung, one trained expert rather than eight averaged, which still leads Kermut by 0.034.
+complementary experts to the strongest published single model is worth. The equal-compute comparison is the single-model rung, which still leads Kermut by 0.034.
 
 ## 5.2 The aggregate hides the category, and the top of the list
 
@@ -436,10 +438,10 @@ The size regime is part of the method's specification, not a footnote: the gain 
 fewer measurements and vanishes on the largest quartile. It is a property of the correlation estimate rather than
 of the feature budget, since the baseline has more data there too.
 
-**Coverage is partial and coupled.** The encoder needs a wild-type sequence and covers 182 of 217 assays;
-the other 35 fall back to an older expert, and still show +0.0029 — but not because of their own
-predictions: the nested weight search fits one vector per fold over all training assays, so replacing the
-expert elsewhere moves the weights applied to them.
+**Coverage is partial and coupled.** The encoder needs a wild-type sequence and covers 182 of 217 assays; the other
+35 fall back to an older expert and still show +0.0029, though not from their own predictions — the nested weight
+search fits one vector per fold over all training assays, so replacing the expert elsewhere moves the weights
+applied to them.
 
 ## 6 Limitations and Ethical Considerations
 
@@ -455,12 +457,10 @@ per-fold fusion weights, which are summarised rather than released, so §5.2 reg
 fixed fusion. The one hyperparameter that matters, the distillation weight, was re-selected inside each fold and
 chose the same value in all five.
 
-**Coverage and shift.** The panel is skewed toward particular families, organisms and assay types and performance
-is not uniform across them; a family absent from it should be expected to behave like the large-assay regime.
-
 **Scope of the evaluation.** Every result is on ProteinGym substitutions, ProteinGym indels, or FLIP2's published
-splits, and the top-of-list analysis characterises a *ranking*; turning one into a measured hit rate is a
-prospective study against a wet-lab readout. The claims stop at the ranking.
+splits, the panel is skewed toward particular families and assay types, and the top-of-list analysis characterises a
+*ranking*; turning one into a measured hit rate is a prospective study against a wet-lab readout. The claims stop at
+the ranking.
 
 ### Ethical considerations
 
@@ -475,9 +475,8 @@ assays only.
 
 
 **Data and released artifacts.** All assays are previously published deep-mutational-scanning datasets distributed
-by ProteinGym: no new experimental data, no human subjects, no clinical material. The submission includes, as
-anonymised supplementary material, per-mutant predictions for all 696,311 mutants, the code behind every reported
-number, and the recovered kernel for the structural experts. The code is permissively licensed; the expert prediction tables are research-use only because they derive from
+by ProteinGym: no new experimental data, no human subjects, no clinical material. The supplementary material adds
+per-mutant predictions, the code behind every reported number, and the recovered kernel for the structural experts. The code is permissively licensed; the expert prediction tables are research-use only because they derive from
 third-party methods.
 
 **Generative AI usage.** Analysis scripts, evaluation harnesses and LaTeX assembly were written and
@@ -498,9 +497,9 @@ aggregate Spearman cannot express. The second is **the boundary** — the regres
 regime at parity. For a practitioner the boundary is worth more than the mean: it is the difference between
 trusting a ranking on a familiar assay family and being surprised on a new one.
 
-Three AI challenges are tackled: small-data-per-task learning, so the question is regularisation rather than
-capacity; distribution shift, which is why the field reached for adaptive weighting and why that lever is 42% of an
-expert change; and representation, where the signal lives in the difference between two sequences.
+Three AI challenges are tackled: small-data learning, where the question is regularisation rather than capacity;
+distribution shift, which is why the field reached for adaptive weighting; and representation, where the signal
+lives in the difference between two sequences.
 
 Three challenges arise from using AI here. Wet-lab validation is the field's binding constraint, and this paper
 places its claims at the ranking rather than the bench. Assay data is heterogeneous in ways metadata does not
@@ -508,10 +507,8 @@ capture — two stability assays on one protein can disagree in sign — so a ca
 while individual assays move sharply both ways. And the ecosystem rewards leaderboard movement over
 characterisation, which is what a domain user needs most.
 
-On our use of ProteinGym: rather than only taking from a public benchmark we verify it end to end, publish
-per-mutant predictions for all 696,311 variants so the evaluation stands without our code, and characterise its
-difficulty structure across categories, sizes and splits. A reader can use that characterisation without adopting
-our method.
+We give back to the benchmark we use: verified end to end, per-mutant predictions for all 696,311 variants so the
+evaluation stands without our code, and its difficulty structure characterised across categories, sizes and splits.
 
 ### What this work gives, and what would overturn it
 
