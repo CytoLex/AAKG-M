@@ -13,7 +13,7 @@ anything below marked *assumed* is inferred from the main-track rules and from t
 | Notification April 21, 2027; camera-ready May 21, 2027 | noted |
 | **Double-blind** from the authors' perspective (main track) | **done** — no author block, no institutional strings |
 | IJCAI style enforced; margins and font sizes must not be altered | **done** — `ijcai27.sty` used unmodified |
-| Overlength papers rejected without review | **done** — 7 body pages, 8 total |
+| Overlength papers rejected without review | **done** — 7 body pages, 9 total (7 + 2 references) |
 | Ethics statement optional, placeable in body or reference pages | **done** — §6 covers limitations and ethics |
 | USD 100 submission fee under the Primary Paper Initiative, waived for primary papers | **confirmed payable**, so the waiver is an optimisation |
 | Reciprocal reviewing: one qualified author must be designated in the system by the deadline; qualification is five full papers across nineteen named venues, or IJCAI 2027 PC/SPC/AC | **confirmed available** — designation still has to be made in the system, and the reviewing actually completed |
@@ -41,4 +41,4 @@ anything below marked *assumed* is inferred from the main-track rules and from t
 2. Designate the reciprocal reviewer **in the submission system before the deadline** — eligibility is
    assessed against what is recorded there, not against what was agreed.
 3. Add the author block **only if** the track is non-anonymous.
-4. Rebuild with `cd latex_ijcai && ./build.sh` and confirm 8 pages.
+4. Rebuild with `cd latex_ijcai && ./build.sh` and confirm **9 pages** — 7 body plus 2 of references. This is now exactly at the limit; any addition needs an equal cut.

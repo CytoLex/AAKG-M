@@ -34,19 +34,24 @@ That is the only edit needed; nothing else in the document identifies the author
 
 ## 3. If a new required section appears, here is where to cut
 
-The body is at **7 of 7 pages**, so any added requirement means removing an equal amount. In order of what
-costs the paper least:
+The body is at **7 of 7 pages and the whole document at 9 of 9**, so any added requirement means removing an equal amount — there is no slack left at either level. In order of what costs the paper least. **Re-measured against the current build. The previous list had all five items already used, and one of them
+recommended cutting a paragraph that is now load-bearing — do not use an older copy of this table.**
 
 | cut | words | why it is the cheapest |
 |---|---:|---|
-| §3.5 Compute and reproduction paragraph | 111 | the numbers are all in the artifact |
-| §7 "What would falsify us" paragraph | 47 | good faith, not load-bearing |
-| §6 "Bias and domain shift" merged into Limitations | 46 | overlap |
-| §3.5 Statistics paragraph | 44 | conventional, recoverable from the code |
-| §4.4 the ESM-C sentence | 24 | second-order ablation |
+| §4.4 the "reframes what building an expert means" tail | 141 | the principle is stated above it, in the figure caption, and in the contributions |
+| §6 the inherited-experts limitation | 69 | the reproducibility scope is repeated in the §5.2 table caption |
+| §2 the evaluation-practice paragraph | 44 | §5.2 makes the same argument with numbers |
+| §7 the three-challenges list | 38 | the challenges are evident from §2 and §3 |
+| §5.2 the per-category prose | 32 | the category table carries the same comparison |
 
-Those are measured word counts, not estimates. The first three together — 204 words — buy about a third
-of a page without touching a claim; all five buy roughly half a page.
+They are measured word counts from the current text, not estimates. The first three together — 254 words — buy
+roughly half a page without touching a claim or an interval.
+
+**Do not cut, in this order of severity:** the §7 falsification paragraph (it is the paper's answer to "what would
+change your mind" and a reviewer will look for it), the §3.2 rank-average baseline (it is the objection a reader in
+this literature asks first), the oracle null in §3.3 (it is what makes +0.0051 more than selection noise), and any
+interval.
 
 ## 4. The three author-only decisions — **all resolved**
 
@@ -85,7 +90,7 @@ cd kdd/figures && python3 make_figs_ijcai.py     # the IJCAI-scaled figures
 cd ../latex_ijcai && ./build.sh
 ```
 
-Expected output: `AAKG_IJCAI_draft.pdf: 7 pages`. Then confirm by hand:
+Expected output: `AAKG_IJCAI_draft.pdf: 9 pages (7 body + 2 references)`. Then confirm by hand:
 
 - [ ] body ends by page 7, references within 9
 - [ ] no author names, affiliations, acknowledgements, or repository URLs anywhere in the PDF
