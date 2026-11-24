@@ -35,6 +35,21 @@ The section 5.1 table now carries one verified row for our fusion instead of two
 5.2 category table was recomputed: values move by up to 0.004 and one delta by 0.010, and every category still
 improves (+0.026 to +0.040).
 
+## Follow-on: the utility numbers now come from the same artifact
+
+Section 5.2's top-of-list figures had been computed from a fixed-fusion reconstruction rather than from the release,
+which left the paper with two pipelines again at a smaller scale. Recomputed from the released predictions:
+
+| top-k | was (fixed fusion) | now (released) |
+|---|---|---|
+| 1% | 0.112, 11.2x | **0.115** [0.104, 0.126], **11.5x** |
+| 5% | 0.239, 4.78x | **0.241** [0.226, 0.254], **4.82x** |
+| 10% | 0.343, 3.43x | **0.346** [0.333, 0.358], **3.46x** |
+
+The category ordering is unchanged — Stability 7.8x against Activity 3.4x — and the caveat that used to sit under the
+table ("regenerates to within 0.01 under the fixed fusion") is gone, because it no longer applies. Every number in
+the headline, the category breakdown and the top-of-list analysis now derives from one released artifact.
+
 ## What did not change
 
 The conclusion. The lead over the published leader is +0.035 rather than +0.037, the category ordering is the same

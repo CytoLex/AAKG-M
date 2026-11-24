@@ -31,8 +31,8 @@ against **0.657** for Kermut, having first reproduced Kermut's published per-ass
 mean absolute difference 0.0; the same representation wins six of seven FLIP2 splits.
 
 **An aggregate score is not a deployment specification.** The model that reaches 0.692 scores 0.850 on stability assays and
-0.644 on activity, and the top 5% of its ranking recovers 23.9% of the true top 5% — a **4.8x** lift that is 7.8x
-on stability and 3.5x on activity. Those numbers let a laboratory decide how much of the ordering to
+0.644 on activity, and the top 5% of its ranking recovers 24.1% of the true top 5% — a **4.8x** lift that is 7.8x
+on stability and 3.4x on activity. Those numbers let a laboratory decide how much of the ordering to
 trust for its own property and assay size.
 
 The levers are ordered, and so is what to do about each: measure the ceiling before tuning weights, spend on
@@ -57,5 +57,4 @@ will be judged by rather than the one that is convenient.
    category, and the assay-size regime over which the advantage holds. It converts one aggregate number
    into the two facts a campaign needs: how much of the top of the list to trust, and for which property.
 4. **A reproducible artifact**: per-mutant predictions for all 696,311 mutants and the code behind every reported
-   number, supplied as anonymised supplementary material and released on publication, with the scope of what
-   regenerates exactly stated in §6.
+   number, supplied as anonymised supplementary material and released on publication.

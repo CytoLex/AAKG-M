@@ -5,9 +5,8 @@ the improvement reaches +0.00003 on the largest quartile. The aggregate is the c
 of any one assay.
 
 **The structural experts are inherited, not retrained inside each outer fold**; a fully nested protocol would
-retrain them per fold. Every reported number is reproducible from the published per-mutant scores except the
-per-fold fusion weights, which are summarised rather than released, so §5.2 regenerates to within 0.01 under the
-fixed fusion. The one hyperparameter that matters, the distillation weight, was re-selected inside each fold and
+retrain them per fold. Every number in the headline, the category breakdown and the top-of-list analysis is reproducible
+from the published per-mutant scores; the per-fold fusion weights themselves are summarised rather than released. The one hyperparameter that matters, the distillation weight, was re-selected inside each fold and
 chose the same value in all five.
 
 **Scope of the evaluation.** Every result is on ProteinGym substitutions, ProteinGym indels, or FLIP2's published

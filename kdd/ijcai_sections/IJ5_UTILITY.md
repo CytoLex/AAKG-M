@@ -39,17 +39,16 @@ official way:
 
 | top of the list | recall of the true top | lift over random |
 |---|---:|---:|
-| 1% | **0.112** [0.099, 0.125] | **11.2x** [9.9x, 12.5x] |
-| 5% | **0.239** [0.223, 0.255] | **4.78x** [4.46x, 5.10x] |
-| 10% | **0.343** [0.329, 0.357] | **3.43x** [3.29x, 3.57x] |
+| 1% | **0.115** [0.104, 0.126] | **11.5x** [10.4x, 12.6x] |
+| 5% | **0.241** [0.226, 0.254] | **4.82x** [4.52x, 5.08x] |
+| 10% | **0.346** [0.333, 0.358] | **3.46x** [3.33x, 3.58x] |
 
-Intervals are bootstrap over assays. These are the values the released scores regenerate under the fixed fusion of
-§4.3; the per-fold weight search used for the headline score is not in the release, and reproduces them to within
-0.01 rather than exactly.
+Intervals are bootstrap over assays, and the values are computed from the same released per-mutant predictions as
+§5.1: a reader re-running them gets these numbers.
 
 Ordering the top 5% recovers about a quarter of the true top 5%, roughly five times random. It is also
-category-dependent in the direction the table above predicts: **7.8x on Stability** [7.4, 8.1], 4.2x Binding
-[3.1, 5.3], 4.1x Expression [3.4, 4.7], and **3.5x on Activity** [3.0, 3.9] — and activity is what
+category-dependent in the direction the table above predicts: **7.8x on Stability**, 4.3x OrganismalFitness, 4.3x
+Expression, 4.2x Binding, and **3.4x on Activity** — and activity is what
 function-oriented campaigns care about. **The ranker is roughly twice as good at prioritising stability mutants as
 activity mutants**, and the intervals separate.
 
