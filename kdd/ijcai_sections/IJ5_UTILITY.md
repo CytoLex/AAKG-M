@@ -73,10 +73,9 @@ that regresses on average** (−0.0018).
 | third | +0.0024 | 0.407 |
 | **largest** | **+0.00003** | 0.500 |
 
-The size regime is therefore part of the method's specification rather than a footnote: the gain is
-concentrated in assays with fewer measurements, and on the largest quartile the fusion matches its
-predecessor. This is a property of the correlation estimate rather than of the feature budget, since the
-baseline has more data there too, and it tells a reader which assays to expect an improvement on.
+The size regime is part of the method's specification, not a footnote: the gain is concentrated in assays with
+fewer measurements and vanishes on the largest quartile. It is a property of the correlation estimate rather than
+of the feature budget, since the baseline has more data there too.
 
 **Coverage is partial and coupled.** The encoder needs a wild-type sequence and covers 182 of 217 assays;
 the other 35 fall back to an older expert, and still show +0.0029 — but not because of their own

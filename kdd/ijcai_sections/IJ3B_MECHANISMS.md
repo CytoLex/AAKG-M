@@ -43,6 +43,10 @@ covers the panel, so that both pools are evaluated on the same units.
 resampling assays and re-aggregating each resample. **The expert lever.** Adding the distilled encoder to the
 same pool raises that constant to **0.6952**, a gain of **+0.0122** (95% CI [0.0099, 0.0144]).
 
+**The headroom is not selection noise.** Replacing each assay's oracle weights with those of a *random other* assay
+— matched per-assay selection, zero information — gives **−0.0064** [−0.0083, −0.0043]: below the constant, as random
+per-assay weights should be. The real oracle sits **0.0141** above that null.
+
 **The allocation headroom is 42% of the expert gain, and the intervals do not overlap.** Per-assay weighting
 is therefore a real but secondary lever: everything a weighting rule could reach is less than half of what
 one expert change delivers. The two quantities are easy to conflate: an oracle over one pool compared against a fixed blend of a
@@ -72,7 +76,7 @@ with σ²_i the sampling variance of an assay's fitted weights from six half-spl
 variance — and on indels it reaches **+0.0022** against +0.0025 for a hand-tuned k with no search.
 
 The control says what does the work: **permuting those coefficients across assays** changes the gain by at most
-**+0.0005** on indels, inside the permutation's own spread, and is 0.0009 *better* on substitutions. **What matters is that the
+**+0.0005** on indels, inside its own spread, and is 0.0009 *better* on substitutions. **What matters is that the
 estimate is shrunk at all, not how finely**: on indels a flat λ of 0.60 gains +0.0062 where the derived median of
 0.41 gains +0.0052, so the closed form is, if anything, over-shrinking. We report the per-assay version for needing
 no hand-chosen constant, not because its adaptivity earns anything.
@@ -80,8 +84,9 @@ no hand-chosen constant, not because its adaptivity earns anything.
 **And it is predictable before you fit.** The oracle gain is not evenly spread across assays. It is explained by
 the **ambiguity** of the pool on that assay — the variance of the experts' own scores, the term the ensemble
 decomposition turns on \cite{audhkhasi2013generalized,wood2023unified} — and, negatively, by how much data the
-assay has (r = −0.279). A leave-one-assay-out predictor from those two statistics reaches r = **+0.628** without fitting a per-assay
-weight vector, so whether adapting the weights is worth attempting can be read off before any of it is done.
+assay has (r = −0.279). A leave-one-assay-out predictor from those two statistics reaches r = **+0.628** without fitting a per-assay weight
+vector, against **+0.002** for a permuted predictor, so whether adapting the weights is worth attempting can be read
+off before any of it is done.
 
 **And it is not spread evenly.** Ranking assays by pool ambiguity, the top quartile holds **57%** of the total
 allocation headroom with a median gain of **+0.0117**; the bottom quartile is flat, at +0.0009 and 5%. Restricting
@@ -94,8 +99,7 @@ Disagreement between the raw predictions is weaker, at r = +0.509, and skill-wei
 with that literature we report this as a trade-off, not a maximand — pushing disagreement further by residualising
 an expert against the pool collapsed its accuracy to −0.33 and bought nothing.
 
-**This is the sharpest comparison in the paper.** The best of the seven designed mechanisms captures +0.00025 over
-its tuned constant; a two-parameter shrinkage captures **+0.0051** in its own protocol — twenty times as much — and
-stays positive where unregularised fitting loses. The estimation problem was a variance problem, and its fix need
-not know the variance.
+**This is the sharpest comparison in the paper.** The best designed mechanism captures +0.00025 over its tuned
+constant; a two-parameter shrinkage captures **+0.0051** in its own protocol — twenty times as much — and stays
+positive where unregularised fitting loses.
 

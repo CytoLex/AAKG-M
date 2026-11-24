@@ -9,10 +9,9 @@ aggregate Spearman cannot express. The second is **the boundary** — the regres
 regime at parity. For a practitioner the boundary is worth more than the mean: it is the difference between
 trusting a ranking on a familiar assay family and being surprised on a new one.
 
-Three AI challenges are tackled. The ranking problem is small-data-per-task learning, so the question is
-regularisation rather than capacity. It is a distribution-shift problem, which is why the field reached for
-adaptive weighting and why the reachable part of that lever is 42% of an expert change. And it is a representation
-problem: the signal lives in the difference between two sequences, read in its local context.
+Three AI challenges are tackled: small-data-per-task learning, so the question is regularisation rather than
+capacity; distribution shift, which is why the field reached for adaptive weighting and why that lever is 42% of an
+expert change; and representation, where the signal lives in the difference between two sequences.
 
 Three challenges arise from using AI here. Wet-lab validation is the field's binding constraint, and this paper
 places its claims at the ranking rather than the bench. Assay data is heterogeneous in ways metadata does not

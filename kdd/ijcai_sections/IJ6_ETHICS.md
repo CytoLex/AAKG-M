@@ -4,19 +4,18 @@
 the improvement reaches +0.00003 on the largest quartile. The aggregate is the centre of that range, not a property
 of any one assay.
 
-**The structural experts are inherited, not retrained inside each outer fold**, and every reported number is
-reproducible from the published per-mutant scores except the per-fold fusion weights, which are summarised rather
-than released — the utility figures in §5.2 therefore regenerate to within 0.01 under the fixed fusion rather than
-exactly. A fully nested protocol would retrain the structural experts within each fold. The one hyperparameter that materially matters, the distillation weight, was re-selected inside each
-fold and chose the same value in all five.
+**The structural experts are inherited, not retrained inside each outer fold**; a fully nested protocol would
+retrain them per fold. Every reported number is reproducible from the published per-mutant scores except the
+per-fold fusion weights, which are summarised rather than released, so §5.2 regenerates to within 0.01 under the
+fixed fusion. The one hyperparameter that matters, the distillation weight, was re-selected inside each fold and
+chose the same value in all five.
 
 **Coverage and shift.** The panel is skewed toward particular families, organisms and assay types and performance
 is not uniform across them; a family absent from it should be expected to behave like the large-assay regime.
 
-**Scope of the evaluation.** Every result is on ProteinGym substitutions, ProteinGym indels, or FLIP2's
-published splits, and the top-of-list analysis characterises a *ranking*. Turning an enriched ranking into a
-measured hit rate is a prospective study against a wet-lab readout — a different experiment with a different
-design. The claims here stop at the ranking.
+**Scope of the evaluation.** Every result is on ProteinGym substitutions, ProteinGym indels, or FLIP2's published
+splits, and the top-of-list analysis characterises a *ranking*; turning one into a measured hit rate is a
+prospective study against a wet-lab readout. The claims stop at the ranking.
 
 ### Ethical considerations
 

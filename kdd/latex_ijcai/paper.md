@@ -167,6 +167,10 @@ covers the panel, so that both pools are evaluated on the same units.
 resampling assays and re-aggregating each resample. **The expert lever.** Adding the distilled encoder to the
 same pool raises that constant to **0.6952**, a gain of **+0.0122** (95% CI [0.0099, 0.0144]).
 
+**The headroom is not selection noise.** Replacing each assay's oracle weights with those of a *random other* assay
+— matched per-assay selection, zero information — gives **−0.0064** [−0.0083, −0.0043]: below the constant, as random
+per-assay weights should be. The real oracle sits **0.0141** above that null.
+
 **The allocation headroom is 42% of the expert gain, and the intervals do not overlap.** Per-assay weighting
 is therefore a real but secondary lever: everything a weighting rule could reach is less than half of what
 one expert change delivers. The two quantities are easy to conflate: an oracle over one pool compared against a fixed blend of a
@@ -196,7 +200,7 @@ with σ²_i the sampling variance of an assay's fitted weights from six half-spl
 variance — and on indels it reaches **+0.0022** against +0.0025 for a hand-tuned k with no search.
 
 The control says what does the work: **permuting those coefficients across assays** changes the gain by at most
-**+0.0005** on indels, inside the permutation's own spread, and is 0.0009 *better* on substitutions. **What matters is that the
+**+0.0005** on indels, inside its own spread, and is 0.0009 *better* on substitutions. **What matters is that the
 estimate is shrunk at all, not how finely**: on indels a flat λ of 0.60 gains +0.0062 where the derived median of
 0.41 gains +0.0052, so the closed form is, if anything, over-shrinking. We report the per-assay version for needing
 no hand-chosen constant, not because its adaptivity earns anything.
@@ -204,8 +208,9 @@ no hand-chosen constant, not because its adaptivity earns anything.
 **And it is predictable before you fit.** The oracle gain is not evenly spread across assays. It is explained by
 the **ambiguity** of the pool on that assay — the variance of the experts' own scores, the term the ensemble
 decomposition turns on \cite{audhkhasi2013generalized,wood2023unified} — and, negatively, by how much data the
-assay has (r = −0.279). A leave-one-assay-out predictor from those two statistics reaches r = **+0.628** without fitting a per-assay
-weight vector, so whether adapting the weights is worth attempting can be read off before any of it is done.
+assay has (r = −0.279). A leave-one-assay-out predictor from those two statistics reaches r = **+0.628** without fitting a per-assay weight
+vector, against **+0.002** for a permuted predictor, so whether adapting the weights is worth attempting can be read
+off before any of it is done.
 
 **And it is not spread evenly.** Ranking assays by pool ambiguity, the top quartile holds **57%** of the total
 allocation headroom with a median gain of **+0.0117**; the bottom quartile is flat, at +0.0009 and 5%. Restricting
@@ -218,10 +223,9 @@ Disagreement between the raw predictions is weaker, at r = +0.509, and skill-wei
 with that literature we report this as a trade-off, not a maximand — pushing disagreement further by residualising
 an expert against the pool collapsed its accuracy to −0.33 and bought nothing.
 
-**This is the sharpest comparison in the paper.** The best of the seven designed mechanisms captures +0.00025 over
-its tuned constant; a two-parameter shrinkage captures **+0.0051** in its own protocol — twenty times as much — and
-stays positive where unregularised fitting loses. The estimation problem was a variance problem, and its fix need
-not know the variance.
+**This is the sharpest comparison in the paper.** The best designed mechanism captures +0.00025 over its tuned
+constant; a two-parameter shrinkage captures **+0.0051** in its own protocol — twenty times as much — and stays
+positive where unregularised fitting loses.
 
 ## 3.5 A second benchmark: the bound has two parts
 
@@ -240,9 +244,8 @@ split test says otherwise: weights fitted on half an assay's variants **lose** 0
 gains +0.0047 on substitutions. The difference is assay size — across indel quartiles the out-of-sample gain runs
 −0.0053, −0.0023, −0.0002 and **+0.0044**, so only the largest, at a median of 490 variants, recovers any of it.
 
-**The representation transfers too.** Our differential encoder is the strongest single expert on the indel
-pool at **0.8858** against 0.8231 for the best published model, and lifts the three-expert blend from 0.8438
-to **0.8934**. On a third, independently collected benchmark — FLIP2's seven usable splits — it beats a ridge
+**The representation transfers too.** Our differential encoder is the strongest single expert on the indel pool at
+**0.8858** against 0.8231 for the best published model, lifting the three-expert blend from 0.8438 to **0.8934**. On a third, independently collected benchmark — FLIP2's seven usable splits — it beats a ridge
 on mean-pooled ESM-2 embeddings on six of seven (mean test Spearman **0.43 against 0.26**), though not on the
 features alone: a ridge on them scores 0.15, so the gain belongs to the view combined with a nonlinear head.
 
@@ -329,13 +332,9 @@ The fusion is four numbers, `0.00·D + 0.40·Kermut + 0.40·AMK + 0.20·X`, sele
 of each fold and applied to the held-out ones — exactly the protocol the tuned constant uses. The search drives the additive-structure weight to 0.00 in 14 of 15 seed-by-fold cells and the new expert to 0.20
 in all 15. Under the official metric:
 
-| configuration | official |
-|---|---:|
-| previous four-expert fusion | 0.685538 |
-| + distilled encoder, category residual | 0.691130 |
-| **+ eight-seed averaging** | **0.693311** |
-
-against **0.657028** for Kermut \cite{kermut} — +0.0085 over the previous fusion, +0.037 over the leader.
+The previous four-expert fusion scores **0.685538**; adding the distilled encoder with its category residual
+reaches **0.691130**; averaging eight seeds gives **0.693311** — against **0.657028** for Kermut \cite{kermut},
+so +0.0085 over the previous fusion and +0.037 over the leader.
 
 ## 4.4 What the ablation rules out
 
@@ -445,10 +444,9 @@ that regresses on average** (−0.0018).
 | third | +0.0024 | 0.407 |
 | **largest** | **+0.00003** | 0.500 |
 
-The size regime is therefore part of the method's specification rather than a footnote: the gain is
-concentrated in assays with fewer measurements, and on the largest quartile the fusion matches its
-predecessor. This is a property of the correlation estimate rather than of the feature budget, since the
-baseline has more data there too, and it tells a reader which assays to expect an improvement on.
+The size regime is part of the method's specification, not a footnote: the gain is concentrated in assays with
+fewer measurements and vanishes on the largest quartile. It is a property of the correlation estimate rather than
+of the feature budget, since the baseline has more data there too.
 
 **Coverage is partial and coupled.** The encoder needs a wild-type sequence and covers 182 of 217 assays;
 the other 35 fall back to an older expert, and still show +0.0029 — but not because of their own
@@ -463,19 +461,18 @@ expert elsewhere moves the weights applied to them.
 the improvement reaches +0.00003 on the largest quartile. The aggregate is the centre of that range, not a property
 of any one assay.
 
-**The structural experts are inherited, not retrained inside each outer fold**, and every reported number is
-reproducible from the published per-mutant scores except the per-fold fusion weights, which are summarised rather
-than released — the utility figures in §5.2 therefore regenerate to within 0.01 under the fixed fusion rather than
-exactly. A fully nested protocol would retrain the structural experts within each fold. The one hyperparameter that materially matters, the distillation weight, was re-selected inside each
-fold and chose the same value in all five.
+**The structural experts are inherited, not retrained inside each outer fold**; a fully nested protocol would
+retrain them per fold. Every reported number is reproducible from the published per-mutant scores except the
+per-fold fusion weights, which are summarised rather than released, so §5.2 regenerates to within 0.01 under the
+fixed fusion. The one hyperparameter that matters, the distillation weight, was re-selected inside each fold and
+chose the same value in all five.
 
 **Coverage and shift.** The panel is skewed toward particular families, organisms and assay types and performance
 is not uniform across them; a family absent from it should be expected to behave like the large-assay regime.
 
-**Scope of the evaluation.** Every result is on ProteinGym substitutions, ProteinGym indels, or FLIP2's
-published splits, and the top-of-list analysis characterises a *ranking*. Turning an enriched ranking into a
-measured hit rate is a prospective study against a wet-lab readout — a different experiment with a different
-design. The claims here stop at the ranking.
+**Scope of the evaluation.** Every result is on ProteinGym substitutions, ProteinGym indels, or FLIP2's published
+splits, and the top-of-list analysis characterises a *ranking*; turning one into a measured hit rate is a
+prospective study against a wet-lab readout. The claims stop at the ranking.
 
 ### Ethical considerations
 
@@ -515,10 +512,9 @@ aggregate Spearman cannot express. The second is **the boundary** — the regres
 regime at parity. For a practitioner the boundary is worth more than the mean: it is the difference between
 trusting a ranking on a familiar assay family and being surprised on a new one.
 
-Three AI challenges are tackled. The ranking problem is small-data-per-task learning, so the question is
-regularisation rather than capacity. It is a distribution-shift problem, which is why the field reached for
-adaptive weighting and why the reachable part of that lever is 42% of an expert change. And it is a representation
-problem: the signal lives in the difference between two sequences, read in its local context.
+Three AI challenges are tackled: small-data-per-task learning, so the question is regularisation rather than
+capacity; distribution shift, which is why the field reached for adaptive weighting and why that lever is 42% of an
+expert change; and representation, where the signal lives in the difference between two sequences.
 
 Three challenges arise from using AI here. Wet-lab validation is the field's binding constraint, and this paper
 places its claims at the ranking rather than the bench. Assay data is heterogeneous in ways metadata does not

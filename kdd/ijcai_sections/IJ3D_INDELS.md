@@ -15,9 +15,8 @@ split test says otherwise: weights fitted on half an assay's variants **lose** 0
 gains +0.0047 on substitutions. The difference is assay size — across indel quartiles the out-of-sample gain runs
 −0.0053, −0.0023, −0.0002 and **+0.0044**, so only the largest, at a median of 490 variants, recovers any of it.
 
-**The representation transfers too.** Our differential encoder is the strongest single expert on the indel
-pool at **0.8858** against 0.8231 for the best published model, and lifts the three-expert blend from 0.8438
-to **0.8934**. On a third, independently collected benchmark — FLIP2's seven usable splits — it beats a ridge
+**The representation transfers too.** Our differential encoder is the strongest single expert on the indel pool at
+**0.8858** against 0.8231 for the best published model, lifting the three-expert blend from 0.8438 to **0.8934**. On a third, independently collected benchmark — FLIP2's seven usable splits — it beats a ridge
 on mean-pooled ESM-2 embeddings on six of seven (mean test Spearman **0.43 against 0.26**), though not on the
 features alone: a ridge on them scores 0.15, so the gain belongs to the view combined with a nonlinear head.
 

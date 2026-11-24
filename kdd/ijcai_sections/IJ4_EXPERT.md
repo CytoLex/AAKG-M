@@ -48,13 +48,9 @@ The fusion is four numbers, `0.00·D + 0.40·Kermut + 0.40·AMK + 0.20·X`, sele
 of each fold and applied to the held-out ones — exactly the protocol the tuned constant uses. The search drives the additive-structure weight to 0.00 in 14 of 15 seed-by-fold cells and the new expert to 0.20
 in all 15. Under the official metric:
 
-| configuration | official |
-|---|---:|
-| previous four-expert fusion | 0.685538 |
-| + distilled encoder, category residual | 0.691130 |
-| **+ eight-seed averaging** | **0.693311** |
-
-against **0.657028** for Kermut \cite{kermut} — +0.0085 over the previous fusion, +0.037 over the leader.
+The previous four-expert fusion scores **0.685538**; adding the distilled encoder with its category residual
+reaches **0.691130**; averaging eight seeds gives **0.693311** — against **0.657028** for Kermut \cite{kermut},
+so +0.0085 over the previous fusion and +0.037 over the leader.
 
 ## 4.4 What the ablation rules out
 
