@@ -28,12 +28,12 @@ within 0.0009 of it.
 
 **That principle selects the representation.** A substitution is a difference between two sequences, so the view
 that produces useful disagreement is the difference: reference-minus-mutant features in a ±4-residue
-neighbourhood, distilled, with a functional-category residual. Fused at four fixed weights this reaches **0.694**
+neighbourhood, distilled, with a functional-category residual. Fused at four fixed weights this reaches **0.692**
 against **0.657** for Kermut, having first reproduced Kermut's published per-assay table on 217 of 217 assays to
 mean absolute difference 0.0; the same representation wins six of seven FLIP2 splits.
 
-**An aggregate score is not a deployment specification.** The model that reaches 0.694 scores 0.851 on stability assays and
-0.642 on activity, and the top 5% of its ranking recovers 23.9% of the true top 5% — a **4.8x** lift that is 7.8x
+**An aggregate score is not a deployment specification.** The model that reaches 0.692 scores 0.850 on stability assays and
+0.644 on activity, and the top 5% of its ranking recovers 23.9% of the true top 5% — a **4.8x** lift that is 7.8x
 on stability and 3.5x on activity. Those numbers let a laboratory decide how much of the ordering to
 trust for its own property and assay size.
 
@@ -330,9 +330,10 @@ The fusion is four numbers, `0.00·D + 0.40·Kermut + 0.40·AMK + 0.20·X`, sele
 of each fold and applied to the held-out ones — exactly the protocol the tuned constant uses. The search drives the additive-structure weight to 0.00 in 14 of 15 seed-by-fold cells and the new expert to 0.20
 in all 15. Under the official metric:
 
-The previous four-expert fusion scores **0.685538**; adding the distilled encoder with its category residual
-reaches **0.691130**; averaging eight seeds gives **0.693311** — against **0.657028** for Kermut \cite{kermut},
-so +0.0085 over the previous fusion and +0.037 over the leader.
+The published predictions score **0.6917** on all 217 assays against **0.6570** for Kermut \cite{kermut} — a lead
+of **+0.0347** — and **0.6931** against **0.6551** on the 182 assays the encoder covers, a lead of **+0.0380**. Both
+figures are what the released per-mutant predictions reproduce under the benchmark's own aggregation, and we quote
+them rather than numbers from the training pipeline that the release does not support.
 
 ## 4.4 What the ablation rules out
 
@@ -373,12 +374,11 @@ our folds are bit-identical to the released distribution.
 
 | model | official | random | modulo | contiguous |
 |---|---:|---:|---:|---:|
-| Kermut (published rank 1) | 0.657 | 0.745 | 0.633 | 0.593 |
-| our fusion, single model | **0.691** | 0.782 | 0.671 | 0.624 |
-| our fusion, seed-averaged | **0.694** | 0.784 | 0.674 | 0.625 |
+| Kermut (published rank 1) | 0.657 | 0.746 | 0.633 | 0.593 |
+| our fusion | **0.692** | 0.778 | 0.671 | 0.626 |
 
-Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.037 is what adding two
-complementary experts to the strongest published single model is worth. The equal-compute comparison is the single-model rung, which still leads Kermut by 0.034.
+Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.035 is what adding
+complementary experts to the strongest published single model is worth, and every scheme improves.
 
 ## 5.2 The aggregate hides the category, and the top of the list
 
@@ -386,13 +386,13 @@ Per functional category:
 
 | category | ours | Kermut | delta |
 |---|---:|---:|---:|
-| Stability | **0.851** | 0.817 | +0.034 |
-| Expression | 0.693 | 0.670 | +0.023 |
-| Binding | 0.653 | 0.611 | +0.042 |
-| Activity | **0.642** | 0.605 | +0.037 |
-| OrganismalFitness | 0.632 | 0.582 | +0.050 |
+| Stability | **0.850** | 0.817 | +0.033 |
+| Expression | 0.697 | 0.670 | +0.026 |
+| Binding | 0.655 | 0.619 | +0.036 |
+| Activity | **0.644** | 0.610 | +0.034 |
+| OrganismalFitness | 0.636 | 0.597 | +0.040 |
 
-Every category improves, and the spread is the part that matters downstream: 0.851 against 0.642 is a
+Every category improves, and the spread is the part that matters downstream: 0.850 against 0.644 is a
 0.21 gap, so a laboratory working on an activity assay is operating at the bottom of the range we report.
 
 Spearman is a whole-list statistic. A campaign has a library and can assay tens of candidates, so the

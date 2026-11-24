@@ -11,12 +11,11 @@ our folds are bit-identical to the released distribution.
 
 | model | official | random | modulo | contiguous |
 |---|---:|---:|---:|---:|
-| Kermut (published rank 1) | 0.657 | 0.745 | 0.633 | 0.593 |
-| our fusion, single model | **0.691** | 0.782 | 0.671 | 0.624 |
-| our fusion, seed-averaged | **0.694** | 0.784 | 0.674 | 0.625 |
+| Kermut (published rank 1) | 0.657 | 0.746 | 0.633 | 0.593 |
+| our fusion | **0.692** | 0.778 | 0.671 | 0.626 |
 
-Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.037 is what adding two
-complementary experts to the strongest published single model is worth. The equal-compute comparison is the single-model rung, which still leads Kermut by 0.034.
+Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.035 is what adding
+complementary experts to the strongest published single model is worth, and every scheme improves.
 
 ## 5.2 The aggregate hides the category, and the top of the list
 
@@ -24,13 +23,13 @@ Per functional category:
 
 | category | ours | Kermut | delta |
 |---|---:|---:|---:|
-| Stability | **0.851** | 0.817 | +0.034 |
-| Expression | 0.693 | 0.670 | +0.023 |
-| Binding | 0.653 | 0.611 | +0.042 |
-| Activity | **0.642** | 0.605 | +0.037 |
-| OrganismalFitness | 0.632 | 0.582 | +0.050 |
+| Stability | **0.850** | 0.817 | +0.033 |
+| Expression | 0.697 | 0.670 | +0.026 |
+| Binding | 0.655 | 0.619 | +0.036 |
+| Activity | **0.644** | 0.610 | +0.034 |
+| OrganismalFitness | 0.636 | 0.597 | +0.040 |
 
-Every category improves, and the spread is the part that matters downstream: 0.851 against 0.642 is a
+Every category improves, and the spread is the part that matters downstream: 0.850 against 0.644 is a
 0.21 gap, so a laboratory working on an activity assay is operating at the bottom of the range we report.
 
 Spearman is a whole-list statistic. A campaign has a library and can assay tens of candidates, so the
