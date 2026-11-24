@@ -124,9 +124,11 @@ FIG1 = r"""
 \includegraphics[width=0.92\textwidth]{../figures/fig1_allocation_vs_expert_ijcai.pdf}
 \caption{Left: both levers measured from one origin in one pipeline, the upper arrow being what any weighting of
 the pool could gain (a per-assay oracle, +0.0051) and the lower what adding one expert is worth (+0.0122). Right:
-the thirteen expert-into-pool pairs, marginal value against disagreement with the pool. The expert with the
-\emph{lowest} standalone score (X, 0.6449) contributes the most, and the highest (AMK, 0.6651) almost nothing,
-which is the claim the title makes; the noise, shuffle and negate controls each score zero.}
+the thirteen expert-into-pool pairs, marginal value against disagreement with the pool; colour is the expert and
+marker shape is which pool it joins, since four of the thirteen are the same expert entering different pools and two
+of those coincide within a marker diameter. The expert with the \emph{lowest} standalone score (X, 0.6449)
+contributes the most and the highest (AMK, 0.6651) almost nothing, which is the claim the title makes; the noise,
+shuffle and negate controls each score zero.}
 \label{fig:allocation}
 \end{figure*}
 """

@@ -58,16 +58,28 @@ ax1.set_xlabel("official aggregation, 182 assays", fontsize=6.8)
 for sp_ in ("left", "right", "top"): ax1.spines[sp_].set_visible(False)
 
 # --- right: the thirteen points
+# Four of the thirteen are the same expert entering different pools, and two of them share a y value to four
+# decimals. White marker edges keep the overlap legible; jittering the data to separate them would misrepresent
+# where the measurements sit, so the coincidence is annotated instead.
+# colour encodes the expert, shape the pool composition: four of the thirteen are the same expert entering
+# different pools, and two of those sit within a marker diameter of each other.
+SHAPE = {"4-expert pool": "o", "into D+Kermut": "^", "into Kermut+AMK": "s", "into D+K+AMK": "D"}
 for name, d, m, pool in PTS:
-    ax2.plot(d, m, "o", ms=4.0, color=COL[name], alpha=0.92, zorder=4, label=name if pool == "4-expert pool" else None)
+    ax2.plot(d, m, SHAPE[pool], ms=3.2 if pool == "4-expert pool" else 2.9, color=COL[name], alpha=0.95, zorder=4,
+             markeredgecolor="white", markeredgewidth=0.4,
+             label=name if pool == "4-expert pool" else None)
 ax2.set_xlabel("disagreement with the pool", fontsize=6.8)
 ax2.set_ylabel("marginal value", fontsize=6.8)
 ax2.tick_params(labelsize=6.4)
 ax2.grid(alpha=0.18, lw=0.4)
-ax2.text(0.0455, 0.0148, "r = +0.786 over 13 pairs", fontsize=6.3, style="italic", va="top")
-ax2.legend(fontsize=5.6, frameon=False, loc="lower right", handlelength=0.9, labelspacing=0.25,
-           borderaxespad=0.2, title="expert", title_fontsize=5.8)
-ax2.set_ylim(-0.0016, 0.0165); ax2.set_xlim(0.042, 0.215)
+ax2.text(0.0448, 0.0159, "r = +0.786 over 13 pairs", fontsize=6.2, style="italic", va="top")
+ax2.annotate("X entering four pools\n(shape = pool)", xy=(0.1915, 0.0124), xytext=(0.143, 0.0152),
+             fontsize=5.5, color="#8e44ad", linespacing=1.15, va="top",
+             arrowprops=dict(arrowstyle="-", lw=0.5, color="#8e44ad",
+                             shrinkA=1, shrinkB=3))
+ax2.legend(fontsize=5.5, frameon=False, loc="lower right", handlelength=0.9, labelspacing=0.22,
+           borderaxespad=0.15, title="expert", title_fontsize=5.7)
+ax2.set_ylim(-0.0016, 0.0168); ax2.set_xlim(0.042, 0.215)
 for sp_ in ("right", "top"): ax2.spines[sp_].set_visible(False)
 
 fig.tight_layout(pad=0.25, w_pad=1.6)
