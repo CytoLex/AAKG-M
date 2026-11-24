@@ -56,5 +56,6 @@ will be judged by rather than the one that is convenient.
 3. **A utility characterisation that makes the ranking usable** — top-of-list recall by functional
    category, and the assay-size regime over which the advantage holds. It converts one aggregate number
    into the two facts a campaign needs: how much of the top of the list to trust, and for which property.
-4. **A reproducible artifact**: per-mutant predictions for all 696,311 mutants and the code regenerating
-   every number, supplied as anonymised supplementary material and released on publication.
+4. **A reproducible artifact**: per-mutant predictions for all 696,311 mutants and the code behind every reported
+   number, supplied as anonymised supplementary material and released on publication, with the scope of what
+   regenerates exactly stated in §6.
