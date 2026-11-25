@@ -8,18 +8,19 @@ If a mutation's effect were a property of the mutant residue, the residue alone 
 instead of assuming a representation. Three ESM-2 650M layers \cite{esm2} (20, 30, 33) are extracted on both the
 wild-type and the mutated sequence, and the question is what has to be passed to the head:
 
-Scores below come from retraining each view and are reported as measured, not as regenerable from the release.
+Each view is retrained from scratch; the per-assay scores behind every entry are released.
 
 | representation | score | increment |
 |---|---:|---:|
-| site vector of the mutant (layer 33) | 0.467 | — |
-| + three layers stacked | 0.464 | **−0.003** |
+| site vector of the mutant (layer 33) | 0.432 | — |
+| + three layers stacked | 0.464 | +0.032 |
 | + ±4-residue neighbourhood | 0.480 | +0.016 |
-| **+ wild-type layers and difference terms** | **0.596** | **+0.116** |
+| **+ wild-type layers and difference terms** | **0.582** | **+0.103** |
 
-The mutant's absolute state, even given its neighbourhood, is 0.129 below the differential view, and stacking
-more layers on top of the absolute state *loses* ground. The effect is not a property of the mutant residue;
-it is a property of the change, read in context. The features follow from that: 12,800 dimensions of `mut`, `wt` and `mut − wt` with mean-pooled ±4 windows.
+The mutant's absolute state, even with its neighbourhood, is **0.102** below the differential view, and the
+difference is three times the next largest step. Stacking layers helps a little and local context helps a little; the
+change is what carries the signal. The effect is not a property of the mutant residue but of the change, read in
+context, and the features follow: 12,800 dimensions of `mut`, `wt` and `mut − wt` with mean-pooled ±4 windows.
 **The representation is a conclusion about the problem, not a design choice asked of the reader.**
 
 ## 4.2 Distillation, and a residual per functional category

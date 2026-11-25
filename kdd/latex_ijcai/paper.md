@@ -52,9 +52,9 @@ will be judged by rather than the one that is convenient.
    reported +0.0027 for the same quantity, an 85% error.
 2. **An expert's value is its disagreement, not its accuracy**, measured at r = +0.786 across thirteen
    expert-into-pool pairs with noise, shuffle and negate controls at zero, and bounded by a competence floor we
-   map. The representation follows from the principle rather than motivating it: the difference view carries
-   +0.116 where stacking layers is negative, and a control arm shows the category structure is what the
-   residual needs (+0.0214 against a shared branch with a fifth of the parameters).
+   map. The representation follows from the principle rather than motivating it: retraining each view, the difference
+   terms add +0.103 where stacking three layers adds +0.032 and a ±4 window +0.016, and a control arm shows the
+   category structure is what the residual needs (+0.0214 against a shared branch with a fifth of the parameters).
 3. **A utility characterisation that makes the ranking usable** — top-of-list recall by functional
    category, and the assay-size regime over which the advantage holds. It converts one aggregate number
    into the two facts a campaign needs: how much of the top of the list to trust, and for which property.
@@ -289,18 +289,19 @@ If a mutation's effect were a property of the mutant residue, the residue alone 
 instead of assuming a representation. Three ESM-2 650M layers \cite{esm2} (20, 30, 33) are extracted on both the
 wild-type and the mutated sequence, and the question is what has to be passed to the head:
 
-Scores below come from retraining each view and are reported as measured, not as regenerable from the release.
+Each view is retrained from scratch; the per-assay scores behind every entry are released.
 
 | representation | score | increment |
 |---|---:|---:|
-| site vector of the mutant (layer 33) | 0.467 | — |
-| + three layers stacked | 0.464 | **−0.003** |
+| site vector of the mutant (layer 33) | 0.432 | — |
+| + three layers stacked | 0.464 | +0.032 |
 | + ±4-residue neighbourhood | 0.480 | +0.016 |
-| **+ wild-type layers and difference terms** | **0.596** | **+0.116** |
+| **+ wild-type layers and difference terms** | **0.582** | **+0.103** |
 
-The mutant's absolute state, even given its neighbourhood, is 0.129 below the differential view, and stacking
-more layers on top of the absolute state *loses* ground. The effect is not a property of the mutant residue;
-it is a property of the change, read in context. The features follow from that: 12,800 dimensions of `mut`, `wt` and `mut − wt` with mean-pooled ±4 windows.
+The mutant's absolute state, even with its neighbourhood, is **0.102** below the differential view, and the
+difference is three times the next largest step. Stacking layers helps a little and local context helps a little; the
+change is what carries the signal. The effect is not a property of the mutant residue but of the change, read in
+context, and the features follow: 12,800 dimensions of `mut`, `wt` and `mut − wt` with mean-pooled ±4 windows.
 **The representation is a conclusion about the problem, not a design choice asked of the reader.**
 
 ## 4.2 Distillation, and a residual per functional category

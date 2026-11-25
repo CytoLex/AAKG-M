@@ -50,9 +50,9 @@ will be judged by rather than the one that is convenient.
    reported +0.0027 for the same quantity, an 85% error.
 2. **An expert's value is its disagreement, not its accuracy**, measured at r = +0.786 across thirteen
    expert-into-pool pairs with noise, shuffle and negate controls at zero, and bounded by a competence floor we
-   map. The representation follows from the principle rather than motivating it: the difference view carries
-   +0.116 where stacking layers is negative, and a control arm shows the category structure is what the
-   residual needs (+0.0214 against a shared branch with a fifth of the parameters).
+   map. The representation follows from the principle rather than motivating it: retraining each view, the difference
+   terms add +0.103 where stacking three layers adds +0.032 and a ±4 window +0.016, and a control arm shows the
+   category structure is what the residual needs (+0.0214 against a shared branch with a fifth of the parameters).
 3. **A utility characterisation that makes the ranking usable** — top-of-list recall by functional
    category, and the assay-size regime over which the advantage holds. It converts one aggregate number
    into the two facts a campaign needs: how much of the top of the list to trust, and for which property.

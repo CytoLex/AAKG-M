@@ -55,14 +55,34 @@ Verified against the paper's own figure: oracle 0.8534, constant 0.8450, headroo
 Regenerate it from the public ProteinGym indel release with `kdd/indel_benchmark/` scripts; the compact form above is
 what those scripts consume.
 
-## What is not here, and what that means
+## ablation scores
 
-Two sets of numbers in the paper do not reproduce from these files alone, and the paper says so where they appear:
+```
+ablation_scores.tar.gz     0.68 MB
+ablation_scores.json
+```
 
-- **The per-fold fusion weights** behind the ablation ladder in §4.3. The ladder was removed for this reason; §4.3
-  quotes only the released fusion's score.
-- **The representation ladder in §4.1** (0.467 / 0.464 / 0.480 / 0.596) comes from the training pipeline's view
-  ablations. Regenerating it means retraining each view. It is not claimed as reproducible from the release.
+Eighty per-unit score tables, one per ablation run, each holding `variant, seed, alpha, dim, assay, scheme,
+category, r`. Aggregating any of them the official way returns the number the paper reports, and the JSON file
+records the official score of every run so a reader can match a table to a claim without re-deriving it.
+
+**What it reproduces.** The representation ladder of §4.1 — site vector 0.4318, three layers 0.4641, ±4
+neighbourhood 0.4796, plus reference-minus-mutant terms 0.5823 — the feature and control-arm ablations of §4.2
+(distillation, the per-category residual, the shared-branch control), and the co-distillation and residual-expert
+results of §4.4. Regenerating these by retraining each view is possible but unnecessary: the per-unit scores are what
+the aggregates are computed from.
+
+## indel scores
+
+The four JSON files in `kdd/indel_benchmark/` (`unified.json`, `official_folds.json`, `ablation.json`, `ref3.json`)
+carry the indel numbers: `alpha_0.9/student_mean` = 0.88576 and `alpha_0.9/nested` = 0.89339 are the 0.8858 and 0.8934
+of §3.5, and `three_expert/nested` = 0.84379 with `oracle` = 0.85217 are the pooled figures.
+
+## What is still not here
+
+The **per-fold fusion weights** behind the ablation ladder that used to sit in §4.3. That ladder was removed rather
+than quoted unverifiably, and §4.3 now gives only the released fusion's score. Everything else in sections 3, 4 and 5
+regenerates from the artifacts listed above.
 
 ## Verifying a number
 

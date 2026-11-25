@@ -37,14 +37,38 @@ the value in the paper.
 |---|---|---|---|
 | indel oracle minus constant | §3.5 | +0.0084 | reproduces (oracle 0.8534, constant 0.8450) |
 
-## Does not reproduce from the release, and the paper says so
+## Reproduces from the ablation score tables (`submission/oof/ablation_scores.tar.gz`)
 
-| number | where | why |
-|---|---|---|
-| the ablation ladder 0.685538 → 0.691130 → 0.693311 | was §4.3 | the per-fold fusion weights are summarised, not released. **Removed** rather than quoted unverifiably |
-| the representation ladder 0.467 / 0.464 / 0.480 / 0.596 | §4.1 | needs each view retrained; now labelled as measured, not regenerable |
-| the encoder's indel score 0.8858 and blend 0.8934 | §3.5 | the encoder's indel predictions are not in the released bundle |
-| the feature/control ablations +0.116, +0.0214, +0.114 | §4.1, §4.2, §4.4 | same reason: they are view-level retrainings |
+Eighty per-unit tables plus the official score of each run. Aggregating a table the official way returns the
+reported number.
+
+| number | where | value | status |
+|---|---|---|---|
+| representation ladder | §4.1 | 0.4318 / 0.4641 / 0.4796 / 0.5823 | reproduces |
+| distillation, category residual, shared-branch control | §4.2 | +0.114, +0.024, +0.0214 | reproduces |
+| co-distillation and residual expert | §4.4 | +0.0136, weight 0 | reproduces |
+
+## Reproduces from the indel score files
+
+| number | where | value | status |
+|---|---|---|---|
+| encoder on indels | §3.5 | 0.88576 | reproduces (`unified.json`) |
+| three-expert blend | §3.5 | 0.89339 | reproduces |
+| pooled experts, nested and oracle | §3.5 | 0.84379 / 0.85217 | reproduces |
+
+## Does not reproduce from the release
+
+One item: the **per-fold fusion weights** behind the ablation ladder that used to sit in §4.3. That ladder was
+removed rather than quoted unverifiably; §4.3 now gives only what the released fusion produces.
+
+## A correction this pass forced
+
+The representation ladder had never been checked against its own score tables. Two of its four rungs were right
+(0.4641 and 0.4796 against the reported 0.464 and 0.480); the endpoints were not, and the reported 0.467 made the
+"stacking more layers is negative" claim true. Retrained values give site 0.4318 to layers 0.4641, which is
+**positive**, and the differential step is 0.5823 − 0.4796 = +0.103 rather than +0.116. Section 4.1 and contribution
+2 now carry the reproduced values and the corrected reading: stacking helps a little, context helps a little, and the
+change carries three times either.
 
 ## The three discrepancies this ledger found
 
