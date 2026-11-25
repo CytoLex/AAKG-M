@@ -11,11 +11,12 @@ Compared against: the constant, unregularised per-assay fitting, the tuned k, th
 lambda, and the learned gate. Target for the gate is each assay's own out-of-sample optimal lambda, fitted
 leave-one-assay-out so the reported number never sees the assay it is scored on.
 """
+import os
 import os, glob, itertools, json
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 rng = np.random.default_rng(0)
 LAMS = np.linspace(0, 1, 11)
 

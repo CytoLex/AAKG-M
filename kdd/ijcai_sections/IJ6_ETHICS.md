@@ -6,7 +6,7 @@ of any one assay.
 
 **The structural experts are inherited, not retrained inside each outer fold**; a fully nested protocol would
 retrain them per fold. Every number in the headline, the category breakdown and the top-of-list analysis is reproducible
-from the published per-mutant scores; the per-fold fusion weights themselves are summarised rather than released. The one hyperparameter that matters, the distillation weight, was re-selected inside each fold and
+from the published per-mutant scores; the per-fold fusion weights are summarised rather than released. The one hyperparameter that matters, the distillation weight, was re-selected inside each fold and
 chose the same value in all five.
 
 **Scope of the evaluation.** Every result is on ProteinGym substitutions, ProteinGym indels, or FLIP2's published
@@ -27,8 +27,9 @@ assays only.
 
 
 **Data and released artifacts.** All assays are previously published deep-mutational-scanning datasets distributed
-by ProteinGym: no new experimental data, no human subjects, no clinical material. The supplementary material adds
-per-mutant predictions, the code behind every reported number, and the recovered kernel for the structural experts. The code is permissively licensed; the expert prediction tables are research-use only because they derive from
+by ProteinGym: no new experimental data, no human subjects, no clinical material. The supplementary material adds per-mutant predictions
+for the fusion, the out-of-fold predictions of each expert that the allocation analysis needs, the code behind every
+reported number, and the recovered kernel. The code is permissively licensed; the expert prediction tables are research-use only because they derive from
 third-party methods.
 
 **Generative AI usage.** Analysis scripts, evaluation harnesses and LaTeX assembly were written and

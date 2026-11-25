@@ -10,11 +10,12 @@ Part 2. Whether per-assay weighting is worth attempting should be predictable fr
 by trying it. We relate the per-assay oracle gain to expert disagreement, and test a decision rule against
 always-on and always-off.
 """
+import os
 import os, glob, itertools, json
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 rng = np.random.default_rng(0)
 REPS = 6
 KS = [10, 30, 100, 300, 1000, 3000]

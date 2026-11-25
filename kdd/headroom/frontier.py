@@ -8,11 +8,12 @@ Two axes, run as separate jobs so the shape is not an artefact of one constructi
   residual   m(beta) = z(X) - beta * z(pool)     subtracts the pool's own component
   noise      m(eps)  = z(X) + eps * N(0,1)       degrades accuracy without touching the pool direction
 """
+import os
 import os, itertools, json, sys
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 A = f"{R}/cytolex-aakg-ablation-1103-v1"
 AXIS = sys.argv[1] if len(sys.argv) > 1 else "residual"
 STEPS = [round(x, 2) for x in np.arange(0, 2.01, 0.125)]

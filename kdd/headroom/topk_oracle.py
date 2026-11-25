@@ -8,11 +8,12 @@ which is the paper's own thesis turned on itself.
 Per assay, for every weight vector on the simplex: top-k recall (fraction of the true top k that the predicted top
 k recovers). Then the usual LOO constant and per-assay oracle, aggregated the official way.
 """
+import os
 import os, itertools, json, sys
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 A = f"{R}/cytolex-aakg-ablation-1103-v1"
 KPCT = float(sys.argv[1]) if len(sys.argv) > 1 else 0.05
 

@@ -5,11 +5,12 @@ much it disagrees with the rest of the pool, and what it actually adds to the fu
 handful of real points, enough to see whether marginal value tracks disagreement at all -- and unlike pilot
 A, nothing here is synthesised.
 """
+import os
 import itertools, json
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 A = f"{R}/cytolex-aakg-ablation-1103-v1"
 
 def z(a):

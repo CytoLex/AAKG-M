@@ -6,11 +6,12 @@ rank averaging, and a median -- and those are what a reader in this literature w
 parameter-free average matches the tuned constant, the baseline the paper spends a section defending is not the
 right one; if it does not, the claim is stronger for having been checked.
 """
+import os
 import itertools, json
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr, rankdata
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 A = f"{R}/cytolex-aakg-ablation-1103-v1"
 
 def z(a):

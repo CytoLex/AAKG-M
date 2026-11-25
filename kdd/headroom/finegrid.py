@@ -5,11 +5,12 @@ c = X - 1.25P it is {(1-w-1.25w)P + wX} -- the same family, reparametrised, so t
 identical and any difference must come from where the discrete simplex lands. Refining the step decides it:
 if both columns converge to the same value, the beta headroom was discretisation.
 """
+import os
 import itertools, json
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 A = f"{R}/cytolex-aakg-ablation-1103-v1"
 
 def z(a):

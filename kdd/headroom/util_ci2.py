@@ -6,11 +6,12 @@ those figures were produced with rather than at rounding. This recomputes the ta
 supports -- the paper's fixed fusion -- and puts a bootstrap interval on every entry so the section carries the same
 discipline as the rest of the paper.
 """
+import os
 import json
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 A = f"{R}/cytolex-aakg-ablation-1103-v1"
 rng = np.random.default_rng(0)
 

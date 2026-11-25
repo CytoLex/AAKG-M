@@ -7,11 +7,12 @@ Efficiency: one score matrix S[grid, assay], then the oracle and the leave-one-o
 from it. Computing the constant inside a per-assay loop made the previous attempt O(n^2 * grid) and it did not
 finish in an hour; this is O(grid * n).
 """
+import os
 import os, glob, itertools, json
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 def z(a):
     a = np.asarray(a, dtype=np.float64); return (a-a.mean())/(a.std()+1e-12)
 def sp(a,b):

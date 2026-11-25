@@ -4,11 +4,12 @@ The gap measured +0.0010 in favour of the tuned constant. Every other 0.001-scal
 under a paired interval, so this one gets the same treatment before it is written down: per-assay scores, paired,
 bootstrapped over assays with the official re-aggregation inside each resample.
 """
+import os
 import itertools, json
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr, rankdata
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 A = f"{R}/cytolex-aakg-ablation-1103-v1"
 
 def z(a):

@@ -13,11 +13,12 @@ the pool, and the fusion gain when the expert joins the pool under the nested-co
 If fusion gain peaks at alpha > 0, our view is too far out and a learned view has room. If alpha = 0 is
 optimal, the hand-designed view is already on the frontier.
 """
+import os
 import itertools, json
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 A = f"{R}/cytolex-aakg-ablation-1103-v1"
 rng = np.random.default_rng(0)
 ALPHAS = np.round(np.linspace(0, 1, 11), 2)

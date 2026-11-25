@@ -3,11 +3,12 @@
 Per-assay scores are saved for every rule and compared on the same split (paired), then two uncertainties:
 across fresh splits, and a bootstrap over assays with the official re-aggregation inside each resample.
 """
+import os
 import os, glob, itertools, json
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 rng = np.random.default_rng(0)
 LAMS = np.linspace(0, 1, 11)
 NSPLIT = 5

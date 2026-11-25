@@ -11,11 +11,12 @@ beta = 0 -- the boundary of interpolation. So the question is what lies beyond: 
 component makes the expert *more* contrary. If value keeps rising, a learned view has room beyond the hand
 design; if it peaks and falls, competence is what breaks first and the design is near its frontier.
 """
+import os
 import itertools, json
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 A = f"{R}/cytolex-aakg-ablation-1103-v1"
 rng = np.random.default_rng(0)
 BETAS = np.round(np.linspace(0, 1.5, 7), 2)

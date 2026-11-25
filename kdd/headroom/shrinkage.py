@@ -14,11 +14,12 @@ half. Three rules are compared on the same held-out variants:
     per-assay     lambda = 1   (the rule that fails)
     shrinkage     lambda = n_i / (n_i + k)
 """
+import os
 import os, glob, itertools, json
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 rng = np.random.default_rng(0)
 REPS = 5
 KS = [3, 10, 30, 100, 300, 1000, 3000]

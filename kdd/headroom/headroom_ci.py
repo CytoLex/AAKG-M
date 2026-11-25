@@ -4,10 +4,11 @@ First reproduce the paper's figure from the out-of-fold bundle by trying the pla
 put a bootstrap CI and a grouped-fold sensitivity around whichever subset matches. The indel side needs no
 training either: the published experts' predictions are already cached.
 """
+import os
 import os, glob, json, itertools, numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 rng = np.random.default_rng(0)
 
 def z(a):

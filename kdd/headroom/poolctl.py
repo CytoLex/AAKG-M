@@ -6,11 +6,12 @@ sigma_i^2 from repeated half-splits, tau^2 as total variance minus mean sampling
 tau^2/(tau^2 + sigma_i^2). The null permutes those lambdas across assays, which preserves the distribution and
 destroys the alignment with each assay's sample size.
 """
+import os
 import itertools, json
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 A = f"{R}/cytolex-aakg-ablation-1103-v1"
 rng = np.random.default_rng(0)
 REPS = 4

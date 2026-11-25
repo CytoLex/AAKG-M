@@ -8,6 +8,8 @@ If a mutation's effect were a property of the mutant residue, the residue alone 
 instead of assuming a representation. Three ESM-2 650M layers \cite{esm2} (20, 30, 33) are extracted on both the
 wild-type and the mutated sequence, and the question is what has to be passed to the head:
 
+Scores below come from retraining each view and are reported as measured, not as regenerable from the release.
+
 | representation | score | increment |
 |---|---:|---:|
 | site vector of the mutant (layer 33) | 0.467 | — |

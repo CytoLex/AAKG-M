@@ -9,11 +9,12 @@ the transfer fractions disagree. Here every quantity is computed from the same h
 
 where C is the constant fitted on half A of the other assays, and shrinkage strength is lambda = n/(n+k).
 """
+import os
 import itertools, json, glob, os
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 rng = np.random.default_rng(0); REPS = 5; KS = [10, 30, 100, 300, 1000]
 
 def z(a):

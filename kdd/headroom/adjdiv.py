@@ -12,11 +12,12 @@ four candidates and compares them under identical leave-one-assay-out linear pre
 If the adjusted versions do not beat raw here, that is a result too: the adjustment may not survive a rank
 metric, which is worth stating rather than assuming.
 """
+import os
 import os, glob, itertools, json
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 A = f"{R}/cytolex-aakg-ablation-1103-v1"
 
 def z(a):

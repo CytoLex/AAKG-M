@@ -5,12 +5,13 @@ same ordering, different numbers. The paper's figures came from the per-fold nes
 from a fixed one, and the tie and rounding conventions may also differ. Rather than overwrite either, this tries the
 candidate conventions, reports which reproduces the published values, and bootstraps an interval in that one.
 """
+import os
 import json, itertools
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 from scipy.stats import rankdata
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 A = f"{R}/cytolex-aakg-ablation-1103-v1"
 TARGET = {0.01: 0.119, 0.05: 0.247, 0.10: 0.350}
 rng = np.random.default_rng(0)

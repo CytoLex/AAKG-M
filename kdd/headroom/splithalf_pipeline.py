@@ -4,11 +4,12 @@ For each assay the oracle weights are fitted on half its variants and evaluated 
 the constant fitted on the other assays. Both halves are aggregated the paper's way -- UniProt then category
 -- and the whole thing is repeated over independent random splits so it arrives with a spread.
 """
+import os
 import itertools, json
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 A = f"{R}/cytolex-aakg-ablation-1103-v1"
 rng = np.random.default_rng(0)
 REPS = 10

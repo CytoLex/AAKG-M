@@ -6,11 +6,12 @@ the column is, it manufactures exactly the disagreement-value correlation the pi
 protocol is run with columns that carry no signal: pure noise, a shuffled copy of our expert (identical
 marginal distribution, no signal), and the negated expert.
 """
+import os
 import itertools, json
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 A = f"{R}/cytolex-aakg-ablation-1103-v1"
 rng = np.random.default_rng(0)
 

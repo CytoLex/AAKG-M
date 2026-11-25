@@ -7,11 +7,12 @@ claimed: per-assay scores, paired, bootstrapped over assays with the official re
 
 Also repeats at k = 1% and 10%, since only 5% was tested.
 """
+import os
 import itertools, json
 import numpy as np, pandas as pd
 from scipy.stats import spearmanr
 
-R = "/inspire/ssd/project/scientific-evidence-protocol/tangkezheng-253108540239"
+R = os.environ.get("AAKG_DATA", ".")   # see submission/oof/README.md
 A = f"{R}/cytolex-aakg-ablation-1103-v1"
 LAMS = [0.0, 0.25, 0.5, 0.75, 1.0]
 REPS = 4
