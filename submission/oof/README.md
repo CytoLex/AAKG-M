@@ -78,11 +78,16 @@ The four JSON files in `kdd/indel_benchmark/` (`unified.json`, `official_folds.j
 carry the indel numbers: `alpha_0.9/student_mean` = 0.88576 and `alpha_0.9/nested` = 0.89339 are the 0.8858 and 0.8934
 of §3.5, and `three_expert/nested` = 0.84379 with `oracle` = 0.85217 are the pooled figures.
 
-## What is still not here
+## The fusion ladder
 
-The **per-fold fusion weights** behind the ablation ladder that used to sit in §4.3. That ladder was removed rather
-than quoted unverifiably, and §4.3 now gives only the released fusion's score. Everything else in sections 3, 4 and 5
-regenerates from the artifacts listed above.
+Not released as weights, but regenerable: `headline_seeds.py` recomputes the ladder from the eight `preds_union_s*.csv`
+files, giving 0.690808 for the previous fusion and 0.694984 for the eight-seed average, a gain of +0.004175 with a
+95% CI of [+0.002234, +0.006376]. Note that this script aggregates by category mean, while the headline figure
+reproduces under UniProt-then-category; the two conventions differ by about 0.004 on this panel, which is why §4.3
+quotes the released artifact rather than the ladder.
+
+Run it with `PREFIX=preds_union` — the default in the script appends a second `_s` to the prefix and silently finds no
+per-seed files.
 
 ## Verifying a number
 

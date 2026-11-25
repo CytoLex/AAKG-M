@@ -56,10 +56,31 @@ reported number.
 | three-expert blend | §3.5 | 0.89339 | reproduces |
 | pooled experts, nested and oracle | §3.5 | 0.84379 / 0.85217 | reproduces |
 
-## Does not reproduce from the release
+## The last item: regenerated, but under a different convention
 
-One item: the **per-fold fusion weights** behind the ablation ladder that used to sit in §4.3. That ladder was
-removed rather than quoted unverifiably; §4.3 now gives only what the released fusion produces.
+The per-fold fusion weights were the only unreleased input. They are not missing after all — `headline_seeds.py`
+reproduces the ladder from the eight per-seed prediction files:
+
+```
+previous fusion (D, Kermut, AMK, the older expert)   0.690808
+new fusion, eight seeds averaged                     0.694984
+gain +0.004175   95% CI [+0.002234, +0.006376]
+```
+
+Two things keep this out of the paper as the headline. It uses **category-mean** aggregation, while the headline
+figure of 0.6917 uses **UniProt then category** — the convention that reproduces Kermut's 0.657028 exactly. And the
+ladder that was originally reported (0.685538 / 0.691130 / 0.693311) matches neither this regeneration nor the
+released artifact, so it cannot be restored as written.
+
+So the item is resolved as *understood* rather than *published*: nothing is unreleased, one number was convention-
+dependent, and §4.3 stays on the released artifact because that is the convention a reader can check against Kermut.
+
+## A bug found in the project's own script
+
+`headline_seeds.py` defaults `PREFIX` to `preds_union_s` and then appends `_s{s}`, so it looks for
+`preds_union_s_s1.csv` and silently skips all eight seeds, printing only the previous fusion's score. Running it with
+`PREFIX=preds_union` reproduces the full ladder. The default should have been `preds_union`; anyone regenerating this
+number from the repository would have got eight "no predictions" lines and no explanation.
 
 ## A correction this pass forced
 
