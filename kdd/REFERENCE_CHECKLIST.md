@@ -33,10 +33,29 @@ copy-editor can see the status without digging.
 `timmermann2006forecast`, both peer-reviewed. The preprints only carry secondary points, so a reviewer cannot say
 the argument leans on unreviewed work.
 
-## Still to check by hand — conference entries
+## Conference entries — now verified
 
-These have no DOI and were verified against proceedings indexes in an earlier pass, but **not re-verified this
-round** because `proceedings.neurips.cc` and `proceedings.mlr.press` were not reachable from here.
+The proceedings indexes became reachable, so all nine were checked against the primary source this round.
+
+| key | venue as printed | matches the entry |
+|---|---|---|
+| `proteingym` | NeurIPS 2023, Datasets and Benchmarks Track | ✅ |
+| `proteinnpt` | NeurIPS 2023, Main Conference Track | ✅ |
+| `kermut` | NeurIPS 2024, Main Conference Track | ✅ |
+| `esm1v` | NeurIPS 2021 | ✅ |
+| `flip` | NeurIPS 2021, Datasets and Benchmarks | ✅ — **one author name was wrong and is fixed** |
+| `tranception` | PMLR v162 (ICML 2022) | ✅ |
+| `msatransformer` | PMLR v139 (ICML 2021) | ✅ |
+| `shazeer2017` | ICLR 2017, reachable on OpenReview | ✅ |
+| `rasmussen2006` | MIT Press book | no DOI to check |
+
+**The FLIP fix:** the entry read `Mou, Jurek`; the proceedings list `Jody Mou`. The first name was wrong from the
+beginning. `Yang, Kevin K.` was also missing from the tail of the author list and has been added. This is why the
+index check was worth doing even for entries that "looked fine" — a single wrong given name is invisible in the prose
+and wrong in the bibliography.
+
+The earlier note in this file said these could not be re-verified because the proceedings indexes were unreachable.
+They are reachable now, and all nine hold apart from the name above.
 
 | key | what to confirm |
 |---|---|
