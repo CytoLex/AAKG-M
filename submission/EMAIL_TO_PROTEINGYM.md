@@ -1,6 +1,6 @@
 # Email to the ProteinGym maintainers
 
-**To:** Pascal Notin `<pascal.notin@cs.ox.ac.uk>`
+**To:** Pascal Notin `<pascal_notin@hms.harvard.edu>`
 **Cc:** Daniel Ritter `<danieldritter1@gmail.com>`
 **Subject:** cytomuta-preview — supervised baseline submitted (issue #129, PR #130)
 
@@ -45,7 +45,13 @@ CytoLex · github.com/Zane12518
 ## Sending notes
 
 - Send plain text, no attachments; the data is at a URL.
-- The addresses are the `∗Correspondence` line of the NeurIPS 2023 PDF, not addresses inferred from lab pages.
+- The first attempt went to `pascal.notin@cs.ox.ac.uk`, the address printed in the 2023 PDF, and bounced: Oxford's
+  redirect service forwards that alias to `scro3775@nexus.ox.ac.uk`, an account that no longer exists. Pascal has moved
+  from Oxford to Harvard Medical School, so the working address is `pascal_notin@hms.harvard.edu` (note the
+  underscore), which appears on three papers from December 2024, June 2025 and December 2025. `notin@hms.harvard.edu`
+  also appears and is a reasonable second choice.
+- The Cc to Daniel Ritter's Gmail produced no bounce, so the message may already have been seen by a co-first author
+  who is also a repository committer.
 - Pascal Notin is the measured choice: first author, most frequent author-committer (21 commits against 6 for the
   next), and the identity attached to the repository's merge commits. Aaron Kollasch, whom the repository name would
   suggest, does not appear in the commit history at all.
