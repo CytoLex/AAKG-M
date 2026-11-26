@@ -17,9 +17,15 @@ notification.
 - Pull request: https://github.com/OATML-Markslab/ProteinGym/pull/130
 
 Against the requirements in your README for new baselines: the PR adds `proteingym/baselines/cytomuta/compute_fitness.py`
-together with the scoring script under `scripts/scoring_DMS_supervised/`, and all model scores for all mutants are
-published — 2,088,933 rows, 696,311 mutants across the three fold schemes, all 217 assays, in the format your
-performance script reads unmodified. Run through your evaluation script it reports 0.694, which is +0.037 over Kermut.
+with a scoring script under `scripts/scoring_DMS_supervised/`, the supervised analogue of the `scoring_DMS_zero_shot`
+example. All model scores are published: `raw_score_file.csv` is the per-assay file your performance script reads
+directly, and `fused_per_mutant.csv.gz` covers every benchmarked mutant — 2,088,933 rows, 696,311 mutants across the
+three schemes and all 217 assays. Run on the per-assay file, your evaluation script reports 0.694, +0.037 over Kermut.
+
+One thing I would rather flag than let you find: the per-mutant file is a re-run, not the run behind that 0.694.
+Re-scoring it gives 0.692, with per-assay differences averaging 0.008. The per-assay file is what our reported number
+rests on and is the one your script's aggregation matches; if you need the per-mutant predictions to agree with it
+exactly, I can tell you what regenerating them from the submitted configuration would take.
 
 The evaluation is checkable without taking our word for it: recomputing Kermut's predictions through the same pipeline
 reproduces your published per-assay table on 217 of 217 assays, mean absolute difference 0.00026 and maximum 0.0005,
@@ -49,7 +55,12 @@ GitHub: Zane12518
   next), and the identity attached to the repository's merge commits. Aaron Kollasch, who the repository name would
   suggest, does not appear in the commit history at all.
 - Do not follow up for two weeks, and then once, in two sentences.
-- Before sending, confirm the PR body says 0.694, the figure the benchmark's own script returns on the submitted
-  score file (`submission/official_outputs/Summary_performance_DMS_substitutions_Spearman.csv`). An earlier revision
-  of this draft said 0.692, from re-scoring the released per-mutant file rather than the submitted score file -- those
-  are two different runs and the script's output is the one that counts.
+- The figure quoted is 0.694 because that is what the benchmark's own script returns on
+  `submission/raw_score_file.csv`; the output is in `submission/official_outputs/`. The email says explicitly that the
+  released per-mutant file is a separate re-run and re-scores to 0.692, because a maintainer running it will find that
+  and should hear it from us.
+- Regenerating per-mutant predictions that match the submission was attempted and is not possible from what remains
+  on disk. Best reconstructions against the 651 submitted units: 0.4 Kermut + 0.4 AMK + 0.2 encoder gives mean r
+  0.7054 (per-unit difference 0.0116), the rank-space blend 0.7058, eight-seed averaging 0.7072; the submitted file is
+  0.7123. No single stored prediction file comes closer than 0.0618. The exact configuration is not recoverable, so
+  the honest framing is the one in the email rather than a claim that the release reproduces the submission.
