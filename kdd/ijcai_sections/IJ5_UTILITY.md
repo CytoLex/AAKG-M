@@ -5,9 +5,9 @@ benchmark's own terms, on the terms a laboratory uses, and where it does not hel
 
 We run the official `performance_DMS_supervised_benchmarks.py` unmodified on a score file of our
 per-assay, per-scheme correlations, and as a control we run the same correlations recomputed from
-Kermut's predictions. The control reproduces the published per-assay table on **217 of 217 assays** with
-mean absolute difference **0.0**, the residual being the published table's three-decimal rounding, and
-our folds are bit-identical to the released distribution.
+Kermut's predictions. The control reproduces the published per-assay table on **217 of 217 assays** to the precision that table
+is published at: mean absolute difference **0.00026**, maximum **0.0005**, every residual inside the
+released file's three-decimal rounding. Our folds are bit-identical to the released distribution.
 
 | model | official | random | modulo | contiguous |
 |---|---:|---:|---:|---:|

@@ -29,8 +29,8 @@ within 0.0009 of it.
 **That principle selects the representation.** A substitution is a difference between two sequences, so the view
 that produces useful disagreement is the difference: reference-minus-mutant features in a ±4-residue
 neighbourhood, distilled, with a functional-category residual. Fused at four fixed weights this reaches **0.692**
-against **0.657** for Kermut, having first reproduced Kermut's published per-assay table on 217 of 217 assays to
-mean absolute difference 0.0; the same representation wins six of seven FLIP2 splits.
+against **0.657** for Kermut, having first reproduced Kermut's published per-assay table on 217 of 217 assays to the
+precision it is published at; the same representation wins six of seven FLIP2 splits.
 
 **An aggregate score is not a deployment specification.** The model that reaches 0.692 scores 0.850 on stability assays and
 0.644 on activity, and the top 5% of its ranking recovers 24.1% of the true top 5% — a **4.8x** lift that is 7.8x
@@ -370,9 +370,9 @@ benchmark's own terms, on the terms a laboratory uses, and where it does not hel
 
 We run the official `performance_DMS_supervised_benchmarks.py` unmodified on a score file of our
 per-assay, per-scheme correlations, and as a control we run the same correlations recomputed from
-Kermut's predictions. The control reproduces the published per-assay table on **217 of 217 assays** with
-mean absolute difference **0.0**, the residual being the published table's three-decimal rounding, and
-our folds are bit-identical to the released distribution.
+Kermut's predictions. The control reproduces the published per-assay table on **217 of 217 assays** to the precision that table
+is published at: mean absolute difference **0.00026**, maximum **0.0005**, every residual inside the
+released file's three-decimal rounding. Our folds are bit-identical to the released distribution.
 
 | model | official | random | modulo | contiguous |
 |---|---:|---:|---:|---:|
