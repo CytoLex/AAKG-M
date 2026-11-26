@@ -4,19 +4,28 @@ Which numbers in the paper reproduce from released artifacts, which do not, and 
 because three separate discrepancies were found by checking rather than by reading, and the first two were only
 visible once a *control* number was checked against the same pipeline.
 
-## Reproduces from `submission/predictions/fused_per_mutant.csv.gz`
+## Reproduces from the official script run (`submission/official_outputs/`)
 
-These were recomputed from the released fusion under the benchmark's own aggregation, and each was compared against
-the value in the paper.
+These are ProteinGym's own evaluation script run on `submission/raw_score_file.csv`, so they are the benchmark's numbers
+rather than a reimplementation of them.
 
 | number | where | value | status |
 |---|---|---|---|
-| our fusion, all 217 assays | §4.3, §5.1 | 0.6917 | reproduces |
-| our fusion, 182 covered assays | §4.3 | 0.6931 | reproduces |
-| Kermut, all 217 assays | §5.1 | 0.6570 | reproduces to six decimals |
-| per-scheme breakdown | §5.1 | 0.778 / 0.671 / 0.626 | reproduces |
-| per-category scores | §5.2 | 0.850 … 0.644 | reproduces |
-| top-1/5/10% recall and lifts | §5.2 | 0.115 / 0.241 / 0.346 | reproduces |
+| our fusion, official | §4.3, §5.1 | 0.694 | reproduces |
+| Kermut, official | §4.3, §5.1 | 0.657 | reproduces |
+| per-scheme breakdown | §5.1 | 0.784 / 0.674 / 0.625 | reproduces |
+| per-category scores | §5.2 | 0.851 … 0.642 | reproduces |
+
+## Does not reproduce: the released per-mutant predictions
+
+The file in `submission/predictions/fused_per_mutant.csv.gz` is **a different run** from the score file that produced
+the numbers above. Across all 651 assay-by-scheme units, **none** agree, and the mean absolute difference is 0.0083;
+re-scoring it gives 0.692 rather than 0.694, and 0.115 / 0.241 / 0.346 for the top-of-list figures rather than
+0.119 / 0.247 / 0.350.
+
+This is a defect in the release, not in the paper: the claims rest on the submitted score file, which is included, and
+the paper's limitations now say so. The proper repair would be to publish the predictions that generated that file,
+which cannot be reconstructed from what remains on disk.
 
 ## Reproduces from the expert bundle (`submission/oof/`)
 
@@ -91,13 +100,31 @@ The representation ladder had never been checked against its own score tables. T
 2 now carry the reproduced values and the corrected reading: stacking helps a little, context helps a little, and the
 change carries three times either.
 
-## The three discrepancies this ledger found
+## What this ledger got wrong, and why it is recorded here
 
-1. **The headline was 0.694 against Kermut's 0.657 — two different populations** (182 covered assays against 217).
-   Corrected to 0.6917 against 0.6570, +0.0347, with the 182-assay figure given separately.
-2. **The utility table came from a fixed-fusion reconstruction**, not from the release. Recomputed: 0.115 / 0.241 /
-   0.346 with lifts 11.5x / 4.82x / 3.46x.
-3. **Section 5.2's earlier numbers** (0.119 / 0.247 / 0.350) were never reproducible from anything released.
+Three "corrections" in earlier drafts of this file were themselves wrong, and they are kept as a record rather than
+deleted:
 
-Each was found by checking a number against the artifact that was supposed to produce it. None would have been found
-by reading the paper.
+1. **"The headline compares two populations."** It does not. The 0.694 came from ProteinGym's script on the submitted
+   score file; the 0.6917 came from re-scoring the released per-mutant file, which is a different run.
+2. **"The utility table came from a reconstruction."** It came from the submitted model. Recomputing from the release
+   gives different figures because the release is not the submitted model.
+3. **"Section 5.2's 0.119 / 0.247 / 0.350 were never reproducible."** They are reproducible from the submitted file;
+   they are not reproducible from the release.
+
+All three share one root cause: treating the released per-mutant predictions as the model the paper reports. That
+assumption was never checked, and it is wrong — none of the 651 assay-by-scheme units agree between the two, with a
+mean absolute difference of 0.0083.
+
+The check that settles it takes one command and the file was in the submission the whole time:
+`submission/official_outputs/Summary_performance_DMS_substitutions_Spearman.csv` is the benchmark script's own output
+and carries 0.694 and 0.657 directly.
+
+The lesson is narrower than "verify numbers": **verify that the artefact you are verifying against is the artefact the
+claim came from.** Two files, both plausible, both about the same model, one of which is a re-run.
+
+## The representation ladder remains corrected
+
+That one stands on its own evidence — the per-unit tables each run writes alongside its scores — and is unaffected by
+the above. Site vector 0.4318 to 0.4641 with three layers is positive, the differential step is +0.103, and §4.1 and
+contribution 2 carry those values.

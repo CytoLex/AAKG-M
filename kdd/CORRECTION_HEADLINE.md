@@ -1,67 +1,48 @@
-# Correction: the headline number, and a comparison across two populations
+# Correction of the correction: the headline is 0.694, and it was right the first time
 
-## What was wrong
+## What I got wrong
 
-Two things, and the second is worse than the first.
+For two rounds this file recorded that the paper's headline of 0.694 was inflated, that the correct figure was
+0.6917, and that the paper had compared two different populations. All three of those conclusions were wrong, and
+they were wrong for one reason: I assumed the released per-mutant predictions were the model that the paper reports.
 
-**The headline did not reproduce.** The paper reported **0.694** (and 0.693311 in the ablation ladder). Recomputing
-from the published `fused_per_mutant.csv.gz` — 2,088,933 rows, 217 assays, the benchmark's own aggregation — gives
-**0.6917**.
+They are not. They are a different run.
 
-**The comparison mixed populations.** Kermut's 0.657 is the score over all 217 assays; the paper's 0.694 was the
-score over the 182 assays the encoder covers. Measured on identical units:
+## How it was settled
 
-| population | ours | Kermut | lead |
-|---|---:|---:|---:|
-| all 217 assays | **0.6917** | 0.6570 | **+0.0347** |
-| 182 assays the encoder covers | 0.6931 | 0.6551 | +0.0380 |
+The submission contains `official_outputs/Summary_performance_DMS_substitutions_Spearman.csv`, the output of
+ProteinGym's own `performance_DMS_supervised_benchmarks.py` run on `submission/raw_score_file.csv`:
 
-The paper quoted 0.694 against 0.657, a lead of +0.037 — a figure that corresponds to neither row.
+```
+cytomuta-preview  0.694  0.784 0.674 0.625  |  0.642 0.653 0.693 0.632 0.851
+Kermut            0.657  0.745 0.633 0.593  |  0.605 0.611 0.670 0.582 0.817
+```
 
-## How it was found
+Those are the paper's original numbers, to the digit. The benchmark's own code, on the submitted file, is the
+authority, and it says 0.694 against 0.657 — a lead of 0.037, not 0.0347.
 
-Kermut's row turned out to be the control that settled it. Recomputing Kermut through the same pipeline returns
-**0.657028**, matching the paper to six decimals, so the aggregation chain was never in doubt: the same chain was
-being applied to two different populations.
+The two sets are not the same run. Comparing per-assay, per-scheme Spearman across all 651 units, **0 of 651 agree**
+and the mean absolute difference is 0.0083; the submitted scores average 0.7123 against 0.7087 for the release.
+
+## How the mistake happened, in order
+
+1. I recomputed the aggregation from the released predictions and got 0.6917, and treated that as the truth.
+2. Kermut recomputed to 0.657028 under the same code and matched the published 0.657, which I took as proof the
+   pipeline was right — but agreement to three decimals on one model does not validate a reimplementation of a
+   bias-corrected aggregate. It only shows the two happen to round the same.
+3. Seeing 0.6917 sit nearer the 182-assay figure, I diagnosed a population mix-up and "corrected" the paper.
+4. The diagnosis survived because it was internally coherent. It was still built on step 1.
+
+The check that would have prevented it: `official_outputs/` is in the submission and contains the answer directly.
 
 ## What the paper says now
 
-Section 4.3 quotes **0.6917 against 0.6570 on all 217 assays (+0.0347)** and **0.6931 against 0.6551 on the 182
-covered assays (+0.0380)**, both of which the released predictions reproduce. The ablation ladder that carried
-0.685538 / 0.691130 / 0.693311 is gone: those rungs come from the training pipeline and the release does not support
-them, so quoting them would have made the paper's reproducibility claim false for its own headline.
+Restored: 0.694 against 0.657 in §4.3 and the introduction, the script's per-scheme figures in §5.1, and the script's
+category table in §5.2. The §4.3 wording now says the number came from the benchmark's script rather than from our
+reaggregation, and the output ships with the submission.
 
-The section 5.1 table now carries one verified row for our fusion instead of two unverifiable ones, and the section
-5.2 category table was recomputed: values move by up to 0.004 and one delta by 0.010, and every category still
-improves (+0.026 to +0.040).
-
-## Follow-on: the utility numbers now come from the same artifact
-
-Section 5.2's top-of-list figures had been computed from a fixed-fusion reconstruction rather than from the release,
-which left the paper with two pipelines again at a smaller scale. Recomputed from the released predictions:
-
-| top-k | was (fixed fusion) | now (released) |
-|---|---|---|
-| 1% | 0.112, 11.2x | **0.115** [0.104, 0.126], **11.5x** |
-| 5% | 0.239, 4.78x | **0.241** [0.226, 0.254], **4.82x** |
-| 10% | 0.343, 3.43x | **0.346** [0.333, 0.358], **3.46x** |
-
-The category ordering is unchanged — Stability 7.8x against Activity 3.4x — and the caveat that used to sit under the
-table ("regenerates to within 0.01 under the fixed fusion") is gone, because it no longer applies. Every number in
-the headline, the category breakdown and the top-of-list analysis now derives from one released artifact.
-
-## What did not change
-
-The conclusion. The lead over the published leader is +0.035 rather than +0.037, the category ordering is the same
-(Stability 0.850 highest, Activity 0.644 lowest), and every supporting claim in sections 3 and 4 was computed from
-the out-of-fold bundle rather than from this pipeline.
-
-## Why this is the right repair rather than a defence
-
-The unverifiable numbers were not wrong in the sense of being fabricated — they came from a real run. They were
-wrong in the sense that matters for a paper whose contribution includes reproducibility: **a reader executing the
-released artifact would not have reproduced them.** The choice was to republish the artifact that matches them, or to
-publish the numbers the existing artifact gives. The original pipeline was not available, so the second.
-
-If the training pipeline is recovered later, the ladder can be restored — with its population stated, which it
-should have had from the start.
+The limitations carry the gap that this episode did expose, and it is real: **the released per-mutant predictions are
+not the submitted score file.** They differ on every one of the 651 units, by 0.008 on average, and re-scoring them
+gives 0.692 rather than 0.694. The submitted score file is what the claims rest on; the per-mutant file is offered as
+a convenience and is now labelled as such. That is a genuine defect in the release, and the correct repair is to
+publish the predictions that generated the submitted scores, which is not possible from what remains on disk.

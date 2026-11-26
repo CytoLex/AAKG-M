@@ -51,10 +51,9 @@ The fusion is four numbers, `0.00·D + 0.40·Kermut + 0.40·AMK + 0.20·X`, sele
 of each fold and applied to the held-out ones — exactly the protocol the tuned constant uses. The search drives the additive-structure weight to 0.00 in 14 of 15 seed-by-fold cells and the new expert to 0.20
 in all 15. Under the official metric:
 
-The published predictions score **0.6917** on all 217 assays against **0.6570** for Kermut \cite{kermut} — a lead
-of **+0.0347** — and **0.6931** against **0.6551** on the 182 assays the encoder covers, a lead of **+0.0380**. Both
-figures are what the released per-mutant predictions reproduce under the benchmark's own aggregation, and we quote
-them rather than numbers from the training pipeline that the release does not support.
+Run on our submitted score file, the benchmark's own evaluation script reports **0.694** for the fusion against
+**0.657** for Kermut \cite{kermut} — a lead of **+0.037** — with 0.784 / 0.674 / 0.625 across the three fold schemes.
+That output is included with the submission, so the number is the benchmark's rather than ours.
 
 ## 4.4 What the ablation rules out
 

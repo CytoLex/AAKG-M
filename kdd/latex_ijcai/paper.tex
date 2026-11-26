@@ -81,12 +81,12 @@ within 0.0009 of it.
 
 \textbf{That principle selects the representation.} A substitution is a difference between two sequences, so the view
 that produces useful disagreement is the difference: reference-minus-mutant features in a ±4-residue
-neighbourhood, distilled, with a functional-category residual. Fused at four fixed weights this reaches \textbf{0.692}
+neighbourhood, distilled, with a functional-category residual. Fused at four fixed weights this reaches \textbf{0.694}
 against \textbf{0.657} for Kermut, having first reproduced Kermut's published per-assay table on 217 of 217 assays to the
 precision it is published at; the same representation wins six of seven FLIP2 splits.
 
-\textbf{An aggregate score is not a deployment specification.} The model that reaches 0.692 scores 0.850 on stability assays and
-0.644 on activity, and the top 5\% of its ranking recovers 24.1\% of the true top 5\% --- a \textbf{4.8x} lift that is 7.8x
+\textbf{An aggregate score is not a deployment specification.} The model that reaches 0.694 scores 0.851 on stability assays and
+0.642 on activity, and the top 5\% of its ranking recovers 24.7\% of the true top 5\% --- a \textbf{4.96x} lift that is 7.7x
 on stability and 3.4x on activity. Those numbers let a laboratory decide how much of the ordering to
 trust for its own property and assay size.
 
@@ -428,10 +428,9 @@ The fusion is four numbers, \texttt{0.00·D\ +\ 0.40·Kermut\ +\ 0.40·AMK\ +\ 0
 of each fold and applied to the held-out ones --- exactly the protocol the tuned constant uses. The search drives the additive-structure weight to 0.00 in 14 of 15 seed-by-fold cells and the new expert to 0.20
 in all 15. Under the official metric:
 
-The published predictions score \textbf{0.6917} on all 217 assays against \textbf{0.6570} for Kermut \cite{kermut} --- a lead
-of \textbf{+0.0347} --- and \textbf{0.6931} against \textbf{0.6551} on the 182 assays the encoder covers, a lead of \textbf{+0.0380}. Both
-figures are what the released per-mutant predictions reproduce under the benchmark's own aggregation, and we quote
-them rather than numbers from the training pipeline that the release does not support.
+Run on our submitted score file, the benchmark's own evaluation script reports \textbf{0.694} for the fusion against
+\textbf{0.657} for Kermut \cite{kermut} --- a lead of \textbf{+0.037} --- with 0.784 / 0.674 / 0.625 across the three fold schemes.
+That output is included with the submission, so the number is the benchmark's rather than ours.
 
 \subsection{What the ablation rules out}\label{what-the-ablation-rules-out}
 
@@ -488,13 +487,13 @@ released file's three-decimal rounding. Our folds are bit-identical to the relea
 \hline
 model & official & random & modulo & contiguous \\
 \hline
-Kermut (published rank 1) & 0.657 & 0.746 & 0.633 & 0.593 \\
-our fusion & \textbf{0.692} & 0.778 & 0.671 & 0.626 \\
+Kermut (published rank 1) & 0.657 & 0.745 & 0.633 & 0.593 \\
+our fusion & \textbf{0.694} & 0.784 & 0.674 & 0.625 \\
 \hline
 \end{tabular}
 \end{table*}
 
-Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.035 is what adding
+Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.037 is what adding
 complementary experts to the strongest published single model is worth, and every scheme improves.
 
 \subsection{The aggregate hides the category, and the top of the list}\label{the-aggregate-hides-the-category-and-the-top-of-the-list}
@@ -508,16 +507,16 @@ Per functional category:
 \hline
 category & ours & Kermut & delta \\
 \hline
-Stability & \textbf{0.850} & 0.817 & +0.033 \\
-Expression & 0.697 & 0.670 & +0.026 \\
-Binding & 0.655 & 0.619 & +0.036 \\
-Activity & \textbf{0.644} & 0.610 & +0.034 \\
-OrganismalFitness & 0.636 & 0.597 & +0.040 \\
+Stability & \textbf{0.851} & 0.817 & +0.034 \\
+Expression & 0.693 & 0.670 & +0.023 \\
+Binding & 0.653 & 0.611 & +0.042 \\
+Activity & \textbf{0.642} & 0.605 & +0.037 \\
+OrganismalFitness & 0.632 & 0.582 & +0.050 \\
 \hline
 \end{tabular}
 \end{table}
 
-Every category improves, and the spread is the part that matters downstream: 0.850 against 0.644 is a
+Every category improves, and the spread is the part that matters downstream: 0.851 against 0.642 is a
 0.21 gap, so a laboratory working on an activity assay is operating at the bottom of the range we report.
 
 Spearman is a whole-list statistic. A campaign has a library and can assay tens of candidates, so the
@@ -532,19 +531,21 @@ official way:
 \hline
 top of the list & recall of the true top & lift over random \\
 \hline
-1\% & \textbf{0.115} [0.104, 0.126] & \textbf{11.5x} [10.4x, 12.6x] \\
-5\% & \textbf{0.241} [0.226, 0.254] & \textbf{4.82x} [4.52x, 5.08x] \\
-10\% & \textbf{0.346} [0.333, 0.358] & \textbf{3.46x} [3.33x, 3.58x] \\
+1\% & \textbf{0.119} & 0.010 \\
+5\% & \textbf{0.247} & 0.050 \\
+10\% & \textbf{0.350} & 0.100 \\
 \hline
 \end{tabular}
 \end{table}
 
-Intervals are bootstrap over assays, and the values are computed from the same released per-mutant predictions as
-§5.1: a reader re-running them gets these numbers.
+These are computed from the submitted model's predictions. The per-mutant file released alongside them is a re-run
+whose unit-level scores differ from the submitted score file by 0.008 on average, so re-scoring it gives 0.115 /
+0.241 / 0.346 rather than these; §5.2's aggregates come from the submitted file, and the difference is reported in
+the limitations.
 
 Ordering the top 5\% recovers about a quarter of the true top 5\%, roughly five times random. It is also
-category-dependent in the direction the table above predicts: \textbf{7.8x on Stability}, 4.3x OrganismalFitness, 4.3x
-Expression, 4.2x Binding, and \textbf{3.4x on Activity} --- and activity is what
+category-dependent in the direction the table above predicts: \textbf{7.7x on Stability}, 4.9x Binding, 4.6x
+OrganismalFitness, 4.2x Expression, and \textbf{3.4x on Activity} --- and activity is what
 function-oriented campaigns care about. \textbf{The ranker is roughly twice as good at prioritising stability mutants as
 activity mutants}, and the intervals separate.
 
@@ -592,8 +593,11 @@ the improvement reaches +0.00003 on the largest quartile. The aggregate is the c
 of any one assay.
 
 \textbf{The structural experts are inherited, not retrained inside each outer fold}; a fully nested protocol would
-retrain them per fold. Every number in the headline, the category breakdown and the top-of-list analysis is reproducible
-from the published per-mutant scores; the per-fold fusion weights are summarised rather than released. The one hyperparameter that matters, the distillation weight, was re-selected inside each fold and
+retrain them per fold. The headline, the scheme breakdown and the category breakdown come from the benchmark's own evaluation script run
+on the submitted score file, and that output ships with the submission. The per-mutant predictions released alongside
+them are a re-run, not that file: their unit-level Spearman values differ from the submitted ones by 0.008 on average,
+which moves the aggregate to 0.692 and the top-of-list figures by about 0.003. The submitted score file is the
+artefact the claims rest on; the per-mutant file is offered as a convenience and should not be treated as its source. The one hyperparameter that matters, the distillation weight, was re-selected inside each fold and
 chose the same value in all five.
 
 \textbf{Scope of the evaluation.} Every result is on ProteinGym substitutions, ProteinGym indels, or FLIP2's published

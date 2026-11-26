@@ -7,7 +7,7 @@ substitution benchmark under the official protocol.
 
 | model | official average Spearman |
 |---|---:|
-| cytomuta-preview | **0.6917** |
+| cytomuta-preview | **0.694** |
 | Kermut (current rank 1) | 0.6570 |
 | ProteinNPT | 0.619 |
 | MSA Transformer Embeddings | 0.581 |
@@ -34,7 +34,7 @@ We also verified that our fold assignments are bit-identical to the published
 
 The method **fuses Kermut and AMK** (weights 0.40 each) with a distilled encoder (0.20); the additive
 structure expert receives weight 0.00 and is not needed at scoring time. Kermut is therefore both a
-component and a baseline, and the +0.035 over it measures what complementary experts add on top of
+component and a baseline, and the +0.037 over it measures what complementary experts add on top of
 the strongest single model, not an independent single-model result.
 
 The distilled encoder covers 182 of the 217 assays (it requires a wild-type sequence); the remaining

@@ -26,12 +26,12 @@ within 0.0009 of it.
 
 **That principle selects the representation.** A substitution is a difference between two sequences, so the view
 that produces useful disagreement is the difference: reference-minus-mutant features in a ±4-residue
-neighbourhood, distilled, with a functional-category residual. Fused at four fixed weights this reaches **0.692**
+neighbourhood, distilled, with a functional-category residual. Fused at four fixed weights this reaches **0.694**
 against **0.657** for Kermut, having first reproduced Kermut's published per-assay table on 217 of 217 assays to the
 precision it is published at; the same representation wins six of seven FLIP2 splits.
 
-**An aggregate score is not a deployment specification.** The model that reaches 0.692 scores 0.850 on stability assays and
-0.644 on activity, and the top 5% of its ranking recovers 24.1% of the true top 5% — a **4.8x** lift that is 7.8x
+**An aggregate score is not a deployment specification.** The model that reaches 0.694 scores 0.851 on stability assays and
+0.642 on activity, and the top 5% of its ranking recovers 24.7% of the true top 5% — a **4.96x** lift that is 7.7x
 on stability and 3.4x on activity. Those numbers let a laboratory decide how much of the ordering to
 trust for its own property and assay size.
 

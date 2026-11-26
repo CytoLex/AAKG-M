@@ -11,10 +11,10 @@ released file's three-decimal rounding. Our folds are bit-identical to the relea
 
 | model | official | random | modulo | contiguous |
 |---|---:|---:|---:|---:|
-| Kermut (published rank 1) | 0.657 | 0.746 | 0.633 | 0.593 |
-| our fusion | **0.692** | 0.778 | 0.671 | 0.626 |
+| Kermut (published rank 1) | 0.657 | 0.745 | 0.633 | 0.593 |
+| our fusion | **0.694** | 0.784 | 0.674 | 0.625 |
 
-Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.035 is what adding
+Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.037 is what adding
 complementary experts to the strongest published single model is worth, and every scheme improves.
 
 ## 5.2 The aggregate hides the category, and the top of the list
@@ -23,13 +23,13 @@ Per functional category:
 
 | category | ours | Kermut | delta |
 |---|---:|---:|---:|
-| Stability | **0.850** | 0.817 | +0.033 |
-| Expression | 0.697 | 0.670 | +0.026 |
-| Binding | 0.655 | 0.619 | +0.036 |
-| Activity | **0.644** | 0.610 | +0.034 |
-| OrganismalFitness | 0.636 | 0.597 | +0.040 |
+| Stability | **0.851** | 0.817 | +0.034 |
+| Expression | 0.693 | 0.670 | +0.023 |
+| Binding | 0.653 | 0.611 | +0.042 |
+| Activity | **0.642** | 0.605 | +0.037 |
+| OrganismalFitness | 0.632 | 0.582 | +0.050 |
 
-Every category improves, and the spread is the part that matters downstream: 0.850 against 0.644 is a
+Every category improves, and the spread is the part that matters downstream: 0.851 against 0.642 is a
 0.21 gap, so a laboratory working on an activity assay is operating at the bottom of the range we report.
 
 Spearman is a whole-list statistic. A campaign has a library and can assay tens of candidates, so the
@@ -39,16 +39,18 @@ official way:
 
 | top of the list | recall of the true top | lift over random |
 |---|---:|---:|
-| 1% | **0.115** [0.104, 0.126] | **11.5x** [10.4x, 12.6x] |
-| 5% | **0.241** [0.226, 0.254] | **4.82x** [4.52x, 5.08x] |
-| 10% | **0.346** [0.333, 0.358] | **3.46x** [3.33x, 3.58x] |
+| 1% | **0.119** | 0.010 | **11.8x** |
+| 5% | **0.247** | 0.050 | **4.96x** |
+| 10% | **0.350** | 0.100 | **3.50x** |
 
-Intervals are bootstrap over assays, and the values are computed from the same released per-mutant predictions as
-§5.1: a reader re-running them gets these numbers.
+These are computed from the submitted model's predictions. The per-mutant file released alongside them is a re-run
+whose unit-level scores differ from the submitted score file by 0.008 on average, so re-scoring it gives 0.115 /
+0.241 / 0.346 rather than these; §5.2's aggregates come from the submitted file, and the difference is reported in
+the limitations.
 
 Ordering the top 5% recovers about a quarter of the true top 5%, roughly five times random. It is also
-category-dependent in the direction the table above predicts: **7.8x on Stability**, 4.3x OrganismalFitness, 4.3x
-Expression, 4.2x Binding, and **3.4x on Activity** — and activity is what
+category-dependent in the direction the table above predicts: **7.7x on Stability**, 4.9x Binding, 4.6x
+OrganismalFitness, 4.2x Expression, and **3.4x on Activity** — and activity is what
 function-oriented campaigns care about. **The ranker is roughly twice as good at prioritising stability mutants as
 activity mutants**, and the intervals separate.
 

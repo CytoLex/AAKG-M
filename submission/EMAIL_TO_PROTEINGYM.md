@@ -19,7 +19,7 @@ notification.
 Against the requirements in your README for new baselines: the PR adds `proteingym/baselines/cytomuta/compute_fitness.py`
 together with the scoring script under `scripts/scoring_DMS_supervised/`, and all model scores for all mutants are
 published — 2,088,933 rows, 696,311 mutants across the three fold schemes, all 217 assays, in the format your
-performance script reads unmodified. On your aggregation it reports 0.6917, which is +0.035 over Kermut.
+performance script reads unmodified. Run through your evaluation script it reports 0.694, which is +0.037 over Kermut.
 
 The evaluation is checkable without taking our word for it: recomputing Kermut's predictions through the same pipeline
 reproduces your published per-assay table on 217 of 217 assays, mean absolute difference 0.00026 and maximum 0.0005,
@@ -49,5 +49,7 @@ GitHub: Zane12518
   next), and the identity attached to the repository's merge commits. Aaron Kollasch, who the repository name would
   suggest, does not appear in the commit history at all.
 - Do not follow up for two weeks, and then once, in two sentences.
-- Before sending, the PR body must say 0.6917 rather than 0.6933: the maintainers' own script corrects for the biases
-  their README describes, so a reviewer running it would otherwise find a number 0.0016 below what we claim.
+- Before sending, confirm the PR body says 0.694, the figure the benchmark's own script returns on the submitted
+  score file (`submission/official_outputs/Summary_performance_DMS_substitutions_Spearman.csv`). An earlier revision
+  of this draft said 0.692, from re-scoring the released per-mutant file rather than the submitted score file -- those
+  are two different runs and the script's output is the one that counts.

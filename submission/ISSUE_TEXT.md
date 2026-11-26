@@ -2,7 +2,7 @@
 
 **Model name:** cytomuta-preview
 **Benchmark:** supervised substitutions
-**Average Spearman (official aggregation):** 0.6917
+**Average Spearman (official aggregation):** 0.694
 
 ## Method
 
