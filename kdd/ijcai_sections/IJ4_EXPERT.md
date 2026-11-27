@@ -64,10 +64,13 @@ Two ablations agree: **co-distillation from the fusion** lifts the expert by +0.
 in the bundle is added to the pool formed by the other four, under the nested-constant protocol, and its marginal
 value compared with its standalone score and with its disagreement from that pool.
 
-Figure 1 (right) shows all thirteen. Marginal value tracks disagreement at r = **+0.786** and not accuracy: **the
-weakest expert alone contributes the most — the encoder at 0.6449, adding +0.0118 — and the strongest contributes
-almost nothing, AMK at 0.6651 adding +0.0028.** A noise column, a shuffled copy and a negated copy each score
-**+0.0000**, so the measurement is not an artefact of enlarging the weight search.
+Figure 1 (right) shows all thirteen. Marginal value tracks disagreement at r = **+0.786**, and standalone accuracy
+does not predict it at all: across the five experts r = **−0.200**, and the weakest alone contributes the most — the
+encoder at 0.6449, adding +0.0118 — while the strongest contributes +0.0028 at 0.6651. The correlation's *magnitude*
+is not robust to which experts enter it: dropping the encoder's four points gives +0.500, and the seven points
+contributed by the published experts alone give +0.929. We report the full set and the split rather than the headline
+alone. A noise column, a shuffled copy and a negated copy each score **+0.0000**, so the measurement is not an
+artefact of enlarging the weight search.
 
 That reframes what building an expert means: useful disagreement comes from a different *view* of the same
 information, not from a different optimiser, loss or bigger model. The objective is to maximise residual disagreement subject to a competence floor, and **the floor is measurable**.

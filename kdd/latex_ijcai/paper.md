@@ -20,7 +20,7 @@ Fitted out of sample, per-assay weights gain +0.0047 on substitutions but *lose*
 `λ = n/(n+k)` gains +0.0051 and +0.0021 instead.
 
 **An expert is worth its disagreement, not its accuracy.** Across thirteen expert-into-pool pairs, marginal
-value tracks disagreement at r = **+0.786** and not standalone score: **the weakest expert alone contributes the
+value tracks disagreement at r = **+0.786** and not standalone score (r = −0.200): **the weakest expert alone contributes the
 most, and the strongest contributes almost nothing.** A noise column, a shuffled copy and a negated copy all
 score exactly zero, so the measurement is not an artefact of enlarging the weight search. The objective is
 residual disagreement subject to a competence floor, and the floor is measurable — the expert we build sits
@@ -50,9 +50,9 @@ will be judged by rather than the one that is convenient.
    per-assay fitting loses. Applied to the deployment metric instead, the same protocol finds 2.8 times the
    headroom and yields a two-line rule that reaches all of it. The natural cross-pool comparison would have
    reported +0.0027 for the same quantity, an 85% error.
-2. **An expert's value is its disagreement, not its accuracy**, measured at r = +0.786 across thirteen
-   expert-into-pool pairs with noise, shuffle and negate controls at zero, and bounded by a competence floor we
-   map. The representation follows from the principle rather than motivating it: retraining each view, the difference
+2. **An expert's value is its disagreement, not its accuracy**, measured across thirteen expert-into-pool pairs
+   (r = +0.786, and +0.500 to +0.929 across subsets, against −0.200 for standalone accuracy) with noise, shuffle and
+   negate controls at zero and bounded by a competence floor we map. The representation follows from the principle rather than motivating it: retraining each view, the difference
    terms add +0.103 where stacking three layers adds +0.032 and a ±4 window +0.016, and a control arm shows the
    category structure is what the residual needs (+0.0214 against a shared branch with a fifth of the parameters).
 3. **A utility characterisation that makes the ranking usable** — top-of-list recall by functional
@@ -332,10 +332,13 @@ Two ablations agree: **co-distillation from the fusion** lifts the expert by +0.
 in the bundle is added to the pool formed by the other four, under the nested-constant protocol, and its marginal
 value compared with its standalone score and with its disagreement from that pool.
 
-Figure 1 (right) shows all thirteen. Marginal value tracks disagreement at r = **+0.786** and not accuracy: **the
-weakest expert alone contributes the most — the encoder at 0.6449, adding +0.0118 — and the strongest contributes
-almost nothing, AMK at 0.6651 adding +0.0028.** A noise column, a shuffled copy and a negated copy each score
-**+0.0000**, so the measurement is not an artefact of enlarging the weight search.
+Figure 1 (right) shows all thirteen. Marginal value tracks disagreement at r = **+0.786**, and standalone accuracy
+does not predict it at all: across the five experts r = **−0.200**, and the weakest alone contributes the most — the
+encoder at 0.6449, adding +0.0118 — while the strongest contributes +0.0028 at 0.6651. The correlation's *magnitude*
+is not robust to which experts enter it: dropping the encoder's four points gives +0.500, and the seven points
+contributed by the published experts alone give +0.929. We report the full set and the split rather than the headline
+alone. A noise column, a shuffled copy and a negated copy each score **+0.0000**, so the measurement is not an
+artefact of enlarging the weight search.
 
 That reframes what building an expert means: useful disagreement comes from a different *view* of the same
 information, not from a different optimiser, loss or bigger model. The objective is to maximise residual disagreement subject to a competence floor, and **the floor is measurable**.

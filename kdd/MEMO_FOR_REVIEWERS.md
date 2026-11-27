@@ -17,7 +17,9 @@ tested and failed. The last section says where comments would be most useful.
    headroom with no per-assay tuning, using a closed form rather than a tuned strength. The gain is concentrated:
    the top ambiguity quartile holds **57%** of it.
 4. **Expert value is disagreement, not accuracy.** Across thirteen expert-into-pool pairs, marginal contribution
-   tracks disagreement with the pool at **r = +0.786**. The ordering is not the one standalone accuracy predicts: the
+   tracks disagreement with the pool at **r = +0.786**, and standalone accuracy predicts it not at all (r = −0.200).
+   The magnitude is not stable across subsets — dropping the encoder's four points gives +0.500, the seven points
+   from published experts alone give +0.929 — so the paper reports the range rather than the headline. The ordering is not the one standalone accuracy predicts: the
    encoder, weakest alone at 0.6449, contributes +0.0118; Kermut, second weakest at 0.6551, contributes +0.0062; and
    the strongest standalone expert, at 0.6651, contributes +0.0028 while another member of the pool at a comparable
    solo score contributes nothing at all.
