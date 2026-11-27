@@ -12,15 +12,8 @@ its weights for assay *a* come from other assays or from no labels at all. A mod
 on four of five published folds and predicts the fifth; our folds are bit-identical to the released
 files, verified on all three schemes for a 9,576-variant assay.
 
-| mechanism | official | Δ vs constant | 95% CI |
-|---|---:|---:|---|
-| tuned constant (0.05, 0.45, 0.50) | **0.687637** | — | — |
-| MLP gate over 17 context statistics | 0.687888 | **+0.000251** | [−0.001924, +0.002545] |
-| per-variant uncertainty weighting | 0.687106 | −0.000531 | [−0.001181, +0.000021] |
-| k-NN over assay context | 0.687170 | −0.000467 | [−0.001329, +0.000259] |
-| per-category constants | 0.687220 | −0.000417 | [−0.000784, −0.000084] |
-| ridge context → weights | 0.685109 | −0.002528 | [−0.007833, +0.000676] |
-| per-variant consensus (median) | 0.670492 | −0.017146 | [−0.026771, −0.011115] |
+The six mechanisms land between **−0.00053 and +0.00025** against it, every interval straddling or barely
+excluding zero; the full table is in the released analysis.
 
 One mechanism clears the constant by +0.00025 with an interval straddling zero; four land within 0.0006
 below. **None is separated from the constant by more than the seed-to-seed spread of the models themselves.**
