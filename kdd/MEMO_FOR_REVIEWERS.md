@@ -6,7 +6,7 @@ tested and failed. The last section says where comments would be most useful.
 
 ## What the paper claims
 
-1. **A bound on what combining can buy.** On a fixed pool of four protein-fitness experts, a per-assay oracle — the
+1. **A bound on what combining can buy.** On a fixed pool of three published experts, a per-assay oracle — the
    best weighting chosen with hindsight for each assay — captures **+0.0051** [0.0038, 0.0066] Spearman over a
    constant fitted on the other assays. Adding one expert to the pool is worth **+0.0122** [0.0099, 0.0144]. So
    allocation is **42%** of the expert lever, not the whole of it.
@@ -17,8 +17,10 @@ tested and failed. The last section says where comments would be most useful.
    headroom with no per-assay tuning, using a closed form rather than a tuned strength. The gain is concentrated:
    the top ambiguity quartile holds **57%** of it.
 4. **Expert value is disagreement, not accuracy.** Across thirteen expert-into-pool pairs, marginal contribution
-   tracks disagreement with the pool at **r = +0.786**, while the weakest expert alone contributes the most
-   (+0.0118) and the strongest almost nothing (+0.0000).
+   tracks disagreement with the pool at **r = +0.786**. The ordering is not the one standalone accuracy predicts: the
+   encoder, weakest alone at 0.6449, contributes +0.0118; Kermut, second weakest at 0.6551, contributes +0.0062; and
+   the strongest standalone expert, at 0.6651, contributes +0.0028 while another member of the pool at a comparable
+   solo score contributes nothing at all.
 
 ## How each claim is checked
 

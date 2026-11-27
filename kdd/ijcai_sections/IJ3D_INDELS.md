@@ -1,6 +1,6 @@
 ## 3.5 A second benchmark: the bound has two parts
 
-We repeat both measurements on ProteinGym's **indel** benchmark — 66 assays, 287,207 variants, a
+We repeat both measurements on ProteinGym's **indel** benchmark — 65 of its 66 assays and 61,209 variants that carry both a measurement and a fold, a
 different mutation type, and a different expert pool: three published supervised indel models whose
 out-of-fold predictions ship with the benchmark, so this half involves no training and the comparison is
 exact.

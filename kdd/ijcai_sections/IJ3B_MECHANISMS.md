@@ -49,7 +49,7 @@ same pool raises that constant to **0.6952**, a gain of **+0.0122** (95% CI [0.0
 
 **The headroom is not selection noise.** Replacing each assay's oracle weights with those of a *random other* assay
 — matched per-assay selection, zero information — gives **−0.0064** [−0.0083, −0.0043]: below the constant, as random
-per-assay weights should be. The real oracle sits **0.0141** above that null.
+per-assay weights should be. The real oracle sits **0.0115** above that null — 0.6881 against 0.6766.
 
 **The allocation headroom is 42% of the expert gain, and the intervals do not overlap.** Per-assay weighting
 is therefore a real but secondary lever: everything a weighting rule could reach is less than half of what

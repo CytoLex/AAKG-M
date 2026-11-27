@@ -70,8 +70,7 @@ almost nothing, AMK at 0.6651 adding +0.0028.** A noise column, a shuffled copy 
 **+0.0000**, so the measurement is not an artefact of enlarging the weight search.
 
 That reframes what building an expert means: useful disagreement comes from a different *view* of the same
-information — reference versus mutant, local versus global — not from a different optimiser, loss or bigger model.
-The objective is to maximise residual disagreement subject to a competence floor, and **the floor is measurable**.
+information, not from a different optimiser, loss or bigger model. The objective is to maximise residual disagreement subject to a competence floor, and **the floor is measurable**.
 Degrading the expert's predictions with noise traces a clean frontier: marginal value peaks at a small degradation
 (ε = 0.25 gains **+0.0086** against +0.0077 untouched) and then falls monotonically to +0.0063 at ε = 2. **The
 expert sits within 0.0009 of the frontier** — a slightly less accurate version would contribute slightly more, and

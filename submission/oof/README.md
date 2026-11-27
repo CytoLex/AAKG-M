@@ -39,8 +39,14 @@ is what the allocation analysis needs.
 indel_bundle.csv.gz        1.9 MB
 ```
 
-61,209 variants over 65 assays, with the three published indel experts whose out-of-fold predictions ship with
-ProteinGym-indels.
+61,209 variants over 69 assays' worth of prediction files, of which 65 join cleanly to fold metadata, with the three
+published indel experts whose out-of-fold predictions ship with ProteinGym-indels.
+
+**This is a subset, not the whole benchmark.** ProteinGym's indel benchmark is 66 assays and 287,207 variants; the
+compact file here keeps only variants that have both a finite measurement and a fold assignment in the released fold
+files. The analysis that produces the paper's +0.0084 therefore runs on 65 assays and 61,209 variants, which is what
+the paper's indel section should say. A reader comparing the two counts is seeing a subset plus a join filter, not a
+discrepancy.
 
 | column | meaning |
 |---|---|
