@@ -24,7 +24,7 @@ anything below marked *assumed* is inferred from the main-track rules and from t
 
 | item | assumption | risk if wrong |
 |---|---|---|
-| Page limit | 7 body + up to 2 for references/ethics | if it is 9 body pages we have slack; if 7 total we must cut one page |
+| Page limit | **confirmed 9 total = 7 body + 2 references** | we are exactly 7 + 2 ✓ |
 | Anonymity | anonymous | if non-anonymous, add the author block (two lines) |
 | Track-specific required sections | none | may require something the main track does not |
 | Extra pages for purchase | not available | if available, this is relief, not risk |
