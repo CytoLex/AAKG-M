@@ -1,4 +1,6 @@
-# Comment for PR #130
+# Comment for PR #130 — posted
+
+**Posted 2026-11-27 10:03 UTC** as comment `7215431262`, https://github.com/OATML-Markslab/ProteinGym/pull/130#issuecomment-7215431262
 
 Post on the pull request rather than the issue: the PR is where a merge decision is made, and a comment there puts the
 notification where the action is.
@@ -43,3 +45,12 @@ least work. And if this is simply not something the repository is taking on righ
   a comment that recaps the body reads as padding.
 - If nothing comes back, the next step is not another comment. The submission is complete and public; the thread is
   where a maintainer will look when the repository resumes.
+
+## Outcome
+
+Posted successfully as `Zane12518`. The rendered thread shows the two mentions resolving to the right accounts, and
+the comment sits directly under "marked this pull request as ready for review November 18, 2026 06:29", which is the
+right place for a maintainer scanning the thread.
+
+Nothing further to do on delivery. The submission is complete and public; the thread is where a maintainer will look
+when the repository resumes, and that is now the only outstanding dependency.
