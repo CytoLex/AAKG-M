@@ -28,9 +28,9 @@ tested and failed. The last section says where comments would be most useful.
 
 | claim | check | outcome |
 |---|---|---|
-| the bound is real, not selection noise | oracle versus randomly drawn other-assay weights | null **−0.0064** [−0.0083, −0.0043]; the measured bound sits 0.0141 above it |
+| the bound is real, not selection noise | oracle versus randomly drawn other-assay weights | null **−0.0064** [−0.0083, −0.0043]; the measured bound sits 0.0115 above it (0.6881 against 0.6766) |
 | allocation is worth less than adding an expert | both levers measured on the same panel, same aggregation | intervals do not overlap |
-| the bound generalises beyond substitutions | same protocol on the indel benchmark (65 assays, 61,209 variants) | **+0.0084**, same direction |
+| the bound generalises beyond substitutions | same protocol on the indel benchmark (65 of its 66 assays, 61,209 variants) | **+0.0084**, same direction |
 | the shrinkage is derived, not tuned | closed form λ = τ²/(τ²+σ²) against the best tuned constant | matches within 12% on indels, exactly on substitutions |
 | disagreement drives expert value | noise, shuffled and negated columns fed to the same search | each scores **+0.0000** |
 | the aggregate is not the whole story | per-category breakdown plus top-1/5/10% recall | stability 0.851 against activity 0.642 |
