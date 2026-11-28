@@ -80,7 +80,7 @@ residual disagreement subject to a competence floor, and the floor is measurable
 within 0.0009 of it.
 
 \textbf{That principle selects the representation.} A substitution is a difference between two sequences, so the view
-that produces useful disagreement is the difference: reference-minus-mutant features in a ±4-residue
+that produces useful disagreement is the difference: mutant-minus-reference features in a ±4-residue
 neighbourhood, distilled, with a functional-category residual. Fused at four fixed weights this reaches \textbf{0.694}
 against \textbf{0.657} for Kermut, having first reproduced Kermut's published per-assay table on 217 of 217 assays to the
 precision it is published at; the same representation wins six of seven FLIP2 splits.
@@ -106,7 +106,7 @@ will be judged by rather than the one that is convenient.
   against +0.0122 for an expert change, and a shrinkage rule that recovers +0.0051 and +0.0021 where naive
   per-assay fitting loses. Applied to the deployment metric instead, the same protocol finds 2.8 times the
   headroom and yields a two-line rule that reaches all of it. The natural cross-pool comparison would have
-  reported +0.0027 for the same quantity, an 85\% error.
+  reported +0.0027 for the same quantity, just over half of it.
 \item
   \textbf{An expert's value is its disagreement, not its accuracy}, measured across thirteen expert-into-pool pairs
   (r = +0.786, and +0.500 to +0.929 across subsets, against −0.200 for standalone accuracy) with noise, shuffle and
@@ -139,15 +139,15 @@ longer: combining several forecasts by estimating weights is routinely no better
 known as the forecast combination puzzle \cite{timmermann2006forecast}, with a theoretical explanation in which
 weight-estimation error outweighs the benefit of weighting \cite{claeskens2016forecast}.
 It has been argued partly an artefact of low-power tests \cite{frazier2023solving}, which is why our comparisons
-carry assay-level intervals and a permutation null. \cite{qian2015forecast} separates combining \emph{for improvement} from
-combining \emph{for adaptation} --- this paper's expert and allocation levers --- and our contribution is to measure both in
-one domain and bound the adaptation side.
+carry assay-level intervals and a permutation null. \cite{qian2019forecast} separates combination that merely reaches the best member from
+combination that exceeds all of them, a distinction our two levers are easily conflated with: changing the pool
+changes what can be reached, reweighting it does not. We measure both levers in one domain and bound the second.
 
 \textbf{Diversity and ensemble value.} Ensemble error decomposes into average member error minus an ambiguity term, first
 for squared loss and then for any twice-differentiable loss \cite{audhkhasi2013generalized}, and diversity has since
 been shown to be a hidden dimension of the bias-variance decomposition \cite{wood2023unified}. That literature is
 explicit that diversity should be traded off against bias and variance rather than maximised, which is where this
-paper arrives from the other direction: disagreement predicts an expert's marginal value (r = +0.63), but pushing
+paper arrives from the other direction: disagreement predicts an expert's marginal value (r = +0.786 over thirteen pairs), but pushing
 it further costs competence faster than it buys disagreement.
 
 \textbf{Evaluation practice in AI for science.} Aggregate correlation is the standard reporting unit and a poor guide to
@@ -197,7 +197,7 @@ magnitude larger than the effect.
 \textbf{A fusion result needs three numbers, not one}: how much any weighting of the pool could gain (an oracle),
 how much of that an assay's own data can estimate (a split-half), and which estimator reaches it. Reporting
 only the first invites a cross-pool comparison that is easy to make and wrong --- that comparison reads +0.0027
-for this paper's own allocation headroom, against \textbf{+0.0051} measured inside one pool, an 85\% error.
+for this paper's own allocation headroom, against \textbf{+0.0051} measured inside one pool -- it captures just over half, and the gap is the point.
 
 We evaluate six label-free conditioning mechanisms plus the tuned constant they all must beat, on
 ProteinGym \cite{proteingym}: 217 substitution assays, 651 assay-by-split units, official
@@ -403,7 +403,7 @@ saturated far below what memorising a category would require.
 Eight runs of the same architecture differ by about 0.004 in the official metric, so we average predictions per
 variant rather than scores --- the deep-ensemble recipe \cite{lakshminarayanan2017deep}: +0.023 standalone but only +0.0022 in the fusion, which already averages four experts.
 
-The fusion is four numbers, \texttt{0.00·D\ +\ 0.40·Kermut\ +\ 0.40·AMK\ +\ 0.20·X}, selected on the training assays
+The pool is four experts: Kermut \cite{kermut}; the site-wise structural expert we call \texttt{D}; an assay-level sequence model we call \texttt{AMK}; and \texttt{X}, the encoder of §4.1. The fusion is four numbers, \texttt{0.00·D\ +\ 0.40·Kermut\ +\ 0.40·AMK\ +\ 0.20·X}, selected on the training assays
 of each fold and applied to the held-out ones --- exactly the protocol the tuned constant uses. The search drives the additive-structure weight to 0.00 in 14 of 15 seed-by-fold cells and the new expert to 0.20
 in all 15. Under the official metric:
 
@@ -508,13 +508,13 @@ official way:
 \begin{table}[!t]
 \centering
 \small
-\begin{tabular}{lrr}
+\begin{tabular}{lrrr}
 \hline
-top of the list & recall of the true top & lift over random \\
+top of the list & recall & random & lift \\
 \hline
-1\% & \textbf{0.119} & 0.010 \\
-5\% & \textbf{0.247} & 0.050 \\
-10\% & \textbf{0.350} & 0.100 \\
+1\% & \textbf{0.119} & 0.010 & \textbf{11.8x} \\
+5\% & \textbf{0.247} & 0.050 & \textbf{4.96x} \\
+10\% & \textbf{0.350} & 0.100 & \textbf{3.50x} \\
 \hline
 \end{tabular}
 \end{table}

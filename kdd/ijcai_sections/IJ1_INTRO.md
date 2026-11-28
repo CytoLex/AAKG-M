@@ -25,7 +25,7 @@ residual disagreement subject to a competence floor, and the floor is measurable
 within 0.0009 of it.
 
 **That principle selects the representation.** A substitution is a difference between two sequences, so the view
-that produces useful disagreement is the difference: reference-minus-mutant features in a ±4-residue
+that produces useful disagreement is the difference: mutant-minus-reference features in a ±4-residue
 neighbourhood, distilled, with a functional-category residual. Fused at four fixed weights this reaches **0.694**
 against **0.657** for Kermut, having first reproduced Kermut's published per-assay table on 217 of 217 assays to the
 precision it is published at; the same representation wins six of seven FLIP2 splits.
@@ -47,7 +47,7 @@ will be judged by rather than the one that is convenient.
    against +0.0122 for an expert change, and a shrinkage rule that recovers +0.0051 and +0.0021 where naive
    per-assay fitting loses. Applied to the deployment metric instead, the same protocol finds 2.8 times the
    headroom and yields a two-line rule that reaches all of it. The natural cross-pool comparison would have
-   reported +0.0027 for the same quantity, an 85% error.
+   reported +0.0027 for the same quantity, just over half of it.
 2. **An expert's value is its disagreement, not its accuracy**, measured across thirteen expert-into-pool pairs
    (r = +0.786, and +0.500 to +0.929 across subsets, against −0.200 for standalone accuracy) with noise, shuffle and
    negate controls at zero and bounded by a competence floor we map. The representation follows from the principle rather than motivating it: retraining each view, the difference

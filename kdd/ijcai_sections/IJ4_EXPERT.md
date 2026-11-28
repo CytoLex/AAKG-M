@@ -47,7 +47,7 @@ saturated far below what memorising a category would require.
 Eight runs of the same architecture differ by about 0.004 in the official metric, so we average predictions per
 variant rather than scores — the deep-ensemble recipe \cite{lakshminarayanan2017deep}: +0.023 standalone but only +0.0022 in the fusion, which already averages four experts.
 
-The fusion is four numbers, `0.00·D + 0.40·Kermut + 0.40·AMK + 0.20·X`, selected on the training assays
+The pool is four experts: Kermut \cite{kermut}; the site-wise structural expert we call `D`; an assay-level sequence model we call `AMK`; and `X`, the encoder of §4.1. The fusion is four numbers, `0.00·D + 0.40·Kermut + 0.40·AMK + 0.20·X`, selected on the training assays
 of each fold and applied to the held-out ones — exactly the protocol the tuned constant uses. The search drives the additive-structure weight to 0.00 in 14 of 15 seed-by-fold cells and the new expert to 0.20
 in all 15. Under the official metric:
 

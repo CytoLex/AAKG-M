@@ -37,8 +37,8 @@ question is whether the top of our ranking contains the top of the true ranking.
 we take the top *k* ∈ {1%, 5%, 10%} and measure how many land in the true top *k*, aggregating the
 official way:
 
-| top of the list | recall of the true top | lift over random |
-|---|---:|---:|
+| top of the list | recall | random | lift |
+|---|---:|---:|---:|
 | 1% | **0.119** | 0.010 | **11.8x** |
 | 5% | **0.247** | 0.050 | **4.96x** |
 | 10% | **0.350** | 0.100 | **3.50x** |

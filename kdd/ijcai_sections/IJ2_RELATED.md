@@ -13,15 +13,15 @@ longer: combining several forecasts by estimating weights is routinely no better
 known as the forecast combination puzzle \cite{timmermann2006forecast}, with a theoretical explanation in which
 weight-estimation error outweighs the benefit of weighting \cite{claeskens2016forecast}.
 It has been argued partly an artefact of low-power tests \cite{frazier2023solving}, which is why our comparisons
-carry assay-level intervals and a permutation null. \cite{qian2015forecast} separates combining *for improvement* from
-combining *for adaptation* — this paper's expert and allocation levers — and our contribution is to measure both in
-one domain and bound the adaptation side.
+carry assay-level intervals and a permutation null. \cite{qian2019forecast} separates combination that merely reaches the best member from
+combination that exceeds all of them, a distinction our two levers are easily conflated with: changing the pool
+changes what can be reached, reweighting it does not. We measure both levers in one domain and bound the second.
 
 **Diversity and ensemble value.** Ensemble error decomposes into average member error minus an ambiguity term, first
 for squared loss and then for any twice-differentiable loss \cite{audhkhasi2013generalized}, and diversity has since
 been shown to be a hidden dimension of the bias-variance decomposition \cite{wood2023unified}. That literature is
 explicit that diversity should be traded off against bias and variance rather than maximised, which is where this
-paper arrives from the other direction: disagreement predicts an expert's marginal value (r = +0.63), but pushing
+paper arrives from the other direction: disagreement predicts an expert's marginal value (r = +0.786 over thirteen pairs), but pushing
 it further costs competence faster than it buys disagreement.
 
 **Evaluation practice in AI for science.** Aggregate correlation is the standard reporting unit and a poor guide to

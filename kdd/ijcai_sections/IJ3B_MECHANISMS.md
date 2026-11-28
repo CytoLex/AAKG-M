@@ -3,7 +3,7 @@
 **A fusion result needs three numbers, not one**: how much any weighting of the pool could gain (an oracle),
 how much of that an assay's own data can estimate (a split-half), and which estimator reaches it. Reporting
 only the first invites a cross-pool comparison that is easy to make and wrong — that comparison reads +0.0027
-for this paper's own allocation headroom, against **+0.0051** measured inside one pool, an 85% error.
+for this paper's own allocation headroom, against **+0.0051** measured inside one pool -- it captures just over half, and the gap is the point.
 
 We evaluate six label-free conditioning mechanisms plus the tuned constant they all must beat, on
 ProteinGym \cite{proteingym}: 217 substitution assays, 651 assay-by-split units, official
