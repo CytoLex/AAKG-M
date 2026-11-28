@@ -1,18 +1,15 @@
 # Restructure, and the scaffold for writing it in your own words
 
-Two jobs in one document. The first is the narrative change the external review asked for and which the page limit
-also forces. The second is the IJCAI generative-AI rule: the current manuscript says the prose was drafted by an
-assistant, and if the policy is as reported — AI may polish author-written text but may not generate it — then no edit
-to the disclosure fixes that. **The prose has to become yours.** This document is the skeleton that makes that
-tractable: every section reduced to the claims it must make and the numbers that carry them, with no sentences for you
-to edit around.
+The narrative change the external review asked for, which the page limit also rewards. It is written as a skeleton —
+each section reduced to the claims it must make and the numbers that carry them — so it can be worked through in
+either direction: as an editing checklist against the current draft, or as the plan for a rebuild.
 
-Write from these bullets. Do not start from the current `.tex`.
+Either way, check every number against the paper before reusing it. Four of them changed in the last pass.
 
 ## The title
 
-The current one is *What Moves a Protein-Fitness Predictor: Disagreement, Not Accuracy*. Two problems, one of which
-the review is right about:
+The current one is *What Moves a Protein-Fitness Predictor: Disagreement, Not Accuracy*. Two problems, and the
+review is right about both:
 
 - **"Not Accuracy" is refuted by the paper's own §4.4**, which measures a competence floor: degrade an expert's
   predictions with noise and its marginal value eventually falls. High disagreement from a bad expert is worthless,
