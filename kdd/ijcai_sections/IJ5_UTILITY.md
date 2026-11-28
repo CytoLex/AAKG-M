@@ -15,7 +15,9 @@ released file's three-decimal rounding. Our folds are bit-identical to the relea
 | our fusion | **0.694** | 0.784 | 0.674 | 0.625 |
 
 Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.037 is what adding
-complementary experts to the strongest published single model is worth, and every scheme improves.
+complementary experts to that single model is worth, and every scheme improves. It is not the best number on this panel: \cite{gao2026autoscientists} reports **0.700** from an
+agent-discovered Kermut extension we neither reproduce nor compare against. Our contribution is §3's measurement, not
+the ranking.
 
 ## 5.2 The aggregate hides the category, and the top of the list
 

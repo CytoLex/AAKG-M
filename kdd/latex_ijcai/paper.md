@@ -69,7 +69,7 @@ sequence model's likelihood or from multiple-sequence-alignment statistics, with
 \cite{fowler2014,yang2019}, either per assay or across a panel; the leaderboard leader is a composite
 kernel regression of this kind. The fusion line, which this paper belongs to, combines predictors that
 fail differently, and the combination is usually weighted per assay. Benchmarks for this comparison are
-themselves a design choice \cite{flip}, and §5.1 therefore verifies the one we use end to end before
+themselves a design choice \cite{flip,didi2026flip2,tan2026harness,ma2026linear}, and §5.1 verifies the one we use end to end before
 reporting any comparison on it.
 
 **Adaptive weighting, and the combination puzzle.** Mixture-of-experts layers and context-conditioned gates are
@@ -332,8 +332,8 @@ Two ablations agree: **co-distillation from the fusion** lifts the expert by +0.
 in the bundle is added to the pool formed by the other four, under the nested-constant protocol, and its marginal
 value compared with its standalone score and with its disagreement from that pool.
 
-Figure 1 (right) shows all thirteen. Marginal value tracks disagreement at r = **+0.786**, and standalone accuracy
-does not predict it at all: across the five experts r = **−0.200**, and the weakest alone contributes the most — the
+Figure 1 (right) shows all thirteen. A signal that indicates generalisation need not select models \cite{nagarsekar2026generalisation}; here
+marginal value tracks disagreement at r = **+0.786**, and standalone accuracy does not predict it at all: across the five experts r = **−0.200**, and the weakest alone contributes the most — the
 encoder at 0.6449, adding +0.0118 — while the strongest contributes +0.0028 at 0.6651. The correlation's *magnitude*
 is not robust to which experts enter it: dropping the encoder's four points gives +0.500, and the seven points
 contributed by the published experts alone give +0.929. We report the full set and the split rather than the headline
@@ -368,7 +368,9 @@ released file's three-decimal rounding. Our folds are bit-identical to the relea
 | our fusion | **0.694** | 0.784 | 0.674 | 0.625 |
 
 Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.037 is what adding
-complementary experts to the strongest published single model is worth, and every scheme improves.
+complementary experts to that single model is worth, and every scheme improves. It is not the best number on this panel: \cite{gao2026autoscientists} reports **0.700** from an
+agent-discovered Kermut extension we neither reproduce nor compare against. Our contribution is §3's measurement, not
+the ranking.
 
 ## 5.2 The aggregate hides the category, and the top of the list
 
@@ -488,11 +490,10 @@ Three AI challenges are tackled: small-data learning, where the question is regu
 distribution shift, which is why the field reached for adaptive weighting; and representation, where the signal
 lives in the difference between two sequences.
 
-Three challenges arise from using AI here. Wet-lab validation is the field's binding constraint, and this paper
-places its claims at the ranking rather than the bench. Assay data is heterogeneous in ways metadata does not
-capture — two stability assays on one protein can disagree in sign — so a category-averaged metric can look stable
-while individual assays move sharply both ways. And the ecosystem rewards leaderboard movement over
-characterisation, which is what a domain user needs most.
+Three challenges arise from using AI here. Wet-lab validation is the binding constraint, and this paper places its
+claims at the ranking rather than the bench. Assay data is heterogeneous in ways metadata does not capture, so a
+category-averaged metric can look stable while individual assays move sharply both ways. And the ecosystem rewards
+leaderboard movement over characterisation, which is what a domain user needs most.
 
 We give back to the benchmark we use: verified end to end, per-mutant predictions for all 696,311 variants so the
 evaluation stands without our code, and its difficulty structure characterised across categories, sizes and splits.

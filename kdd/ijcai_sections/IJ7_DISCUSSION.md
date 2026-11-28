@@ -11,11 +11,10 @@ Three AI challenges are tackled: small-data learning, where the question is regu
 distribution shift, which is why the field reached for adaptive weighting; and representation, where the signal
 lives in the difference between two sequences.
 
-Three challenges arise from using AI here. Wet-lab validation is the field's binding constraint, and this paper
-places its claims at the ranking rather than the bench. Assay data is heterogeneous in ways metadata does not
-capture — two stability assays on one protein can disagree in sign — so a category-averaged metric can look stable
-while individual assays move sharply both ways. And the ecosystem rewards leaderboard movement over
-characterisation, which is what a domain user needs most.
+Three challenges arise from using AI here. Wet-lab validation is the binding constraint, and this paper places its
+claims at the ranking rather than the bench. Assay data is heterogeneous in ways metadata does not capture, so a
+category-averaged metric can look stable while individual assays move sharply both ways. And the ecosystem rewards
+leaderboard movement over characterisation, which is what a domain user needs most.
 
 We give back to the benchmark we use: verified end to end, per-mutant predictions for all 696,311 variants so the
 evaluation stands without our code, and its difficulty structure characterised across categories, sizes and splits.

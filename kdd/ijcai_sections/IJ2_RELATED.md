@@ -4,7 +4,7 @@ sequence model's likelihood or from multiple-sequence-alignment statistics, with
 \cite{fowler2014,yang2019}, either per assay or across a panel; the leaderboard leader is a composite
 kernel regression of this kind. The fusion line, which this paper belongs to, combines predictors that
 fail differently, and the combination is usually weighted per assay. Benchmarks for this comparison are
-themselves a design choice \cite{flip}, and §5.1 therefore verifies the one we use end to end before
+themselves a design choice \cite{flip,didi2026flip2,tan2026harness,ma2026linear}, and §5.1 verifies the one we use end to end before
 reporting any comparison on it.
 
 **Adaptive weighting, and the combination puzzle.** Mixture-of-experts layers and context-conditioned gates are
