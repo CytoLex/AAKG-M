@@ -3,18 +3,18 @@ benchmark's own terms, on the terms a laboratory uses, and where it does not hel
 
 ## 5.1 Measuring it the way the leaderboard measures it
 
-We run the official `performance_DMS_supervised_benchmarks.py` unmodified on a score file of our
-per-assay, per-scheme correlations, and as a control we run the same correlations recomputed from
-Kermut's predictions. The control reproduces the published per-assay table on **217 of 217 assays** to the precision that table
+Every number below is computed from the released per-mutant predictions: per-assay, per-scheme Spearman from those
+predictions, aggregated by the official `performance_DMS_supervised_benchmarks.py` unmodified. As a control we run the
+same correlations recomputed from Kermut's predictions. The control reproduces the published per-assay table on **217 of 217 assays** to the precision that table
 is published at: mean absolute difference **0.00026**, maximum **0.0005**, every residual inside the
 released file's three-decimal rounding. Our folds are bit-identical to the released distribution.
 
 | model | official | random | modulo | contiguous |
 |---|---:|---:|---:|---:|
 | Kermut (published rank 1) | 0.657 | 0.745 | 0.633 | 0.593 |
-| our fusion | **0.694** | 0.784 | 0.674 | 0.625 |
+| our fusion | **0.692** | 0.778 | 0.671 | 0.626 |
 
-Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.037 is what adding
+Kermut is one of the four experts, so this is a fusion result and we report it as such: +0.035 is what adding
 complementary experts to that single model is worth, and every scheme improves. It is not the best number on this panel: \cite{gao2026autoscientists} reports **0.700** from an
 agent-discovered Kermut extension we neither reproduce nor compare against. Our contribution is §3's measurement, not
 the ranking.
@@ -25,13 +25,13 @@ Per functional category:
 
 | category | ours | Kermut | delta |
 |---|---:|---:|---:|
-| Stability | **0.851** | 0.817 | +0.034 |
-| Expression | 0.693 | 0.670 | +0.023 |
-| Binding | 0.653 | 0.611 | +0.042 |
-| Activity | **0.642** | 0.605 | +0.037 |
-| OrganismalFitness | 0.632 | 0.582 | +0.050 |
+| Stability | **0.850** | 0.817 | +0.033 |
+| Expression | 0.697 | 0.670 | +0.026 |
+| Binding | 0.655 | 0.619 | +0.036 |
+| Activity | **0.644** | 0.610 | +0.034 |
+| OrganismalFitness | 0.636 | 0.597 | +0.040 |
 
-Every category improves, and the spread is the part that matters downstream: 0.851 against 0.642 is a
+Every category improves, and the spread is the part that matters downstream: 0.850 against 0.644 is a
 0.21 gap, so a laboratory working on an activity assay is operating at the bottom of the range we report.
 
 Spearman is a whole-list statistic. A campaign has a library and can assay tens of candidates, so the
@@ -41,18 +41,17 @@ official way:
 
 | top of the list | recall | random | lift |
 |---|---:|---:|---:|
-| 1% | **0.119** | 0.010 | **11.8x** |
-| 5% | **0.247** | 0.050 | **4.96x** |
-| 10% | **0.350** | 0.100 | **3.50x** |
+| 1% | **0.115** | 0.010 | **11.5x** |
+| 5% | **0.241** | 0.050 | **4.82x** |
+| 10% | **0.346** | 0.100 | **3.46x** |
 
-These are computed from the submitted model's predictions. The per-mutant file released alongside them is a re-run
-whose unit-level scores differ from the submitted score file by 0.008 on average, so re-scoring it gives 0.115 /
-0.241 / 0.346 rather than these; §5.2's aggregates come from the submitted file, and the difference is reported in
-the limitations.
+These come from the same released predictions as the aggregate in §5.1, so a reader re-running them on the published
+file gets these numbers. An earlier version of this analysis used a separate score file whose unit-level values
+differed from the release by 0.008 on average and gave 0.119 / 0.247 / 0.350; that file is not the authority here.
 
 Ordering the top 5% recovers about a quarter of the true top 5%, roughly five times random. It is also
-category-dependent in the direction the table above predicts: **7.7x on Stability**, 4.9x Binding, 4.6x
-OrganismalFitness, 4.2x Expression, and **3.4x on Activity** — and activity is what
+category-dependent in the direction the table above predicts: **7.8x on Stability**, 4.3x OrganismalFitness, 4.3x
+Expression, 4.2x Binding, and **3.4x on Activity** — and activity is what
 function-oriented campaigns care about. **The ranker is roughly twice as good at prioritising stability mutants as
 activity mutants**, and the intervals separate.
 

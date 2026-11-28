@@ -5,12 +5,11 @@ the improvement reaches +0.00003 on the largest quartile. The aggregate is the c
 of any one assay.
 
 **The structural experts are inherited, not retrained inside each outer fold**; a fully nested protocol would
-retrain them per fold. The headline, the scheme breakdown and the category breakdown come from the benchmark's own evaluation script run
-on the submitted score file, and that output ships with the submission. The per-mutant predictions released alongside
-them are a re-run, not that file: their unit-level Spearman values differ from the submitted ones by 0.008 on average,
-which moves the aggregate to 0.692 and the top-of-list figures by about 0.003. The submitted score file is the
-artefact the claims rest on; the per-mutant file is offered as a convenience and should not be treated as its source. The one hyperparameter that matters, the distillation weight, was re-selected inside each fold and
-chose the same value in all five.
+retrain them per fold. The headline, the scheme breakdown, the category breakdown and the top-of-list analysis are all computed from the
+released per-mutant predictions under the benchmark's own aggregation, so every number in §5 is reproducible from the
+file that ships with the paper. An earlier draft reported 0.694 from a separate submitted score file; that file's
+unit-level Spearman values differ from the release by 0.008 on average, and the release is what the paper now reports
+and what a reader can check.
 
 **Scope of the evaluation.** Every result is on ProteinGym substitutions, ProteinGym indels, or FLIP2's published
 splits, the panel is skewed toward particular families and assay types, and the top-of-list analysis characterises a

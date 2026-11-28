@@ -194,7 +194,7 @@ PRE = r"""\documentclass{article}
 \begin{document}
 \linenumbers
 
-\title{What Moves a Protein-Fitness Predictor: Disagreement, Not Accuracy}
+\title{What Expert Fusion Can and Cannot Buy in Protein Fitness Prediction}
 
 % Anonymous submission: no author block.
 \author{}

@@ -23,7 +23,7 @@ this; the mechanisms below are their conditional variants, and the tuned constan
 amounts to.
 
 **And the constant is not separated from a parameter-free average either.** Averaging the experts' within-assay
-ranks — no labels, no parameters — reaches **0.6942** against the tuned constant's **0.6952**, a paired difference of
+ranks — no labels, no parameters — reaches **0.6922** against the tuned constant's **0.6952**, a paired difference of
 **−0.0010** with a 95% CI of [−0.0031, +0.0011]. So nothing in this section separates from simple rank averaging,
 tuned or learned: the comparison the mechanisms had to survive was itself only tied with a rule that requires no
 fitting at all.

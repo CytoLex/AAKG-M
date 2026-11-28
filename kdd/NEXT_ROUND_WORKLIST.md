@@ -4,6 +4,16 @@ Deadline: full paper **2027-01-11**; the separate abstract submission is **2027-
 Today is 2026-11-28, so there are six weeks and a two-day buffer. Nothing below assumes the current prose survives —
 see the note on rewrites at the end.
 
+## Decisions taken
+
+1. **0.692 adopted.** The released per-mutant predictions are now the authority for every number in §5, under the
+   benchmark's own aggregation: 0.692 against 0.657 for Kermut, +0.035. Per-scheme 0.778 / 0.671 / 0.626; category
+   0.850 / 0.697 / 0.655 / 0.644 / 0.636; top-of-list 0.115 / 0.241 / 0.346 with lifts 11.5x / 4.82x / 3.46x. The
+   submitted score file appears only in the limitations, as the thing that was replaced.
+2. **The title changed** to *What Expert Fusion Can and Cannot Buy in Protein Fitness Prediction*.
+3. **Prose rewrite** — see the scaffold document.
+4. **Surpassing 0.700** — the attempt and its result are below.
+
 ## The finding that changes the goal
 
 The second review named AutoScientists as a competitive neighbour. It is worse than a missing citation:
